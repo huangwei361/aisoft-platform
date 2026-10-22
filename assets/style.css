@@ -313,6 +313,29 @@ input,select,textarea{font-family:inherit}
 .mall-price b{font-size:17px;color:var(--ink);font-weight:750}
 .mall-price span{font-size:10px;color:var(--dim)}
 .mall-rating{font-size:10.5px;color:var(--dim);text-align:right;line-height:1.5}
+.mall-type.individual{background:#ecfdf5;color:#047857;border:1px solid #d1fae5}
+.mall-type.team{background:#f5f3ff;color:#6d28d9;border:1px solid #ede9fe}
+.mall-type.company{background:#eff6ff;color:#1d4ed8;border:1px solid #dbeafe}
+.verified.pending{background:#fffbeb;color:#b45309;border-color:#fef3c7}
+.store-head{display:flex;gap:10px;align-items:center;margin-top:2px}
+.store-avatar{width:38px;height:38px;border-radius:11px;flex:none;display:grid;place-items:center;background:linear-gradient(135deg,#2f5cff,#7c3aed);color:#fff;font-size:15px;font-weight:700}
+.store-avatar.lg{width:52px;height:52px;border-radius:14px;font-size:20px}
+.store-tagline{font-size:11px;color:var(--dim);margin-top:2px}
+.store-head h3{margin-bottom:0}
+.store-head h3 a:hover{color:var(--brand)}
+.store-stats{display:flex;gap:14px;font-size:10.5px;color:var(--dim);padding-top:8px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.store-stats b{font-size:12.5px;color:var(--ink);font-weight:700}
+.store-detail-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+.store-detail-head .mdesc{margin-top:6px}
+.store-apps{display:flex;flex-direction:column;gap:10px}
+.store-app{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:14px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+.sa-main{flex:1;min-width:200px}
+.sa-main h4{font-size:13.5px;color:var(--ink);font-weight:650;margin-bottom:4px}
+.sa-main p{font-size:11.5px;color:var(--muted);line-height:1.6;margin-bottom:7px}
+.sa-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
+.sa-right b{font-size:15px;color:var(--ink);font-weight:750}
+.sa-right span{font-size:10px;color:var(--dim)}
+.sa-right .btn{margin-top:4px}
 
 /* ---------- guarantee strip ---------- */
 .guarantee{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0 8px}
