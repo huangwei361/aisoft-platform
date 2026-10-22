@@ -359,6 +359,38 @@
   /* ---------- 商城广场：个人与组织开店 ---------- */
   const mallState = { owner: 'all', q: '' };
   const OWNER_LABELS = { individual: '个人开发者', team: '团队工作室', company: '企业服务商' };
+  const THEME_OPTIONS = {
+    amber: ['#b45309', '#f59e0b'],
+    indigo: ['#4338ca', '#818cf8'],
+    cyan: ['#0e7490', '#22d3ee'],
+    rose: ['#be123c', '#fb7185'],
+    emerald: ['#0f766e', '#34d399']
+  };
+  const STORE_STYLE = {
+    s1: { theme: 'amber', badge: '个人精选', features: ['跨境卖家口碑', '48 小时交付', '订阅制付费'], featured: true },
+    s2: { theme: 'indigo', badge: '企业旗舰店', features: ['国产 GPU 适配', '私有化交付', '等保合规'], featured: true },
+    s3: { theme: 'cyan', badge: '团队工作室', features: ['源码交付', '一个月陪跑', '企微生态'] },
+    s4: { theme: 'emerald', badge: '源头服务商', features: ['多模态标注', '质检抽检', '私有化平台'] },
+    s5: { theme: 'rose', badge: '算法团队', features: ['运筹背景', '小样本训练', '现场试跑'] },
+    s6: { theme: 'rose', badge: '合规专营店', features: ['行业清单', '审计日志', '隐私评估'] },
+    s7: { theme: 'amber', badge: '创作者小店', features: ['数字人定制', '批量成片', '按条计费'] },
+    s8: { theme: 'indigo', badge: '垂直专家店', features: ['多约束求解', '插单模拟', '驻场实施'] },
+    s9: { theme: 'emerald', badge: '校园口碑店', features: ['校本知识', '教师培训', '校内私有化'], featured: true }
+  };
+
+  function storeStyle(s) {
+    if (Array.isArray(s.theme)) {
+      return { theme: s.theme, badge: s.badge || '特色新店', features: s.features || [], featured: false };
+    }
+    const preset = STORE_STYLE[s.id] || {};
+    return {
+      theme: THEME_OPTIONS[preset.theme || 'indigo'],
+      badge: preset.badge || '诚信店铺',
+      features: preset.features || [],
+      featured: !!preset.featured
+    };
+  }
+
 
   function allStores() {
     return store.get(MY_STORE_KEY, []).concat(window.STORES || []);
@@ -371,35 +403,61 @@
 
   function storeCard(s) {
     const apps = s.apps || [];
+    const st = storeStyle(s);
     const appTags = apps.slice(0, 3).map(a => `<span class="tag">${esc(a.name)}</span>`).join('');
-    return `<article class="mall-card store-card">
-      <div class="mall-top">
-        <span class="mall-type ${esc(s.ownerType)}">${esc(OWNER_LABELS[s.ownerType] || '店主')}</span>
-        ${s.verified ? '<span class="verified">已认证商家</span>' : '<span class="verified pending">审核中</span>'}
+    return `<article class="mall-card store-card" style="--a1:${st.theme[0]};--a2:${st.theme[1]}">
+      <div class="store-cover">
+        <div class="cover-top">
+          <span class="store-badge">${esc(st.badge)}</span>
+          <span class="cover-verified">${s.verified ? '已认证商家' : '审核中'}</span>
+        </div>
+        <div class="cover-main">
+          <span class="store-avatar">${esc((s.name || '店').slice(0, 1))}</span>
+          <div>
+            <h3><a href="#" data-store-detail="${s.id}">${esc(s.name)}</a></h3>
+            <p>${esc(s.tagline || '')}</p>
+          </div>
+        </div>
+        <div class="cover-foot">${esc(OWNER_LABELS[s.ownerType] || '店主')} · ${esc(s.since || '2026')} 年入驻 · ${apps.length} 款自研应用</div>
       </div>
-      <div class="store-head">
-        <span class="store-avatar">${esc((s.name || '店').slice(0, 1))}</span>
-        <div>
-          <h3><a href="#" data-store-detail="${s.id}" style="color:inherit">${esc(s.name)}</a></h3>
-          <div class="store-tagline">${esc(s.tagline || '')}</div>
+      <div class="store-body">
+        <p class="mdesc">${esc(s.desc)}</p>
+        <div class="feature-tags">${st.features.map(f => `<span class="feature-tag">${esc(f)}</span>`).join('')}</div>
+        <div class="app-tags">${appTags || '<span class="tag">待上架</span>'}</div>
+        <div class="store-stats">
+          <span><b>${apps.length}</b> 款应用</span>
+          <span><b>${s.sales || 0}</b> 笔成交</span>
+          <span>${s.rating ? '★ ' + s.rating : '新店'}</span>
+        </div>
+        <div class="mall-foot">
+          <div class="mall-price"><b>${storeMinPrice(s)}</b> <span>起</span></div>
+          <div class="mall-rating">${esc(s.since || '2026')} 年入驻<br>平台担保</div>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-ghost btn-sm" data-store-detail="${s.id}">进店看看</button>
+          <button class="btn btn-primary btn-sm" data-store-detail="${s.id}">选购应用</button>
         </div>
       </div>
-      <p class="mdesc">${esc(s.desc)}</p>
-      <div class="app-tags">${appTags || '<span class="tag">待上架</span>'}</div>
-      <div class="store-stats">
-        <span><b>${apps.length}</b> 款应用</span>
-        <span><b>${s.sales || 0}</b> 笔成交</span>
-        <span>${s.rating ? '★ ' + s.rating : '新店'}</span>
-      </div>
-      <div class="mall-foot">
-        <div class="mall-price"><b>${storeMinPrice(s)}</b> <span>起</span></div>
-        <div class="mall-rating">${esc(s.since || '2026')} 年入驻<br>平台担保</div>
-      </div>
-      <div class="card-actions">
-        <button class="btn btn-ghost btn-sm" data-store-detail="${s.id}">进店看看</button>
-        <button class="btn btn-primary btn-sm" data-store-detail="${s.id}">选购应用</button>
-      </div>
     </article>`;
+  }
+
+  function featuredStoreCard(s) {
+    const st = storeStyle(s);
+    const apps = s.apps || [];
+    return `<article class="featured-store" style="--a1:${st.theme[0]};--a2:${st.theme[1]}" data-store-detail="${s.id}">
+      <div class="fs-top"><span class="store-badge">${esc(st.badge)}</span><span>${esc(OWNER_LABELS[s.ownerType] || '店主')}</span></div>
+      <span class="fs-avatar">${esc((s.name || '店').slice(0, 1))}</span>
+      <h3>${esc(s.name)}</h3>
+      <p>${esc(s.tagline || '')}</p>
+      <div class="fs-meta">${apps.length} 款自研应用${s.rating ? ' · ★ ' + s.rating : ''}</div>
+      <span class="fs-link">进店逛逛 →</span>
+    </article>`;
+  }
+
+  function renderFeaturedStores() {
+    const rail = $('#featuredStores');
+    if (!rail) return;
+    rail.innerHTML = allStores().filter(s => storeStyle(s).featured).slice(0, 3).map(featuredStoreCard).join('');
   }
 
   function filteredStores() {
@@ -424,6 +482,8 @@
       : `<div class="empty" style="grid-column:1/-1"><b>暂无匹配店铺</b><p>换个关键词，或申请开一家属于你的 AI 应用店。</p></div>`;
     const count = $('#mallCount');
     if (count) count.textContent = `共 ${list.length} 家店铺`;
+    const fs = $('#featuredStoresSection');
+    if (fs) fs.style.display = (mallState.owner === 'all' && !mallState.q) ? '' : 'none';
   }
 
   function renderFeaturedMall() {
@@ -436,6 +496,7 @@
     const s = allStores().find(x => x.id === id);
     if (!s) return;
     const apps = s.apps || [];
+    const st = storeStyle(s);
     const rows = apps.length ? apps.map(a => `
       <div class="store-app">
         <div class="sa-main">
@@ -453,13 +514,17 @@
       title: esc(s.name),
       subtitle: `${OWNER_LABELS[s.ownerType] || '店主'} · ${s.verified ? '已认证商家' : '审核中'} · ${s.since || '2026'} 年入驻`,
       body: `
-        <div class="store-detail-head">
+        <div class="sd-hero" style="--a1:${st.theme[0]};--a2:${st.theme[1]}">
           <span class="store-avatar lg">${esc((s.name || '店').slice(0, 1))}</span>
-          <div>
-            <div class="store-tagline">${esc(s.tagline || '')}</div>
-            <p class="mdesc">${esc(s.desc)}</p>
+          <div class="sd-info">
+            <span class="store-badge">${esc(st.badge)}</span>
+            <h3>${esc(s.name)}</h3>
+            <p>${esc(s.tagline || '')}</p>
+            <div class="sd-meta">${esc(OWNER_LABELS[s.ownerType] || '店主')} · ${s.verified ? '已认证商家' : '审核中'} · ${esc(s.since || '2026')} 年入驻</div>
           </div>
         </div>
+        <div class="feature-tags" style="margin-bottom:14px">${st.features.map(f => `<span class="feature-tag">${esc(f)}</span>`).join('')}</div>
+        <div class="detail-block"><h5>店铺介绍</h5><p>${esc(s.desc)}</p></div>
         <div class="detail-kv">
           <div class="kv"><span>在售应用</span><b>${apps.length} 款</b></div>
           <div class="kv"><span>累计成交</span><b>${s.sales || 0} 笔</b></div>
@@ -551,6 +616,20 @@
             </div>
             <div class="form-row"><label>联系人<em>*</em></label><input class="input" name="contact" required placeholder="姓名"></div>
             <div class="form-row"><label>联系电话<em>*</em></label><input class="input" name="phone" required placeholder="手机号"></div>
+          </div>
+          <div class="form-row"><label>店铺标签</label><input class="input" name="badge" maxlength="6" placeholder="如：跨境专营（最多 6 字）"></div>
+          <div class="form-row"><label>一句话特色</label><input class="input" name="tagline" placeholder="如：只做能直接投放的商品图"></div>
+          <div class="form-grid">
+            <div class="form-row"><label>店铺主题色</label>
+              <select class="select-full" name="theme">
+                <option value="emerald">青绿 · 专业可靠</option>
+                <option value="indigo">靛蓝 · 技术旗舰</option>
+                <option value="amber">琥珀 · 个人精选</option>
+                <option value="cyan">青碧 · 团队工作室</option>
+                <option value="rose">玫红 · 创意专营</option>
+              </select>
+            </div>
+            <div class="form-row"><label>店铺亮点</label><input class="input" name="features" placeholder="逗号分隔，最多 3 个"></div>
           </div>
           <div class="form-row"><label>主打应用<em>*</em></label><input class="input" name="app" required placeholder="你准备上架的第一款 AI 应用"></div>
           <div class="form-row"><label>参考价格</label><input class="input" name="price" placeholder="如 1980（元/年），留空则显示面议"></div>
@@ -731,12 +810,16 @@
       if (!form || !form.reportValidity()) return;
       const data = Object.fromEntries(new FormData(form).entries());
       const priceNum = Number(String(data.price || '').replace(/[^\d.]/g, ''));
+      const feats = String(data.features || '').split(/[,，]/).map(s => s.trim()).filter(Boolean).slice(0, 3);
       const list = store.get(MY_STORE_KEY, []);
       list.unshift({
         id: 'ms-' + Date.now(), name: data.name, ownerType: data.ownerType,
-        tagline: `${data.category} · 新店开业`,
+        tagline: data.tagline && data.tagline.trim() || `${data.category} · 新店开业`,
         desc: data.desc, categories: [data.category], tags: [data.category, '新店'],
         rating: null, sales: 0, since: '2026', verified: false, local: true,
+        theme: THEME_OPTIONS[data.theme] || THEME_OPTIONS.emerald,
+        badge: (data.badge && data.badge.trim()) || '新店开业',
+        features: feats.length ? feats : ['平台担保', '新店开业'],
         apps: [{
           id: 'ma-' + Date.now(), name: data.app && data.app.trim() || '待上架应用',
           price: priceNum > 0 ? priceNum : null, unit: priceNum > 0 ? '/年' : '',
@@ -812,6 +895,7 @@
     if ($('#mallGrid')) {
       bindChips('#mallChips', v => { mallState.owner = v; renderMall(); });
       bindSearch('#mallSearch', v => { mallState.q = v; renderMall(); });
+      renderFeaturedStores();
       renderMall();
     }
     renderFeaturedMall();
