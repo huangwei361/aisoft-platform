@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>需求广场 · 承接官方 AI 项目订单｜AI SOFT</title>
+<meta name="description" content="供应商在需求广场承接 AI SOFT 官方发布的行业 AI 项目订单，预算明确、范围清晰、平台统一对接。">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="demands">
+
+<header class="site-header">
+  <div class="container nav">
+    <a class="logo" href="index.html"><span class="logo-mark">AI</span><span>AI SOFT<small>行业 AI 应用平台</small></span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">首页</a>
+      <a href="apps.html">应用广场</a>
+      <a href="demands.html" class="active">需求广场</a>
+      <a href="mall.html">商城广场</a>
+      <a href="index.html#mechanism">平台机制</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn js-cart" aria-label="购物车">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/><path d="M2 3h3l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+        <span class="cart-count" data-cart-count>0</span>
+      </button>
+      <a href="apps.html" class="btn btn-ghost btn-sm">官方应用</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="打开菜单">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <div class="crumb"><a href="index.html">首页</a> / 需求广场</div>
+      <h1>需求广场</h1>
+      <p>官方订单的承接入口。需求组已完成评估立项，开发组已拆解交付范围与验收标准，供应商可提交承接意向。</p>
+      <div class="hero-badges">
+        <span class="pill"><strong>需求真实</strong> 已评估立项</span>
+        <span class="pill"><strong>预算明确</strong> 范围与周期清晰</span>
+        <span class="pill"><strong>统一对接</strong> 营销组负责评标</span>
+        <span class="pill"><strong>验收有据</strong> 以评测与指标结算</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:26px">
+    <div class="container">
+      <div class="guarantee">
+        <div class="g-item"><span class="gi">01</span><div><b>需求组 · 评估立项</b><span>访谈业务、判断价值与数据可行性</span></div></div>
+        <div class="g-item"><span class="gi">02</span><div><b>开发组 · 拆解范围</b><span>输出交付清单、里程碑与验收标准</span></div></div>
+        <div class="g-item"><span class="gi">03</span><div><b>营销组 · 发布对接</b><span>发布订单、筛选供应商、组织评标</span></div></div>
+        <div class="g-item"><span class="gi">04</span><div><b>供应商 · 承接交付</b><span>提交方案与报价，按合同交付验收</span></div></div>
+      </div>
+
+      <div class="toolbar">
+        <div class="chips" id="demandChips">
+          <button class="chip on" data-cat="all">全部行业</button>
+          <button class="chip" data-cat="智能制造">智能制造</button>
+          <button class="chip" data-cat="零售电商">零售电商</button>
+          <button class="chip" data-cat="医疗健康">医疗健康</button>
+          <button class="chip" data-cat="教育培训">教育培训</button>
+        </div>
+        <div class="search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="demandSearch" type="search" placeholder="搜索订单标题、行业或能力标签">
+        </div>
+        <button class="btn btn-primary btn-sm" data-open-demand>发布需求</button>
+      </div>
+
+      <div class="result-line" id="demandCount">共 9 个需求</div>
+      <div class="demand-list" id="demandList"></div>
+
+      <div class="cta-band" style="margin-top:44px">
+        <div>
+          <h3>还不是认证供应商？</h3>
+          <p>在商城广场发布服务能力，营销组审核通过后即可参与官方订单投标。认证供应商会优先进入评标名单。</p>
+        </div>
+        <div class="btns">
+          <a href="mall.html" class="btn btn-primary">发布服务能力</a>
+          <a href="index.html#mechanism" class="btn btn-ghost">了解平台机制</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="index.html"><span class="logo-mark">AI</span><span>AI SOFT<small>行业 AI 应用平台</small></span></a>
+        <p>面向行业的 AI 应用开发与交易平台。把需求、开发与交付放进同一条链路，让 AI 真正落到业务现场。</p>
+      </div>
+      <div class="footer-col">
+        <h4>应用广场</h4>
+        <a href="apps.html">企业效率</a>
+        <a href="apps.html">智能制造</a>
+        <a href="apps.html">零售电商</a>
+        <a href="apps.html">医疗健康</a>
+      </div>
+      <div class="footer-col">
+        <h4>合作入口</h4>
+        <a href="demands.html">承接官方订单</a>
+        <a href="mall.html">发布服务供给</a>
+        <a href="#" data-open-demand>发布企业需求</a>
+        <a href="index.html#mechanism">平台机制</a>
+      </div>
+      <div class="footer-col">
+        <h4>平台保障</h4>
+        <a href="mall.html">担保交易规则</a>
+        <a href="mall.html">供应商认证</a>
+        <a href="index.html#mechanism">四组协同</a>
+        <a href="apps.html">交付与运维</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 AI SOFT · 行业 AI 应用平台</span>
+      <span>演示站点：页面数据、价格与交易流程均为模拟，不产生真实支付</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
