@@ -185,59 +185,104 @@ window.DEMANDS = [
   }
 ];
 
-window.MALL = [
+window.STORES = [
   {
-    id: 'm1', title: 'AI 应用 UI / UX 设计外包', type: 'supply', provider: '星野设计',
-    price: '¥8,000', priceNote: '起 / 项目', delivery: '5–10 个工作日',
-    desc: '面向 AI 产品的界面设计、交互原型与设计规范，含 2 轮修改，交付 Figma 源文件。',
-    tags: ['界面设计', 'Figma', '交互原型'], rating: 4.9, deals: 86, verified: true
+    id: 's1', name: '星野 AI 工作室', ownerType: 'individual', owner: '张野',
+    tagline: '电商视觉与多语言内容',
+    desc: '个人开发者，专注电商内容生产，服务过 30+ 跨境卖家，把商品图、场景图与多语言文案做成可订阅的工具。',
+    categories: ['零售电商', '多模态'], tags: ['电商内容', '多模态', '跨境'],
+    rating: 4.9, sales: 1286, since: 2024, verified: true,
+    apps: [
+      { id: 'a11', name: '商品图批量生成器', price: 1680, unit: '/年', delivery: '即时开通', desc: '上传商品表，批量生成主图、场景图与多尺寸适配，内置平台规范模板。', tags: ['商品图', '批量生成'] },
+      { id: 'a12', name: '多语言文案助手', price: 980, unit: '/年', delivery: '即时开通', desc: '支持 12 种语言的产品标题、卖点与详情页文案，可锁定品牌语气。', tags: ['多语言', '文案'] }
+    ]
   },
   {
-    id: 'm2', title: '大模型私有化部署实施', type: 'supply', provider: '云栈科技',
-    price: '¥60,000', priceNote: '起 / 项目', delivery: '2–4 周',
-    desc: 'vLLM 推理集群搭建、模型量化与压测、权限与审计配置，支持国产 GPU 环境。',
-    tags: ['私有化', 'vLLM', 'GPU'], rating: 4.8, deals: 42, verified: true
+    id: 's2', name: '云栈科技', ownerType: 'company', owner: '云栈科技',
+    tagline: '大模型私有化与知识库',
+    desc: '企业级 AI 基础设施服务商，提供私有化部署、权限审计与国产 GPU 适配，已服务 40+ 中大型企业。',
+    categories: ['企业效率', '智能制造'], tags: ['私有化', '知识库', '国产化'],
+    rating: 4.8, sales: 642, since: 2023, verified: true,
+    apps: [
+      { id: 'a21', name: '私有化大模型平台', price: 60000, unit: '起 / 项目', delivery: '2–4 周', desc: 'vLLM 推理集群、模型量化与压测、权限审计一体化交付。', tags: ['私有化', 'vLLM'] },
+      { id: 'a22', name: '企业知识库私有版', price: 29800, unit: '/年', delivery: '1–2 周', desc: '文档入库、角色权限隔离与原文引用，支持内网部署。', tags: ['RAG', '权限隔离'] }
+    ]
   },
   {
-    id: 'm3', title: '数据标注与评测集构建', type: 'supply', provider: '标智数据',
-    price: '¥0.8', priceNote: '起 / 条', delivery: '按量分批交付',
-    desc: '文本、图像与多模态数据标注，提供标注规范、质检抽检与评测集设计服务。',
-    tags: ['数据标注', '评测集', '质检'], rating: 4.7, deals: 128, verified: true
+    id: 's3', name: '极客工坊', ownerType: 'team', owner: '极客工坊团队',
+    tagline: '小程序与门店智能体',
+    desc: '8 人全栈团队，专注微信生态与门店场景，交付源码、部署文档与一个月陪跑。',
+    categories: ['零售电商', '企业效率'], tags: ['小程序', '门店', '企微'],
+    rating: 4.8, sales: 517, since: 2023, verified: true,
+    apps: [
+      { id: 'a31', name: '门店导购助手', price: 12800, unit: '/年', delivery: '3 个工作日', desc: '企微侧边栏导购，商品知识、搭配推荐与会员运营话术可配置。', tags: ['导购', '企微'] },
+      { id: 'a32', name: '小程序 AI 客服', price: 19800, unit: '起 / 项目', delivery: '2–3 周', desc: '小程序内多轮对话、订单查询与人工接管，含后台管理。', tags: ['客服', '小程序'] }
+    ]
   },
   {
-    id: 'm4', title: 'AI 产品合规咨询', type: 'supply', provider: '合规方舟',
-    price: '¥12,000', priceNote: '/ 次', delivery: '5 个工作日',
-    desc: '生成内容标识、个人信息保护、医疗与教育行业合规边界评估，输出整改建议书。',
-    tags: ['合规', '隐私', '内容安全'], rating: 4.9, deals: 36, verified: true
+    id: 's4', name: '标智数据', ownerType: 'company', owner: '标智数据',
+    tagline: '数据标注与评测集',
+    desc: '提供文本、图像与多模态标注，以及评测集构建与质检体系，支持私有化标注平台。',
+    categories: ['智能制造', '医疗健康'], tags: ['数据标注', '评测集', '质检'],
+    rating: 4.7, sales: 903, since: 2022, verified: true,
+    apps: [
+      { id: 'a41', name: '标注平台私有版', price: 45800, unit: '起 / 项目', delivery: '2 周', desc: '多模态标注、质检抽检与进度看板，部署在客户内网。', tags: ['标注平台', '私有化'] },
+      { id: 'a42', name: '评测集构建服务', price: 0.8, unit: '起 / 条', delivery: '按量交付', desc: '按业务场景设计评测集，含标注规范、抽检与一致性校验。', tags: ['评测集', '按量'] }
+    ]
   },
   {
-    id: 'm5', title: '小程序 + AI 功能开发', type: 'supply', provider: '极客工坊',
-    price: '¥35,000', priceNote: '起 / 项目', delivery: '4–6 周',
-    desc: '微信小程序与 AI 能力集成，含对话、知识库、订单支付与后台管理，交付源码。',
-    tags: ['小程序', '全栈开发', '交付源码'], rating: 4.8, deals: 57, verified: true
+    id: 's5', name: '深智实验室', ownerType: 'team', owner: '深智实验室',
+    tagline: '行业模型微调与评测',
+    desc: '运筹与算法背景团队，专注制造、零售场景的模型微调、效果评测与上线调优。',
+    categories: ['智能制造', '零售电商'], tags: ['模型微调', 'LoRA', '评测'],
+    rating: 4.8, sales: 428, since: 2024, verified: true,
+    apps: [
+      { id: 'a51', name: '行业模型微调', price: 28000, unit: '起 / 项目', delivery: '2–3 周', desc: '数据清洗、SFT / LoRA 微调、评测基准与效果报告。', tags: ['SFT', 'LoRA'] },
+      { id: 'a52', name: '质检模型训练', price: 36000, unit: '起 / 项目', delivery: '3–4 周', desc: '小样本缺陷检测模型训练与现场试跑，输出部署包。', tags: ['缺陷检测', '小样本'] }
+    ]
   },
   {
-    id: 'm6', title: '数字人短视频代运营', type: 'supply', provider: '光年视觉',
-    price: '¥15,000', priceNote: '/ 月', delivery: '月度交付',
-    desc: '数字人口播视频策划、脚本、成片与账号运营，每月 20 条短视频，含数据复盘。',
-    tags: ['数字人', '短视频', '代运营'], rating: 4.6, deals: 24, verified: false
+    id: 's6', name: '合规方舟', ownerType: 'company', owner: '合规方舟',
+    tagline: 'AI 合规与内容安全',
+    desc: '为 AI 应用提供合规评估、生成内容标识与隐私影响评估，已服务 60+ 企业。',
+    categories: ['企业效率', '医疗健康'], tags: ['合规', '内容安全', '隐私'],
+    rating: 4.9, sales: 316, since: 2023, verified: true,
+    apps: [
+      { id: 'a61', name: 'AI 合规自查工具', price: 12800, unit: '/年', delivery: '即时开通', desc: '按行业生成合规清单、风险项与整改建议，支持多人协作。', tags: ['合规', '自查'] },
+      { id: 'a62', name: '生成内容标识组件', price: 6800, unit: '/年', delivery: '1 周', desc: '为图片、音视频与文本添加显式/隐式标识，提供接口与审计日志。', tags: ['内容标识', '审计'] }
+    ]
   },
   {
-    id: 'm7', title: '模型微调与效果调优', type: 'supply', provider: '深智实验室',
-    price: '¥28,000', priceNote: '起 / 项目', delivery: '2–3 周',
-    desc: '行业数据清洗、SFT / LoRA 微调、评测基准搭建与效果调优，交付模型与评测报告。',
-    tags: ['模型微调', 'LoRA', '评测'], rating: 4.8, deals: 68, verified: true
+    id: 's7', name: '光年视觉', ownerType: 'individual', owner: '陈光',
+    tagline: '数字人与短视频生产',
+    desc: '独立创作者，提供数字人形象定制与口播视频批量生产，服务电商与本地生活商家。',
+    categories: ['多模态', '零售电商'], tags: ['数字人', '短视频', '口播'],
+    rating: 4.6, sales: 254, since: 2024, verified: false,
+    apps: [
+      { id: 'a71', name: '数字人口播工坊', price: 3980, unit: '/年', delivery: '即时开通', desc: '选择形象与音色，脚本一键生成口播视频，支持多语言字幕。', tags: ['数字人', '口播'] },
+      { id: 'a72', name: '短视频批量成片', price: 15000, unit: '/月', delivery: '月度交付', desc: '每月 20 条成片，含脚本、剪辑与数据复盘。', tags: ['短视频', '代运营'] }
+    ]
   },
   {
-    id: 'm8', title: '寻求 CRM 智能化改造合作', type: 'need', provider: '某 SaaS 服务商',
-    price: '20–30 万', priceNote: '预算', delivery: '面议',
-    desc: '现有 CRM 产品需要加入智能跟进摘要、商机评分与话术推荐，寻找有 B 端 AI 经验的团队联合交付。',
-    tags: ['CRM', '商机评分', '联合交付'], rating: null, deals: 3, verified: true
+    id: 's8', name: '数智排程团队', ownerType: 'team', owner: '数智排程团队',
+    tagline: '小批量智能排程',
+    desc: '运筹优化背景团队，面向多品种小批量工厂提供排程、插单模拟与产能评估工具。',
+    categories: ['智能制造'], tags: ['排程', '约束求解', '插单'],
+    rating: 4.7, sales: 96, since: 2025, verified: true,
+    apps: [
+      { id: 'a81', name: '小批量排程助手', price: 88000, unit: '起 / 项目', delivery: '8–12 周', desc: '多约束排程求解、可视化甘特图与可执行工单下发。', tags: ['排程', '甘特图'] },
+      { id: 'a82', name: '插单影响模拟', price: 19800, unit: '/年', delivery: '2 周', desc: '分钟级评估插单对交期、设备与物料的影响，给出调整建议。', tags: ['插单', '模拟'] }
+    ]
   },
   {
-    id: 'm9', title: '采购 3 套视觉质检方案', type: 'need', provider: '某电子制造厂',
-    price: '面议', priceNote: '预算', delivery: '30 天内响应',
-    desc: 'SMT 产线需要外观缺陷检测方案，优先考虑已在电子制造落地过、可提供样机试跑的供应商。',
-    tags: ['视觉质检', 'SMT', '样机试跑'], rating: null, deals: 5, verified: true
+    id: 's9', name: '校本 AI 实验室', ownerType: 'team', owner: '校本 AI 实验室',
+    tagline: '校本知识与课件生成',
+    desc: '服务中小学与职教机构，提供校本问答与课件生成工具，支持校内私有化与教师培训。',
+    categories: ['教育培训'], tags: ['校本知识', '课件', '私有化'],
+    rating: 4.8, sales: 372, since: 2024, verified: true,
+    apps: [
+      { id: 'a91', name: '校本问答助手', price: 12800, unit: '/年', delivery: '1–2 周', desc: '教材、讲义与校规章节级溯源，教师与学生分权使用。', tags: ['校本', '溯源'] },
+      { id: 'a92', name: '课件生成工作台', price: 9800, unit: '/年', delivery: '即时开通', desc: '大纲生成课件、图解与分层题库，支持校本模板。', tags: ['课件', '题库'] }
+    ]
   }
 ];
