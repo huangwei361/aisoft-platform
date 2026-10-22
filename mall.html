@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>商城广场 · 需求方与供应商担保交易｜AI SOFT</title>
-<meta name="description" content="AI SOFT 商城广场：需求方与供应商发布服务与需求，平台担保交易、资金托管、验收放款。">
+<title>商城广场 · 个人与组织开 AI 应用店｜AI SOFT</title>
+<meta name="description" content="AI SOFT 商城广场：个人、团队与企业在这里开自己的 AI 应用店，上架自研 AI 业务软件，平台提供店铺、流量、担保交易与结算。">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body data-page="mall">
@@ -24,7 +24,7 @@
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/><path d="M2 3h3l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
         <span class="cart-count" data-cart-count>0</span>
       </button>
-      <a href="demands.html" class="btn btn-ghost btn-sm">供应商接单</a>
+      <a href="#" class="btn btn-ghost btn-sm" data-open-store>我要开店</a>
       <button class="menu-toggle" id="menuToggle" aria-label="打开菜单">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
@@ -37,12 +37,12 @@
     <div class="container">
       <div class="crumb"><a href="index.html">首页</a> / 商城广场</div>
       <h1>商城广场</h1>
-      <p>需求方与供应方的交易空间。设计、开发、部署、数据、合规与内容运营，都可以在这里发布、比价与成交。</p>
+      <p>给个人和组织开一家 AI 应用店的地方。把你开发的 AI 业务软件上架到自己的店铺，平台负责流量、交易与履约保障。</p>
       <div class="hero-badges">
-        <span class="pill"><strong>双向发布</strong> 服务供给 / 需求合作</span>
-        <span class="pill"><strong>担保交易</strong> 资金托管</span>
-        <span class="pill"><strong>验收放款</strong> 按里程碑释放</span>
-        <span class="pill"><strong>争议仲裁</strong> 平台介入协调</span>
+        <span class="pill"><strong>个人 / 组织</strong> 均可开店</span>
+        <span class="pill"><strong>自有应用</strong> 自主定价上架</span>
+        <span class="pill"><strong>平台担保</strong> 资金托管</span>
+        <span class="pill"><strong>营销组运营</strong> 审核与结算</span>
       </div>
     </div>
   </section>
@@ -50,35 +50,36 @@
   <section class="section" style="padding-top:26px">
     <div class="container">
       <div class="guarantee">
-        <div class="g-item"><span class="gi">01</span><div><b>资金托管</b><span>下单后资金进入平台托管账户</span></div></div>
-        <div class="g-item"><span class="gi">02</span><div><b>合同约束</b><span>交付物与验收标准写入电子合同</span></div></div>
-        <div class="g-item"><span class="gi">03</span><div><b>验收放款</b><span>按里程碑验收后分批释放资金</span></div></div>
-        <div class="g-item"><span class="gi">04</span><div><b>争议仲裁</b><span>交付争议由营销组介入协调</span></div></div>
+        <div class="g-item"><span class="gi">01</span><div><b>开店入驻</b><span>个人、团队、企业均可申请，营销组审核</span></div></div>
+        <div class="g-item"><span class="gi">02</span><div><b>独立店铺</b><span>店铺主页、应用上架与定价自主</span></div></div>
+        <div class="g-item"><span class="gi">03</span><div><b>担保交易</b><span>资金托管，验收确认后结算给店主</span></div></div>
+        <div class="g-item"><span class="gi">04</span><div><b>结算与售后</b><span>平台介入争议处理，支持退款</span></div></div>
       </div>
 
       <div class="toolbar">
         <div class="chips" id="mallChips">
-          <button class="chip on" data-type="all">全部交易</button>
-          <button class="chip" data-type="supply">服务供给</button>
-          <button class="chip" data-type="need">需求合作</button>
+          <button class="chip on" data-type="all">全部店铺</button>
+          <button class="chip" data-type="individual">个人开发者</button>
+          <button class="chip" data-type="team">团队工作室</button>
+          <button class="chip" data-type="company">企业服务商</button>
         </div>
         <div class="search">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-          <input id="mallSearch" type="search" placeholder="搜索服务、能力标签或发布方">
+          <input id="mallSearch" type="search" placeholder="搜索店铺、AI 应用或行业">
         </div>
-        <button class="btn btn-primary btn-sm" id="publishMallBtn">发布交易</button>
+        <button class="btn btn-primary btn-sm" id="openStoreBtn">我要开店</button>
       </div>
 
-      <div class="result-line" id="mallCount">共 9 条交易</div>
+      <div class="result-line" id="mallCount">共 9 家店铺</div>
       <div class="mall-grid" id="mallGrid"></div>
 
       <div class="cta-band" style="margin-top:44px">
         <div>
-          <h3>发布你的能力或需求</h3>
-          <p>服务供给由营销组审核后上架；需求合作会同步给外部组，由外部组匹配官方体系之外的供应商资源。</p>
+          <h3>把你的 AI 应用开成一家店</h3>
+          <p>个人开发者、团队工作室与企业服务商都可以申请开店。营销组负责主体审核、应用上架与店铺运营，你只需要专注于产品与交付。</p>
         </div>
         <div class="btns">
-          <button class="btn btn-primary" id="publishMallBtn2" data-publish-mall>发布交易</button>
+          <button class="btn btn-primary" id="openStoreBtn2" data-open-store>我要开店</button>
           <a href="index.html#mechanism" class="btn btn-ghost">了解四组分工</a>
         </div>
       </div>
@@ -103,14 +104,14 @@
       <div class="footer-col">
         <h4>合作入口</h4>
         <a href="demands.html">承接官方订单</a>
-        <a href="mall.html">发布服务供给</a>
+        <a href="#" data-open-store>我要开店</a>
         <a href="#" data-open-demand>发布企业需求</a>
         <a href="index.html#mechanism">平台机制</a>
       </div>
       <div class="footer-col">
         <h4>平台保障</h4>
         <a href="mall.html">担保交易规则</a>
-        <a href="mall.html">供应商认证</a>
+        <a href="mall.html">商家认证</a>
         <a href="index.html#mechanism">四组协同</a>
         <a href="apps.html">交付与运维</a>
       </div>
