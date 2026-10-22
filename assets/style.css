@@ -337,6 +337,48 @@ input,select,textarea{font-family:inherit}
 .sa-right span{font-size:10px;color:var(--dim)}
 .sa-right .btn{margin-top:4px}
 
+/* ---------- 特色店铺 ---------- */
+.store-card{padding:0;overflow:hidden;display:block}
+.store-cover{position:relative;padding:13px 15px 12px;background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;overflow:hidden}
+.store-cover::before{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.12)}
+.store-cover::after{content:"";position:absolute;right:18px;bottom:-45px;width:90px;height:90px;border-radius:50%;border:1px solid rgba(255,255,255,.18)}
+.cover-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.store-badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);font-size:9.5px;font-weight:600;color:#fff;white-space:nowrap}
+.cover-verified{color:rgba(255,255,255,.78);font-size:9.5px}
+.cover-main{display:flex;gap:10px;align-items:center;position:relative;z-index:1;margin-top:10px}
+.cover-main .store-avatar{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35)}
+.cover-main h3{font-size:15px;color:#fff;margin:0;line-height:1.3}
+.cover-main h3 a{color:#fff}
+.cover-main h3 a:hover{color:#fff;opacity:.85}
+.cover-main p{font-size:10.5px;color:rgba(255,255,255,.82);margin-top:2px}
+.cover-foot{position:relative;z-index:1;margin-top:9px;font-size:9.5px;color:rgba(255,255,255,.75)}
+.store-body{display:flex;flex-direction:column;gap:9px;padding:13px 15px 15px}
+.feature-tags{display:flex;flex-wrap:wrap;gap:5px}
+.feature-tag{font-size:9.5px;color:#3f3f46;background:#fafafa;border:1px solid #e4e4e7;border-radius:5px;padding:2px 7px;white-space:nowrap}
+.featured-block{margin:22px 0 6px;padding:18px;border:1px solid var(--line);border-radius:18px;background:#fafbff}
+.featured-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:14px}
+.featured-head h2{font-size:19px;margin-top:2px}
+.featured-head p{font-size:11.5px;color:var(--muted);max-width:420px;text-align:right}
+.featured-rail{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.featured-store{position:relative;overflow:hidden;border-radius:15px;padding:15px 16px;background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.featured-store::after{content:"";position:absolute;right:-34px;top:-34px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.1)}
+.featured-store:hover{transform:translateY(-3px);box-shadow:0 12px 26px -14px rgba(15,23,42,.45)}
+.fs-top{display:flex;justify-content:space-between;align-items:center;font-size:9.5px;color:rgba(255,255,255,.8);position:relative;z-index:1}
+.fs-avatar{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);font-size:14px;font-weight:700;margin-top:12px;position:relative;z-index:1}
+.featured-store h3{font-size:16px;color:#fff;margin:8px 0 3px;position:relative;z-index:1}
+.featured-store p{font-size:11px;color:rgba(255,255,255,.82);line-height:1.5;position:relative;z-index:1}
+.fs-meta{font-size:10px;color:rgba(255,255,255,.7);margin-top:8px;position:relative;z-index:1}
+.fs-link{display:inline-block;margin-top:11px;font-size:10.5px;font-weight:650;color:#fff;position:relative;z-index:1}
+.sd-hero{display:flex;gap:13px;align-items:center;padding:16px;border-radius:14px;background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;margin-bottom:12px;position:relative;overflow:hidden}
+.sd-hero::after{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.1)}
+.sd-hero .store-avatar{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3)}
+.sd-info{position:relative;z-index:1}
+.sd-info h3{font-size:18px;color:#fff;margin:5px 0 2px}
+.sd-info p{font-size:11.5px;color:rgba(255,255,255,.85)}
+.sd-meta{font-size:10px;color:rgba(255,255,255,.72);margin-top:5px}
+.sd-hero .store-badge{background:rgba(255,255,255,.2)}
+@media (max-width:760px){.featured-head{flex-direction:column;align-items:flex-start}.featured-head p{text-align:left}}
+
 /* ---------- guarantee strip ---------- */
 .guarantee{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0 8px}
 .g-item{background:#fff;border:1px solid var(--line);border-radius:11px;padding:13px 15px;display:flex;gap:10px;align-items:flex-start}
