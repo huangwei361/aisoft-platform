@@ -2,7 +2,7 @@
    AI SOFT 平台 · 通用交互
    应用广场：筛选 / 详情 / 购物车 / 下单
    需求广场：筛选 / 承接意向
-   商城广场：筛选 / 担保下单 / 发布
+   商城广场：店铺筛选 / 进店选购 / 开店申请
    ============================================================ */
 (function () {
   'use strict';
@@ -27,7 +27,7 @@
   const CART_KEY = 'aisoft_cart_v1';
   const BID_KEY = 'aisoft_bids_v1';
   const MY_DEMAND_KEY = 'aisoft_my_demands_v1';
-  const MY_MALL_KEY = 'aisoft_my_mall_v1';
+  const MY_STORE_KEY = 'aisoft_my_stores_v1';
 
   /* ---------- 注入弹窗 / 抽屉 / 提示 ---------- */
   document.body.insertAdjacentHTML('beforeend', `
@@ -356,138 +356,210 @@
     });
   }
 
-  /* ---------- 商城广场 ---------- */
-  const mallState = { type: 'all', q: '' };
+  /* ---------- 商城广场：个人与组织开店 ---------- */
+  const mallState = { owner: 'all', q: '' };
+  const OWNER_LABELS = { individual: '个人开发者', team: '团队工作室', company: '企业服务商' };
 
-  function allMall() {
-    const local = store.get(MY_MALL_KEY, []);
-    return local.concat(window.MALL);
+  function allStores() {
+    return store.get(MY_STORE_KEY, []).concat(window.STORES || []);
   }
 
-  function mallCard(m) {
-    const isNeed = m.type === 'need';
-    const rating = m.rating ? `★ ${m.rating} · ${m.deals} 笔成交` : `${m.deals} 条响应`;
-    return `<article class="mall-card">
+  function storeMinPrice(s) {
+    const prices = (s.apps || []).map(a => a.price).filter(p => typeof p === 'number' && p > 0);
+    return prices.length ? money(Math.min(...prices)) : '面议';
+  }
+
+  function storeCard(s) {
+    const apps = s.apps || [];
+    const appTags = apps.slice(0, 3).map(a => `<span class="tag">${esc(a.name)}</span>`).join('');
+    return `<article class="mall-card store-card">
       <div class="mall-top">
-        <span class="mall-type ${isNeed ? 'need' : 'supply'}">${isNeed ? '需求合作' : '服务供给'}</span>
-        <span class="verified" style="${isNeed ? 'background:#fff7ed;color:#c2410c;border-color:#ffedd5' : ''}">${isNeed ? '需求方' : '认证服务商'}</span>
+        <span class="mall-type ${esc(s.ownerType)}">${esc(OWNER_LABELS[s.ownerType] || '店主')}</span>
+        ${s.verified ? '<span class="verified">已认证商家</span>' : '<span class="verified pending">审核中</span>'}
       </div>
-      <h3><a href="#" data-mall-detail="${m.id}" style="color:inherit">${esc(m.title)}</a></h3>
-      <p class="mdesc">${esc(m.desc)}</p>
-      <div class="app-tags">${m.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
-      <div class="provider">
-        <span class="avatar">${esc(m.provider.slice(0, 1))}</span>
-        <span>${esc(m.provider)}</span>
-        ${m.verified ? '<span class="verified">已认证</span>' : ''}
-        <span style="margin-left:auto">${esc(m.delivery)}</span>
+      <div class="store-head">
+        <span class="store-avatar">${esc((s.name || '店').slice(0, 1))}</span>
+        <div>
+          <h3><a href="#" data-store-detail="${s.id}" style="color:inherit">${esc(s.name)}</a></h3>
+          <div class="store-tagline">${esc(s.tagline || '')}</div>
+        </div>
+      </div>
+      <p class="mdesc">${esc(s.desc)}</p>
+      <div class="app-tags">${appTags || '<span class="tag">待上架</span>'}</div>
+      <div class="store-stats">
+        <span><b>${apps.length}</b> 款应用</span>
+        <span><b>${s.sales || 0}</b> 笔成交</span>
+        <span>${s.rating ? '★ ' + s.rating : '新店'}</span>
       </div>
       <div class="mall-foot">
-        <div class="mall-price"><b>${esc(m.price)}</b> <span>${esc(m.priceNote)}</span></div>
-        <div class="mall-rating">${rating}<br>担保交易</div>
+        <div class="mall-price"><b>${storeMinPrice(s)}</b> <span>起</span></div>
+        <div class="mall-rating">${esc(s.since || '2026')} 年入驻<br>平台担保</div>
       </div>
       <div class="card-actions">
-        <button class="btn btn-ghost btn-sm" data-mall-detail="${m.id}">查看详情</button>
-        <button class="btn btn-primary btn-sm" data-mall-buy="${m.id}" ${isNeed ? 'data-need="1"' : ''}>${isNeed ? '提交合作意向' : '立即下单'}</button>
+        <button class="btn btn-ghost btn-sm" data-store-detail="${s.id}">进店看看</button>
+        <button class="btn btn-primary btn-sm" data-store-detail="${s.id}">选购应用</button>
       </div>
     </article>`;
   }
 
-  function filteredMall() {
-    let list = allMall();
-    if (mallState.type !== 'all') list = list.filter(m => m.type === mallState.type);
+  function filteredStores() {
+    let list = allStores();
+    if (mallState.owner !== 'all') list = list.filter(s => s.ownerType === mallState.owner);
     const q = mallState.q.trim().toLowerCase();
-    if (q) list = list.filter(m => (m.title + m.provider + m.desc + m.tags.join('')).toLowerCase().includes(q));
+    if (q) {
+      list = list.filter(s => {
+        const apps = (s.apps || []).map(a => a.name + a.desc + (a.tags || []).join('')).join('');
+        return (s.name + s.tagline + s.desc + (s.tags || []).join('') + apps).toLowerCase().includes(q);
+      });
+    }
     return list;
   }
 
   function renderMall() {
     const grid = $('#mallGrid');
     if (!grid) return;
-    const list = filteredMall();
+    const list = filteredStores();
     grid.innerHTML = list.length
-      ? list.map(mallCard).join('')
-      : `<div class="empty" style="grid-column:1/-1"><b>暂无匹配交易</b><p>发布一条供给或需求，让对的人找到你。</p></div>`;
+      ? list.map(storeCard).join('')
+      : `<div class="empty" style="grid-column:1/-1"><b>暂无匹配店铺</b><p>换个关键词，或申请开一家属于你的 AI 应用店。</p></div>`;
     const count = $('#mallCount');
-    if (count) count.textContent = `共 ${list.length} 条交易`;
+    if (count) count.textContent = `共 ${list.length} 家店铺`;
   }
 
   function renderFeaturedMall() {
     const grid = $('#featuredMall');
     if (!grid) return;
-    grid.innerHTML = window.MALL.slice(0, 3).map(mallCard).join('');
+    grid.innerHTML = (window.STORES || []).slice(0, 3).map(storeCard).join('');
   }
 
-  function openMallDetail(id) {
-    const m = allMall().find(x => x.id === id);
-    if (!m) return;
-    const isNeed = m.type === 'need';
-    openModal({
-      title: esc(m.title),
-      subtitle: `${esc(m.provider)} · ${isNeed ? '需求合作' : '服务供给'} · 担保交易`,
-      body: `
-        <div class="detail-block"><h5>说明</h5><p>${esc(m.desc)}</p></div>
-        <div class="detail-kv">
-          <div class="kv"><span>价格</span><b>${esc(m.price)} ${esc(m.priceNote)}</b></div>
-          <div class="kv"><span>交付周期</span><b>${esc(m.delivery)}</b></div>
-          <div class="kv"><span>交易方式</span><b>平台担保 · 验收放款</b></div>
-          <div class="kv"><span>服务方</span><b>${esc(m.provider)}</b></div>
+  function openStoreDetail(id) {
+    const s = allStores().find(x => x.id === id);
+    if (!s) return;
+    const apps = s.apps || [];
+    const rows = apps.length ? apps.map(a => `
+      <div class="store-app">
+        <div class="sa-main">
+          <h4>${esc(a.name)}</h4>
+          <p>${esc(a.desc)}</p>
+          <div class="app-tags">${(a.tags || []).map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
         </div>
+        <div class="sa-right">
+          <b>${a.price ? money(a.price) : '面议'}</b>
+          <span>${esc(a.unit || '')}</span>
+          <button class="btn btn-primary btn-sm" data-store-buy="${s.id}|${a.id}">采购</button>
+        </div>
+      </div>`).join('') : `<div class="empty"><b>店铺正在筹备</b><p>店主还没有上架应用。</p></div>`;
+    openModal({
+      title: esc(s.name),
+      subtitle: `${OWNER_LABELS[s.ownerType] || '店主'} · ${s.verified ? '已认证商家' : '审核中'} · ${s.since || '2026'} 年入驻`,
+      body: `
+        <div class="store-detail-head">
+          <span class="store-avatar lg">${esc((s.name || '店').slice(0, 1))}</span>
+          <div>
+            <div class="store-tagline">${esc(s.tagline || '')}</div>
+            <p class="mdesc">${esc(s.desc)}</p>
+          </div>
+        </div>
+        <div class="detail-kv">
+          <div class="kv"><span>在售应用</span><b>${apps.length} 款</b></div>
+          <div class="kv"><span>累计成交</span><b>${s.sales || 0} 笔</b></div>
+          <div class="kv"><span>店铺评分</span><b>${s.rating ? '★ ' + s.rating : '暂无'}</b></div>
+          <div class="kv"><span>主营方向</span><b>${esc((s.categories || []).join(' / ') || 'AI 业务应用')}</b></div>
+        </div>
+        <div class="detail-block"><h5>在售应用</h5><div class="store-apps">${rows}</div></div>
         <div class="detail-block"><h5>平台保障</h5><ul class="detail-list">
-          <li>资金由平台托管，按里程碑验收后释放</li>
-          <li>交付物与验收标准写入电子合同</li>
-          <li>争议由平台介入协调，支持部分退款</li>
+          <li>应用由店主自主开发并上架，平台完成主体与资质审核</li>
+          <li>交易资金由平台托管，验收确认后结算给店主</li>
+          <li>交付或售后争议由营销组介入协调</li>
         </ul></div>`,
       foot: `<button class="btn btn-ghost" data-close>关闭</button>
-        <button class="btn btn-primary" data-mall-buy="${m.id}" ${isNeed ? 'data-need="1"' : ''}>${isNeed ? '提交合作意向' : '立即下单'}</button>`
+        <button class="btn btn-primary" data-store-contact="${s.id}">联系店主</button>`
     });
   }
 
-  function openMallBuy(id, isNeed) {
-    const m = allMall().find(x => x.id === id);
-    if (!m) return;
+  function openStoreBuy(storeId, appId) {
+    const s = allStores().find(x => x.id === storeId);
+    if (!s) return;
+    const a = (s.apps || []).find(x => x.id === appId);
+    if (!a) return;
     openModal({
-      title: isNeed ? '提交合作意向' : '确认下单',
-      subtitle: `${esc(m.title)} · ${esc(m.price)} ${esc(m.priceNote)}`,
+      title: '提交采购意向',
+      subtitle: `${s.name} · ${a.name} · ${a.price ? money(a.price) + ' ' + (a.unit || '') : '面议'}`,
       body: `
-        <form id="mallBuyForm">
+        <form id="storeBuyForm">
           <div class="form-grid">
-            <div class="form-row"><label>公司名称<em>*</em></label><input class="input" name="company" required placeholder="采购或合作主体"></div>
+            <div class="form-row"><label>采购方名称<em>*</em></label><input class="input" name="company" required placeholder="公司 / 机构 / 个人"></div>
             <div class="form-row"><label>联系人<em>*</em></label><input class="input" name="contact" required placeholder="姓名"></div>
             <div class="form-row"><label>联系电话<em>*</em></label><input class="input" name="phone" required placeholder="手机号"></div>
-            <div class="form-row"><label>期望交付时间</label><input class="input" name="date" type="date"></div>
+            <div class="form-row"><label>部署方式</label>
+              <select class="select-full" name="deploy"><option>SaaS 订阅</option><option>私有化部署</option><option>混合云</option></select>
+            </div>
           </div>
-          <div class="form-row"><label>补充说明</label><textarea class="textarea" name="note" placeholder="验收标准、交付环境或其他要求"></textarea></div>
-          ${isNeed ? '' : `<div class="sim-note">下单后资金进入平台托管，营销组会在 1 个工作日内完成合同与排期确认。</div>`}
+          <div class="form-row"><label>采购说明</label><textarea class="textarea" name="note" placeholder="使用场景、账号数量、上线时间或其他要求"></textarea></div>
+          <div class="form-hint">采购意向会同时通知店主与营销组，1 个工作日内确认报价与交付方式。</div>
           <div class="sim-note">演示环境：不会产生真实支付与合同。</div>
         </form>`,
       foot: `<button class="btn btn-ghost" data-close>取消</button>
-             <button class="btn btn-primary" data-submit-mall="${m.id}" data-kind="${isNeed ? 'need' : 'supply'}">${isNeed ? '提交意向' : '确认下单'}</button>`
+             <button class="btn btn-primary" data-submit-store-buy="${s.id}|${a.id}">提交意向</button>`
     });
   }
 
-  function openPublishMall() {
+  function openStoreContact(id) {
+    const s = allStores().find(x => x.id === id);
+    if (!s) return;
     openModal({
-      title: '发布交易',
-      subtitle: '发布服务供给或需求合作，营销组审核后上架',
+      title: '联系店主',
+      subtitle: `${s.name} · 营销组同步跟进`,
       body: `
-        <form id="publishMallForm">
-          <div class="form-row"><label>标题<em>*</em></label><input class="input" name="title" required placeholder="如：AI 应用 UI/UX 设计外包"></div>
+        <form id="storeContactForm">
           <div class="form-grid">
-            <div class="form-row"><label>类型<em>*</em></label>
-              <select class="select-full" name="type">
-                <option value="supply">服务供给（我提供服务）</option>
-                <option value="need">需求合作（我发需求）</option>
-              </select>
+            <div class="form-row"><label>你的名称<em>*</em></label><input class="input" name="company" required placeholder="公司 / 机构 / 个人"></div>
+            <div class="form-row"><label>联系人<em>*</em></label><input class="input" name="contact" required placeholder="姓名"></div>
+            <div class="form-row"><label>联系电话<em>*</em></label><input class="input" name="phone" required placeholder="手机号"></div>
+            <div class="form-row"><label>咨询类型</label>
+              <select class="select-full" name="kind"><option>采购应用</option><option>定制开发</option><option>渠道合作</option></select>
             </div>
-            <div class="form-row"><label>价格 / 预算<em>*</em></label><input class="input" name="price" required placeholder="如 ¥8,000 起 或 20–30 万"></div>
-            <div class="form-row"><label>发布方<em>*</em></label><input class="input" name="provider" required placeholder="公司或个人名称"></div>
-            <div class="form-row"><label>交付周期</label><input class="input" name="delivery" placeholder="如 2–4 周"></div>
           </div>
-          <div class="form-row"><label>说明<em>*</em></label><textarea class="textarea" name="desc" required placeholder="服务内容、交付物、验收标准或需求背景"></textarea></div>
-          <div class="form-row"><label>标签</label><input class="input" name="tags" placeholder="用逗号分隔，如：设计,Figma,原型"></div>
+          <div class="form-row"><label>说明<em>*</em></label><textarea class="textarea" name="note" required placeholder="你希望解决的问题或合作方式"></textarea></div>
+          <div class="sim-note">演示环境：信息仅保存在本机浏览器。</div>
         </form>`,
       foot: `<button class="btn btn-ghost" data-close>取消</button>
-             <button class="btn btn-primary" data-submit-publish>提交审核</button>`
+             <button class="btn btn-primary" data-submit-store-contact="${s.id}">发送</button>`
+    });
+  }
+
+  function openStoreApply() {
+    openModal({
+      title: '我要开店',
+      subtitle: '个人、团队与企业都可以开自己的 AI 应用店',
+      body: `
+        <form id="storeApplyForm">
+          <div class="form-row"><label>店铺名称<em>*</em></label><input class="input" name="name" required placeholder="如：星野 AI 工作室"></div>
+          <div class="form-grid">
+            <div class="form-row"><label>主体类型<em>*</em></label>
+              <select class="select-full" name="ownerType">
+                <option value="individual">个人开发者</option>
+                <option value="team">团队工作室</option>
+                <option value="company">企业服务商</option>
+              </select>
+            </div>
+            <div class="form-row"><label>主营方向<em>*</em></label>
+              <select class="select-full" name="category">
+                <option>企业效率</option><option>智能制造</option><option>零售电商</option>
+                <option>医疗健康</option><option>教育培训</option><option>多模态</option>
+              </select>
+            </div>
+            <div class="form-row"><label>联系人<em>*</em></label><input class="input" name="contact" required placeholder="姓名"></div>
+            <div class="form-row"><label>联系电话<em>*</em></label><input class="input" name="phone" required placeholder="手机号"></div>
+          </div>
+          <div class="form-row"><label>主打应用<em>*</em></label><input class="input" name="app" required placeholder="你准备上架的第一款 AI 应用"></div>
+          <div class="form-row"><label>参考价格</label><input class="input" name="price" placeholder="如 1980（元/年），留空则显示面议"></div>
+          <div class="form-row"><label>店铺与应用介绍<em>*</em></label><textarea class="textarea" name="desc" required placeholder="应用解决什么问题、面向哪些客户、已有案例或资质"></textarea></div>
+          <div class="form-hint">提交后由营销组审核主体与上架材料，1 个工作日内联系你开通店铺。</div>
+          <div class="sim-note">演示环境：店铺信息仅保存在本机浏览器。</div>
+        </form>`,
+      foot: `<button class="btn btn-ghost" data-close>取消</button>
+             <button class="btn btn-primary" data-submit-store>提交开店申请</button>`
     });
   }
 
@@ -590,14 +662,21 @@
     const bid = t.closest('[data-bid]');
     if (bid) { openBidForm(bid.dataset.bid); return; }
 
-    const mDetail = t.closest('[data-mall-detail]');
-    if (mDetail) { e.preventDefault(); openMallDetail(mDetail.dataset.mallDetail); return; }
+    const storeDetail = t.closest('[data-store-detail]');
+    if (storeDetail) { e.preventDefault(); openStoreDetail(storeDetail.dataset.storeDetail); return; }
 
-    const mBuy = t.closest('[data-mall-buy]');
-    if (mBuy) { openMallBuy(mBuy.dataset.mallBuy, mBuy.dataset.need === '1'); return; }
+    const storeBuy = t.closest('[data-store-buy]');
+    if (storeBuy) {
+      const [sid, aid] = storeBuy.dataset.storeBuy.split('|');
+      openStoreBuy(sid, aid);
+      return;
+    }
+
+    const storeContact = t.closest('[data-store-contact]');
+    if (storeContact) { openStoreContact(storeContact.dataset.storeContact); return; }
 
     if (t.closest('#publishDemandBtn, [data-open-demand]')) { e.preventDefault(); openPublishDemand(); return; }
-    if (t.closest('#publishMallBtn, [data-publish-mall]')) { openPublishMall(); return; }
+    if (t.closest('#openStoreBtn, [data-open-store]')) { e.preventDefault(); openStoreApply(); return; }
 
     /* 表单提交型按钮 */
     if (t.closest('[data-submit-bid]')) {
@@ -631,30 +710,42 @@
       return;
     }
 
-    if (t.closest('[data-submit-mall]')) {
-      const btn = t.closest('[data-submit-mall]');
-      const form = $('#mallBuyForm');
+    if (t.closest('[data-submit-store-buy]')) {
+      const form = $('#storeBuyForm');
       if (!form || !form.reportValidity()) return;
       closeModal();
-      toast(btn.dataset.kind === 'need' ? '合作意向已提交，外部组将尽快匹配' : '订单已创建（担保交易），等待卖方确认');
+      toast('采购意向已提交，店主将在 1 个工作日内联系');
       return;
     }
 
-    if (t.closest('[data-submit-publish]')) {
-      const form = $('#publishMallForm');
+    if (t.closest('[data-submit-store-contact]')) {
+      const form = $('#storeContactForm');
+      if (!form || !form.reportValidity()) return;
+      closeModal();
+      toast('已发送给店主，营销组会同步跟进');
+      return;
+    }
+
+    if (t.closest('[data-submit-store]')) {
+      const form = $('#storeApplyForm');
       if (!form || !form.reportValidity()) return;
       const data = Object.fromEntries(new FormData(form).entries());
-      const list = store.get(MY_MALL_KEY, []);
+      const priceNum = Number(String(data.price || '').replace(/[^\d.]/g, ''));
+      const list = store.get(MY_STORE_KEY, []);
       list.unshift({
-        id: 'mm-' + Date.now(), title: data.title, type: data.type, provider: data.provider,
-        price: data.price, priceNote: data.type === 'need' ? '预算' : '起',
-        delivery: data.delivery || '面议', desc: data.desc,
-        tags: (data.tags || '自定义').split(/[,，]/).map(s => s.trim()).filter(Boolean).slice(0, 3),
-        rating: null, deals: 0, verified: false, local: true
+        id: 'ms-' + Date.now(), name: data.name, ownerType: data.ownerType,
+        tagline: `${data.category} · 新店开业`,
+        desc: data.desc, categories: [data.category], tags: [data.category, '新店'],
+        rating: null, sales: 0, since: '2026', verified: false, local: true,
+        apps: [{
+          id: 'ma-' + Date.now(), name: data.app && data.app.trim() || '待上架应用',
+          price: priceNum > 0 ? priceNum : null, unit: priceNum > 0 ? '/年' : '',
+          delivery: '待确认', desc: data.desc, tags: ['新上架']
+        }]
       });
-      store.set(MY_MALL_KEY, list);
+      store.set(MY_STORE_KEY, list);
       closeModal();
-      toast('已提交审核，营销组将在 1 个工作日内上架');
+      toast('开店申请已提交，营销组将在 1 个工作日内联系');
       if ($('#mallGrid')) renderMall();
       return;
     }
@@ -719,7 +810,7 @@
 
     // 商城广场
     if ($('#mallGrid')) {
-      bindChips('#mallChips', v => { mallState.type = v; renderMall(); });
+      bindChips('#mallChips', v => { mallState.owner = v; renderMall(); });
       bindSearch('#mallSearch', v => { mallState.q = v; renderMall(); });
       renderMall();
     }
