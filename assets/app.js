@@ -369,11 +369,51 @@
     if (!d) return;
     const bids = store.get(BID_KEY, {});
     const signed = !!bids[d.id];
+    const isOfficial = d.source === 'official';
     const scope = d.scope || ['需求评估与方案设计', '开发与联调', '上线验收与培训', '运营期效果复盘'];
     const req = d.requirement || ['具备对应行业交付经验', '可提供项目案例', '支持合同约定的验收标准'];
+
+    // 用户发布专属监管区块
+    let supervisionBlock = '';
+    let noteText = '';
+    if (isOfficial) {
+      noteText = '官方订单由需求组评估、开发组拆解、营销组发布与对接；投标信息同步至供应商后台。';
+    } else {
+      const auditBadge = d.auditStatus === '审核中'
+        ? '<span class="sv-mini warn">审核中 · 暂不可投标</span>'
+        : '<span class="sv-mini ok">审核通过</span>';
+      const depositBadge = d.deposit ? '<span class="sv-mini ok">保证金已缴</span>' : '<span class="sv-mini warn">保证金未缴</span>';
+      const guaranteeBadge = d.guarantee ? '<span class="sv-mini ok">平台担保</span>' : '<span class="sv-mini off">无平台担保</span>';
+      const stars = Math.round((d.creditScore || 70) / 20);
+      supervisionBlock = `
+        <div class="detail-block">
+          <h5>🛡️ 监管与担保</h5>
+          <div class="detail-kv">
+            <div class="kv"><span>发布方信用</span><b class="ur-credit lv-${(d.creditLevel || 'B').charAt(0)}">${esc(d.creditLevel || 'B')} · ${d.creditScore || 70} 分</b></div>
+            <div class="kv"><span>信用星级</span><b style="color:#f59e0b">${'★'.repeat(stars)}${'☆'.repeat(5-stars)}</b></div>
+            <div class="kv"><span>审核状态</span><b>${auditBadge}</b></div>
+            <div class="kv"><span>担保状态</span><b>${depositBadge} ${guaranteeBadge}</b></div>
+          </div>
+          <div class="form-hint" style="margin-top:10px">
+            <b>监管条款摘要：</b>发布方违约不兑现 → 保证金赔付承接方；承接方交付不了 → 营销组介入仲裁，违约方扣除保证金 + 降低信用等级。合同按里程碑分阶段验收，每阶段需营销组签批。
+          </div>
+        </div>`;
+      noteText = '用户自主发布需求，经平台审核后上架。承接方请注意：优先选择带「平台担保」标识的需求，权益更有保障。';
+    }
+
+    // 投标按钮：审核中的用户需求禁用
+    const canBid = !signed && d.status !== '已定标' && !(d.source === 'user' && d.auditStatus === '审核中');
+    const footBtn = signed
+      ? '<button class="btn btn-primary" disabled>已提交承接意向</button>'
+      : (d.status === '已定标'
+        ? '<button class="btn btn-ghost" disabled>已定标</button>'
+        : (d.source === 'user' && d.auditStatus === '审核中'
+          ? '<button class="btn btn-ghost" disabled>审核中，暂不可投标</button>'
+          : `<button class="btn btn-primary" data-bid="${d.id}">${canBid ? '提交承接意向' : '不可投标'}</button>`));
+
     openModal({
       title: esc(d.title),
-      subtitle: `${esc(d.company)} · ${esc(d.industry)} · ${esc(d.status)}`,
+      subtitle: `${isOfficial ? '🏢 官方发布' : '🛡️ 用户发布'} · ${esc(d.company)} · ${esc(d.industry)} · ${esc(d.status)}`,
       body: `
         <div class="detail-kv">
           <div class="kv"><span>项目预算</span><b>${esc(d.budget)}</b></div>
@@ -381,16 +421,12 @@
           <div class="kv"><span>合作方式</span><b>${esc(d.type)}</b></div>
           <div class="kv"><span>当前投标</span><b>${d.bids} 家供应商</b></div>
         </div>
+        ${supervisionBlock}
         <div class="detail-block"><h5>需求背景</h5><p>${esc(d.desc)}</p></div>
         <div class="detail-block"><h5>交付范围</h5><ul class="detail-list">${scope.map(s => `<li>${esc(s)}</li>`).join('')}</ul></div>
         <div class="detail-block"><h5>供应商要求</h5><ul class="detail-list">${req.map(s => `<li>${esc(s)}</li>`).join('')}</ul></div>
-        <div class="sim-note">官方订单由需求组评估、开发组拆解、营销组发布与对接；投标信息同步至供应商后台。</div>`,
-      foot: `<button class="btn btn-ghost" data-close>关闭</button>
-        ${signed
-          ? '<button class="btn btn-primary" disabled>已提交承接意向</button>'
-          : (d.status === '已定标'
-            ? '<button class="btn btn-ghost" disabled>已定标</button>'
-            : `<button class="btn btn-primary" data-bid="${d.id}">提交承接意向</button>`)}`
+        <div class="sim-note">${noteText}</div>`,
+      foot: `<button class="btn btn-ghost" data-close>关闭</button>${footBtn}`
     });
   }
 
