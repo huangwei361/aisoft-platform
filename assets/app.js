@@ -1,137 +1,1042 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>商城广场 · 个人与组织开 AI 应用店｜AI SOFT</title>
-<meta name="description" content="AI SOFT 商城广场：个人、团队与企业在这里开自己的 AI 应用店，上架自研 AI 业务软件，平台提供店铺、流量、担保交易与结算。">
-<link rel="stylesheet" href="assets/style.css">
-</head>
-<body data-page="mall">
+/* ============================================================
+   AI SOFT 平台 · 通用交互
+   应用广场：筛选 / 详情 / 购物车 / 下单
+   需求广场：筛选 / 承接意向
+   商城广场：店铺筛选 / 进店选购 / 开店申请
+   ============================================================ */
+(function () {
+  'use strict';
 
-<header class="site-header">
-  <div class="container nav">
-    <a class="logo" href="index.html"><span class="logo-mark">AI</span><span>AI SOFT<small>行业 AI 应用平台</small></span></a>
-    <nav class="nav-links" id="navLinks">
-      <a href="index.html">首页</a>
-      <a href="apps.html">应用广场</a>
-      <a href="demands.html">需求广场</a>
-      <a href="mall.html" class="active">商城广场</a>
-      <a href="index.html#mechanism">平台机制</a>
-    </nav>
-    <div class="nav-actions">
-      <button class="icon-btn js-cart" aria-label="购物车">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/><path d="M2 3h3l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
-        <span class="cart-count" data-cart-count>0</span>
-      </button>
-      <a href="#" class="btn btn-ghost btn-sm" data-open-store>我要开店</a>
-      <button class="menu-toggle" id="menuToggle" aria-label="打开菜单">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-      </button>
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+  const money = n => '¥' + Number(n).toLocaleString('zh-CN');
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  const store = {
+    get(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (e) { return fallback; }
+    },
+    set(key, value) {
+      try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* ignore */ }
+    }
+  };
+
+  const CART_KEY = 'aisoft_cart_v1';
+  const BID_KEY = 'aisoft_bids_v1';
+  const MY_DEMAND_KEY = 'aisoft_my_demands_v1';
+  const MY_STORE_KEY = 'aisoft_my_stores_v1';
+
+  /* ---------- 注入弹窗 / 抽屉 / 提示 ---------- */
+  document.body.insertAdjacentHTML('beforeend', `
+    <div class="overlay" id="modalOverlay">
+      <div class="modal" id="modal" role="dialog" aria-modal="true"></div>
     </div>
-  </div>
-</header>
-
-<main>
-  <section class="page-hero">
-    <div class="container">
-      <div class="crumb"><a href="index.html">首页</a> / 商城广场</div>
-      <h1>商城广场</h1>
-      <p>给个人和组织开一家 AI 应用店的地方。每家店都可以自定义主题色、封面风格、圆角与招牌标签，像装修实体店一样装修自己的店面。</p>
-      <div class="hero-badges">
-        <span class="pill"><strong>个人 / 组织</strong> 均可开店</span>
-        <span class="pill"><strong>店铺装修</strong> 颜色 · 风格 · 圆角实时预览</span>
-        <span class="pill"><strong>平台担保</strong> 资金托管</span>
-        <span class="pill"><strong>营销组运营</strong> 审核与结算</span>
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <aside class="drawer" id="cartDrawer" aria-label="购物车">
+      <div class="drawer-head">
+        <h3>购物车</h3>
+        <button class="modal-close" data-drawer-close aria-label="关闭">×</button>
       </div>
-    </div>
-  </section>
+      <div class="drawer-body" id="cartBody"></div>
+      <div class="drawer-foot" id="cartFoot"></div>
+    </aside>
+    <div class="toast-wrap" id="toastWrap"></div>
+  `);
 
-  <section class="section" style="padding-top:26px">
-    <div class="container">
-      <div class="guarantee">
-        <div class="g-item"><span class="gi">01</span><div><b>开店入驻</b><span>个人、团队、企业均可申请，营销组审核</span></div></div>
-        <div class="g-item"><span class="gi">02</span><div><b>独立店铺</b><span>店铺主页、应用上架与定价自主</span></div></div>
-        <div class="g-item"><span class="gi">03</span><div><b>担保交易</b><span>资金托管，验收确认后结算给店主</span></div></div>
-        <div class="g-item"><span class="gi">04</span><div><b>结算与售后</b><span>平台介入争议处理，支持退款</span></div></div>
+  const modalOverlay = $('#modalOverlay');
+  const modal = $('#modal');
+  const drawer = $('#cartDrawer');
+  const drawerOverlay = $('#drawerOverlay');
+
+  function lockScroll() {
+    const open = modalOverlay.classList.contains('open') || drawer.classList.contains('open');
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  function openModal({ title, subtitle = '', body = '', foot = '', wide = false }) {
+    modal.classList.toggle('modal-wide', !!wide);
+    modal.innerHTML = `
+      <div class="modal-head">
+        <div><h3>${title}</h3>${subtitle ? `<p>${subtitle}</p>` : ''}</div>
+        <button class="modal-close" data-close aria-label="关闭">×</button>
       </div>
+      <div class="modal-body">${body}</div>
+      ${foot ? `<div class="modal-foot">${foot}</div>` : ''}`;
+    modalOverlay.classList.add('open');
+    lockScroll();
+  }
+  function closeModal() {
+    modalOverlay.classList.remove('open');
+    lockScroll();
+  }
+  function openDrawer() {
+    renderCart();
+    drawer.classList.add('open');
+    drawerOverlay.classList.add('open');
+    lockScroll();
+  }
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    drawerOverlay.classList.remove('open');
+    lockScroll();
+  }
+  function toast(msg) {
+    const wrap = $('#toastWrap');
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.innerHTML = `<span class="tick">✓</span><span>${esc(msg)}</span>`;
+    wrap.appendChild(el);
+    setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; }, 2600);
+    setTimeout(() => el.remove(), 3000);
+  }
 
-      <div class="featured-block" id="featuredStoresSection">
-        <div class="featured-head">
-          <div><div class="kicker">FEATURED STORES</div><h2>本周特色店</h2></div>
-          <p>每家店都有自己的主题色、招牌应用和经营标签，点进去逛一逛。</p>
+  /* ---------- 购物车 ---------- */
+  function getCart() { return store.get(CART_KEY, {}); }
+  function cartQty() { return Object.values(getCart()).reduce((a, b) => a + b, 0); }
+  function saveCart(cart) {
+    store.set(CART_KEY, cart);
+    updateCartBadge();
+  }
+  function updateCartBadge() {
+    $$('.cart-count').forEach(el => {
+      const n = cartQty();
+      el.textContent = n;
+      el.classList.toggle('show', n > 0);
+    });
+  }
+  function addToCart(id) {
+    const cart = getCart();
+    cart[id] = (cart[id] || 0) + 1;
+    saveCart(cart);
+    toast('已加入购物车');
+  }
+  function renderCart() {
+    const cart = getCart();
+    const body = $('#cartBody');
+    const foot = $('#cartFoot');
+    const items = Object.keys(cart).map(id => {
+      const app = window.APPS.find(a => a.id === id);
+      return app ? { app, qty: cart[id] } : null;
+    }).filter(Boolean);
+
+    if (!items.length) {
+      body.innerHTML = `<div class="cart-empty"><b>购物车还是空的</b>去应用广场挑选适合的官方应用吧</div>`;
+      foot.innerHTML = `<a class="btn btn-ghost btn-block" href="apps.html">去应用广场</a>`;
+      return;
+    }
+    body.innerHTML = items.map(({ app, qty }) => `
+      <div class="cart-item">
+        <div class="ct" style="background:linear-gradient(135deg,${app.colors[0]},${app.colors[1]})">${app.mark}</div>
+        <div style="flex:1;min-width:0">
+          <h4>${esc(app.name)}</h4>
+          <div class="ci-price">${app.price ? money(app.price) + app.unit : '面议'}</div>
+          <div class="cart-line">
+            <div class="qty">
+              <button data-cart-op="minus" data-id="${app.id}" aria-label="减少">−</button>
+              <span>${qty}</span>
+              <button data-cart-op="plus" data-id="${app.id}" aria-label="增加">+</button>
+            </div>
+            <button class="cart-remove" data-cart-op="remove" data-id="${app.id}">移除</button>
+          </div>
         </div>
-        <div class="featured-rail" id="featuredStores"></div>
-      </div>
+      </div>`).join('');
+    const total = items.reduce((sum, { app, qty }) => sum + (app.price || 0) * qty, 0);
+    const totalText = total > 0 ? money(total) : '面议';
+    foot.innerHTML = `
+      <div class="cart-total"><span>合计（含首年服务）</span><b>${totalText}</b></div>
+      <button class="btn btn-primary btn-block" data-checkout>提交采购需求</button>
+      <div class="form-hint">演示环境不产生真实支付。提交后由营销组对接合同与交付排期。</div>`;
+  }
 
-      <div class="toolbar">
-        <div class="chips" id="mallChips">
-          <button class="chip on" data-type="all">全部店铺</button>
-          <button class="chip" data-type="individual">个人开发者</button>
-          <button class="chip" data-type="team">团队工作室</button>
-          <button class="chip" data-type="company">企业服务商</button>
+  /* ---------- 应用广场 ---------- */
+  const appState = { cat: 'all', q: '', sort: 'rec' };
+
+  function appCard(a) {
+    return `<article class="app-card">
+      <div class="app-cover" style="--c1:${a.colors[0]};--c2:${a.colors[1]}">
+        <span class="cat">${esc(a.catLabel)}</span>
+        <span class="badge">${esc(a.badge)}</span>
+        <span class="mark">${esc(a.mark)}</span>
+      </div>
+      <div class="app-body">
+        <h3>${esc(a.name)}</h3>
+        <p class="app-desc">${esc(a.desc)}</p>
+        <div class="app-tags">${a.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
+        <div class="app-meta">
+          <div class="price"><b>${a.price ? money(a.price) : '面议'}</b>${a.price ? `<span>${esc(a.unit)}</span>` : ''}</div>
+          <span class="rating">★ <b>${a.rating}</b> · ${a.sales} 家采购</span>
         </div>
-        <div class="search">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-          <input id="mallSearch" type="search" placeholder="搜索店铺、AI 应用或行业">
-        </div>
-        <button class="btn btn-primary btn-sm" id="openStoreBtn">我要开店</button>
-      </div>
-
-      <div class="result-line" id="mallCount">共 9 家店铺</div>
-      <div class="mall-grid" id="mallGrid"></div>
-
-      <div class="cta-band" style="margin-top:44px">
-        <div>
-          <h3>把你的 AI 应用开成一家店</h3>
-          <p>个人开发者、团队工作室与企业服务商都可以申请开店。营销组负责主体审核、应用上架与店铺运营，你只需要专注于产品与交付。</p>
-        </div>
-        <div class="btns">
-          <button class="btn btn-primary" id="openStoreBtn2" data-open-store>我要开店</button>
-          <a href="index.html#mechanism" class="btn btn-ghost">了解四组分工</a>
+        <div class="app-foot">
+          <button class="btn btn-ghost btn-sm" data-app-detail="${a.id}">查看详情</button>
+          <button class="btn btn-primary btn-sm" data-add-cart="${a.id}">加入购物车</button>
         </div>
       </div>
-    </div>
-  </section>
-</main>
+    </article>`;
+  }
 
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a class="logo" href="index.html"><span class="logo-mark">AI</span><span>AI SOFT<small>行业 AI 应用平台</small></span></a>
-        <p>面向行业的 AI 应用开发与交易平台。把需求、开发与交付放进同一条链路，让 AI 真正落到业务现场。</p>
-      </div>
-      <div class="footer-col">
-        <h4>应用广场</h4>
-        <a href="apps.html">企业效率</a>
-        <a href="apps.html">智能制造</a>
-        <a href="apps.html">零售电商</a>
-        <a href="apps.html">医疗健康</a>
-      </div>
-      <div class="footer-col">
-        <h4>合作入口</h4>
-        <a href="demands.html">承接官方订单</a>
-        <a href="#" data-open-store>我要开店</a>
-        <a href="#" data-open-demand>发布企业需求</a>
-        <a href="index.html#mechanism">平台机制</a>
-      </div>
-      <div class="footer-col">
-        <h4>平台保障</h4>
-        <a href="mall.html">担保交易规则</a>
-        <a href="mall.html">商家认证</a>
-        <a href="index.html#mechanism">四组协同</a>
-        <a href="apps.html">交付与运维</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 AI SOFT · 行业 AI 应用平台</span>
-      <span>演示站点：页面数据、价格与交易流程均为模拟，不产生真实支付</span>
-    </div>
-  </div>
-</footer>
+  function filteredApps() {
+    let list = window.APPS.slice();
+    if (appState.cat !== 'all') list = list.filter(a => a.cat === appState.cat);
+    const q = appState.q.trim().toLowerCase();
+    if (q) {
+      list = list.filter(a => (a.name + a.desc + a.catLabel + a.tags.join('')).toLowerCase().includes(q));
+    }
+    if (appState.sort === 'price') list.sort((a, b) => (a.price || 1e12) - (b.price || 1e12));
+    if (appState.sort === 'sales') list.sort((a, b) => b.sales - a.sales);
+    return list;
+  }
 
-<script src="assets/data.js"></script>
-<script src="assets/app.js"></script>
-</body>
-</html>
+  function renderApps() {
+    const grid = $('#appGrid');
+    if (!grid) return;
+    const list = filteredApps();
+    grid.innerHTML = list.length
+      ? list.map(appCard).join('')
+      : `<div class="empty" style="grid-column:1/-1"><b>没有匹配的应用</b><p>换个关键词或分类试试，也可以直接发布需求让我们为你定制。</p></div>`;
+    const count = $('#appCount');
+    if (count) count.textContent = `共 ${list.length} 个官方应用`;
+  }
+
+  function renderFeaturedApps() {
+    const grid = $('#featuredApps');
+    if (!grid) return;
+    grid.innerHTML = window.APPS.slice(0, 3).map(appCard).join('');
+  }
+
+  function openAppDetail(id) {
+    const a = window.APPS.find(x => x.id === id);
+    if (!a) return;
+    openModal({
+      title: esc(a.name),
+      subtitle: `${a.catLabel} · ${a.badge} · ${a.sales} 家企业采购`,
+      body: `
+        <div class="modal-cover" style="background:linear-gradient(135deg,${a.colors[0]},${a.colors[1]})">
+          <h4>${esc(a.name)}</h4>
+          <p>${esc(a.desc)}</p>
+        </div>
+        <div class="detail-block">
+          <h5>核心能力</h5>
+          <ul class="detail-list">${a.features.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
+        </div>
+        <div class="detail-kv">
+          <div class="kv"><span>交付方式</span><b>私有化 / 混合云</b></div>
+          <div class="kv"><span>实施周期</span><b>2–6 周（视场景）</b></div>
+          <div class="kv"><span>服务内容</span><b>部署 + 培训 + 首年运维</b></div>
+          <div class="kv"><span>评价</span><b>★ ${a.rating} / 5.0</b></div>
+        </div>
+        <div class="price-line"><b>${a.price ? money(a.price) : '面议'}</b><span>${a.price ? esc(a.priceNote || '') : '按规模与部署方式报价'}</span></div>
+        <div class="sim-note">演示环境：价格为示意，真实采购以合同与实施范围为准。</div>`,
+      foot: `<button class="btn btn-ghost" data-close>关闭</button>
+             <button class="btn btn-primary" data-add-cart="${a.id}">加入购物车</button>`
+    });
+  }
+
+  /* ---------- 需求广场 ---------- */
+  const demandState = { cat: 'all', q: '' };
+
+  function myDemands() { return store.get(MY_DEMAND_KEY, []); }
+
+  function demandCard(d) {
+    const bids = store.get(BID_KEY, {});
+    const signed = !!bids[d.id];
+    const statusCls = d.status === '已定标' ? 'done' : (d.status === '待评估' ? 'hot' : '');
+    return `<article class="demand-card">
+      <div>
+        <div class="d-head">
+          <h3>${esc(d.title)}</h3>
+          <span class="status ${statusCls}">${esc(d.status)}</span>
+          ${d.hot ? '<span class="status hot">急单</span>' : ''}
+        </div>
+        <div class="d-tags">${d.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
+        <p class="d-desc">${esc(d.desc)}</p>
+        <div class="meta-row">
+          <span>发布方：<b>${esc(d.company)}</b></span>
+          <span>行业：<b>${esc(d.industry)}</b></span>
+          <span>合作方式：<b>${esc(d.type)}</b></span>
+          <span>周期：<b>${esc(d.cycle)}</b></span>
+          <span>已投标：<b>${d.bids} 家</b></span>
+          <span>发布于 ${esc(d.published)}</span>
+        </div>
+      </div>
+      <div class="d-side">
+        <div class="budget"><b>${esc(d.budget)}</b><span>项目预算</span></div>
+        <button class="btn btn-primary btn-sm" data-demand-detail="${d.id}" ${signed ? 'disabled' : ''}>
+          ${signed ? '已提交意向' : (d.status === '已定标' ? '查看结果' : '承接 / 投标')}
+        </button>
+        <div class="d-note">${d.status === '已定标' ? '已完成定标，可查看归档' : '由营销组统一对接'}</div>
+      </div>
+    </article>`;
+  }
+
+  function allDemands() {
+    const local = myDemands().map(d => ({
+      id: d.id, title: d.title, company: d.company || '我的企业', industry: d.industry,
+      type: d.type || '项目制', budget: d.budget || '面议', cycle: d.cycle || '待评估',
+      desc: d.desc, tags: ['新发布', '待评估'], bids: 0, status: '待评估', hot: false, published: '今天'
+    }));
+    return local.concat(window.DEMANDS);
+  }
+
+  function filteredDemands() {
+    let list = allDemands();
+    if (demandState.cat !== 'all') list = list.filter(d => d.industry === demandState.cat);
+    const q = demandState.q.trim().toLowerCase();
+    if (q) list = list.filter(d => (d.title + d.company + d.desc + d.tags.join('') + d.industry).toLowerCase().includes(q));
+    return list;
+  }
+
+  function renderDemands() {
+    const listEl = $('#demandList');
+    if (!listEl) return;
+    const list = filteredDemands();
+    listEl.innerHTML = list.length
+      ? list.map(demandCard).join('')
+      : `<div class="empty"><b>暂无匹配需求</b><p>提交一个需求，需求组会在 1 个工作日内评估。</p></div>`;
+    const count = $('#demandCount');
+    if (count) count.textContent = `共 ${list.length} 个需求`;
+  }
+
+  function renderFeaturedDemands() {
+    const listEl = $('#featuredDemands');
+    if (!listEl) return;
+    listEl.innerHTML = window.DEMANDS.slice(0, 3).map(demandCard).join('');
+  }
+
+  function openDemandDetail(id) {
+    const d = allDemands().find(x => x.id === id);
+    if (!d) return;
+    const bids = store.get(BID_KEY, {});
+    const signed = !!bids[d.id];
+    const scope = d.scope || ['需求评估与方案设计', '开发与联调', '上线验收与培训', '运营期效果复盘'];
+    const req = d.requirement || ['具备对应行业交付经验', '可提供项目案例', '支持合同约定的验收标准'];
+    openModal({
+      title: esc(d.title),
+      subtitle: `${esc(d.company)} · ${esc(d.industry)} · ${esc(d.status)}`,
+      body: `
+        <div class="detail-kv">
+          <div class="kv"><span>项目预算</span><b>${esc(d.budget)}</b></div>
+          <div class="kv"><span>交付周期</span><b>${esc(d.cycle)}</b></div>
+          <div class="kv"><span>合作方式</span><b>${esc(d.type)}</b></div>
+          <div class="kv"><span>当前投标</span><b>${d.bids} 家供应商</b></div>
+        </div>
+        <div class="detail-block"><h5>需求背景</h5><p>${esc(d.desc)}</p></div>
+        <div class="detail-block"><h5>交付范围</h5><ul class="detail-list">${scope.map(s => `<li>${esc(s)}</li>`).join('')}</ul></div>
+        <div class="detail-block"><h5>供应商要求</h5><ul class="detail-list">${req.map(s => `<li>${esc(s)}</li>`).join('')}</ul></div>
+        <div class="sim-note">官方订单由需求组评估、开发组拆解、营销组发布与对接；投标信息同步至供应商后台。</div>`,
+      foot: `<button class="btn btn-ghost" data-close>关闭</button>
+        ${signed
+          ? '<button class="btn btn-primary" disabled>已提交承接意向</button>'
+          : (d.status === '已定标'
+            ? '<button class="btn btn-ghost" disabled>已定标</button>'
+            : `<button class="btn btn-primary" data-bid="${d.id}">提交承接意向</button>`)}`
+    });
+  }
+
+  function openBidForm(id) {
+    const d = allDemands().find(x => x.id === id);
+    if (!d) return;
+    openModal({
+      title: '提交承接意向',
+      subtitle: `${esc(d.title)} · 预算 ${esc(d.budget)} · 周期 ${esc(d.cycle)}`,
+      body: `
+        <form id="bidForm" novalidate>
+          <div class="form-grid">
+            <div class="form-row"><label>公司名称<em>*</em></label><input class="input" name="company" required placeholder="供应商主体名称"></div>
+            <div class="form-row"><label>联系人<em>*</em></label><input class="input" name="contact" required placeholder="姓名"></div>
+            <div class="form-row"><label>联系电话<em>*</em></label><input class="input" name="phone" required placeholder="手机号或座机"></div>
+            <div class="form-row"><label>报价（万元）</label><input class="input" name="quote" type="number" min="0" step="0.5" placeholder="如 42"></div>
+          </div>
+          <div class="form-row"><label>承接方案简述<em>*</em></label><textarea class="textarea" name="plan" required placeholder="交付思路、相关案例、团队配置与排期"></textarea></div>
+          <div class="form-hint">提交后由营销组在 1 个工作日内联系，需求组与开发组共同参与评标。</div>
+          <div class="sim-note">演示环境：信息仅保存在本机浏览器，不会真实发送。</div>
+        </form>`,
+      foot: `<button class="btn btn-ghost" data-close>取消</button>
+             <button class="btn btn-primary" data-submit-bid="${d.id}">提交意向</button>`
+    });
+  }
+
+  /* ---------- 商城广场：个人与组织开店 ---------- */
+  const mallState = { owner: 'all', q: '' };
+  const OWNER_LABELS = { individual: '个人开发者', team: '团队工作室', company: '企业服务商' };
+  const THEME_OPTIONS = {
+    amber: ['#b45309', '#f59e0b'],
+    indigo: ['#4338ca', '#818cf8'],
+    cyan: ['#0e7490', '#22d3ee'],
+    rose: ['#be123c', '#fb7185'],
+    emerald: ['#0f766e', '#34d399']
+  };
+  const STORE_STYLE = {
+    s1: { theme: 'amber', badge: '个人精选', features: ['跨境卖家口碑', '48 小时交付', '订阅制付费'], featured: true },
+    s2: { theme: 'indigo', badge: '企业旗舰店', features: ['国产 GPU 适配', '私有化交付', '等保合规'], featured: true },
+    s3: { theme: 'cyan', badge: '团队工作室', features: ['源码交付', '一个月陪跑', '企微生态'] },
+    s4: { theme: 'emerald', badge: '源头服务商', features: ['多模态标注', '质检抽检', '私有化平台'] },
+    s5: { theme: 'rose', badge: '算法团队', features: ['运筹背景', '小样本训练', '现场试跑'] },
+    s6: { theme: 'rose', badge: '合规专营店', features: ['行业清单', '审计日志', '隐私评估'] },
+    s7: { theme: 'amber', badge: '创作者小店', features: ['数字人定制', '批量成片', '按条计费'] },
+    s8: { theme: 'indigo', badge: '垂直专家店', features: ['多约束求解', '插单模拟', '驻场实施'] },
+    s9: { theme: 'emerald', badge: '校园口碑店', features: ['校本知识', '教师培训', '校内私有化'], featured: true }
+  };
+
+  const DECOR_KEY = 'aisoft_store_decor_v1';
+  const DECOR_THEMES = {
+    emerald: ['#0f766e', '#34d399'], indigo: ['#4338ca', '#818cf8'], amber: ['#b45309', '#f59e0b'],
+    cyan: ['#0e7490', '#22d3ee'], rose: ['#be123c', '#fb7185'], violet: ['#6d28d9', '#c084fc'],
+    blue: ['#1d4ed8', '#60a5fa'], orange: ['#c2410c', '#fb923c'], slate: ['#334155', '#94a3b8']
+  };
+  const DECOR_PATTERNS = [['aurora', '极光渐变'], ['dots', '波点矩阵'], ['stripes', '动感斜纹'], ['waves', '波浪曲线'], ['plain', '纯色简约']];
+  const DECOR_RADII = [['round', '圆润'], ['std', '标准'], ['sharp', '硬朗']];
+
+  function storeDecor(id) { return store.get(DECOR_KEY, {})[id] || null; }
+
+  function storeStyle(s, decor) {
+    let base;
+    if (Array.isArray(s.theme)) {
+      base = { theme: s.theme, badge: s.badge || '特色新店', features: s.features || [], featured: false, tagline: '' };
+    } else {
+      const preset = STORE_STYLE[s.id] || {};
+      base = {
+        theme: THEME_OPTIONS[preset.theme || 'indigo'],
+        badge: preset.badge || '诚信店铺',
+        features: preset.features || [],
+        featured: !!preset.featured,
+        tagline: ''
+      };
+    }
+    const d = decor !== undefined ? decor : storeDecor(s.id);
+    if (d) {
+      if (Array.isArray(d.theme)) base.theme = d.theme;
+      if (d.badge) base.badge = d.badge;
+      if (Array.isArray(d.features) && d.features.length) base.features = d.features;
+      if (d.tagline) base.tagline = d.tagline;
+      base.pattern = d.pattern || 'aurora';
+      base.radius = d.radius || 'round';
+    } else {
+      base.pattern = 'aurora';
+      base.radius = 'std';
+    }
+    return base;
+  }
+
+
+  function allStores() {
+    return store.get(MY_STORE_KEY, []).concat(window.STORES || []);
+  }
+
+  function storeMinPrice(s) {
+    const prices = (s.apps || []).map(a => a.price).filter(p => typeof p === 'number' && p > 0);
+    return prices.length ? money(Math.min(...prices)) : '面议';
+  }
+
+  function storeCard(s, decor) {
+    const apps = s.apps || [];
+    const st = storeStyle(s, decor);
+    const appTags = apps.slice(0, 3).map(a => `<span class="tag">${esc(a.name)}</span>`).join('');
+    return `<article class="mall-card store-card" data-pattern="${st.pattern}" data-radius="${st.radius}" style="--a1:${st.theme[0]};--a2:${st.theme[1]}">
+      <div class="store-cover" data-pattern="${st.pattern}">
+        <div class="cover-top">
+          <span class="store-badge">${esc(st.badge)}</span>
+          <span class="cover-verified">${s.verified ? '已认证商家' : '审核中'}</span>
+        </div>
+        <div class="cover-main">
+          <span class="store-avatar">${esc((s.name || '店').slice(0, 1))}</span>
+          <div>
+            <h3><a href="#" data-store-detail="${s.id}">${esc(s.name)}</a></h3>
+            <p>${esc(st.tagline || s.tagline || '')}</p>
+          </div>
+        </div>
+        <div class="cover-foot">${esc(OWNER_LABELS[s.ownerType] || '店主')} · ${esc(s.since || '2026')} 年入驻 · ${apps.length} 款自研应用</div>
+      </div>
+      <div class="store-body">
+        <p class="mdesc">${esc(s.desc)}</p>
+        <div class="feature-tags">${st.features.map(f => `<span class="feature-tag">${esc(f)}</span>`).join('')}</div>
+        <div class="app-tags">${appTags || '<span class="tag">待上架</span>'}</div>
+        <div class="store-stats">
+          <span><b>${apps.length}</b> 款应用</span>
+          <span><b>${s.sales || 0}</b> 笔成交</span>
+          <span>${s.rating ? '★ ' + s.rating : '新店'}</span>
+        </div>
+        <div class="mall-foot">
+          <div class="mall-price"><b>${storeMinPrice(s)}</b> <span>起</span></div>
+          <div class="mall-rating">${esc(s.since || '2026')} 年入驻<br>平台担保</div>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-ghost btn-sm" data-store-detail="${s.id}">进店看看</button>
+          <button class="btn btn-primary btn-sm" data-store-detail="${s.id}">选购应用</button>
+          <button class="btn btn-ghost btn-sm" data-store-decor="${s.id}">装修</button>
+        </div>
+      </div>
+    </article>`;
+  }
+
+  function featuredStoreCard(s) {
+    const st = storeStyle(s);
+    const apps = s.apps || [];
+    return `<article class="featured-store" data-pattern="${st.pattern}" data-radius="${st.radius}" style="--a1:${st.theme[0]};--a2:${st.theme[1]}" data-store-detail="${s.id}">
+      <div class="fs-top"><span class="store-badge">${esc(st.badge)}</span><span>${esc(OWNER_LABELS[s.ownerType] || '店主')}</span></div>
+      <span class="fs-avatar">${esc((s.name || '店').slice(0, 1))}</span>
+      <h3>${esc(s.name)}</h3>
+      <p>${esc(st.tagline || s.tagline || '')}</p>
+      <div class="fs-meta">${apps.length} 款自研应用${s.rating ? ' · ★ ' + s.rating : ''}</div>
+      <span class="fs-link">进店逛逛 →</span>
+    </article>`;
+  }
+
+  function renderFeaturedStores() {
+    const rail = $('#featuredStores');
+    if (!rail) return;
+    rail.innerHTML = allStores().filter(s => storeStyle(s).featured).slice(0, 3).map(featuredStoreCard).join('');
+  }
+
+  function filteredStores() {
+    let list = allStores();
+    if (mallState.owner !== 'all') list = list.filter(s => s.ownerType === mallState.owner);
+    const q = mallState.q.trim().toLowerCase();
+    if (q) {
+      list = list.filter(s => {
+        const apps = (s.apps || []).map(a => a.name + a.desc + (a.tags || []).join('')).join('');
+        return (s.name + s.tagline + s.desc + (s.tags || []).join('') + apps).toLowerCase().includes(q);
+      });
+    }
+    return list;
+  }
+
+  function renderMall() {
+    const grid = $('#mallGrid');
+    if (!grid) return;
+    const list = filteredStores();
+    grid.innerHTML = list.length
+      ? list.map(storeCard).join('')
+      : `<div class="empty" style="grid-column:1/-1"><b>暂无匹配店铺</b><p>换个关键词，或申请开一家属于你的 AI 应用店。</p></div>`;
+    const count = $('#mallCount');
+    if (count) count.textContent = `共 ${list.length} 家店铺`;
+    const fs = $('#featuredStoresSection');
+    if (fs) fs.style.display = (mallState.owner === 'all' && !mallState.q) ? '' : 'none';
+  }
+
+  function renderFeaturedMall() {
+    const grid = $('#featuredMall');
+    if (!grid) return;
+    grid.innerHTML = (window.STORES || []).slice(0, 3).map(storeCard).join('');
+  }
+
+  function openStoreDetail(id) {
+    const s = allStores().find(x => x.id === id);
+    if (!s) return;
+    const apps = s.apps || [];
+    const st = storeStyle(s);
+    const rows = apps.length ? apps.map(a => `
+      <div class="store-app">
+        <div class="sa-main">
+          <h4>${esc(a.name)}</h4>
+          <p>${esc(a.desc)}</p>
+          <div class="app-tags">${(a.tags || []).map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
+        </div>
+        <div class="sa-right">
+          <b>${a.price ? money(a.price) : '面议'}</b>
+          <span>${esc(a.unit || '')}</span>
+          <button class="btn btn-primary btn-sm" data-store-buy="${s.id}|${a.id}">采购</button>
+        </div>
+      </div>`).join('') : `<div class="empty"><b>店铺正在筹备</b><p>店主还没有上架应用。</p></div>`;
+    openModal({
+      title: esc(s.name),
+      subtitle: `${OWNER_LABELS[s.ownerType] || '店主'} · ${s.verified ? '已认证商家' : '审核中'} · ${s.since || '2026'} 年入驻`,
+      body: `
+        <div class="sd-hero" data-pattern="${st.pattern}" style="--a1:${st.theme[0]};--a2:${st.theme[1]}">
+          <span class="store-avatar lg">${esc((s.name || '店').slice(0, 1))}</span>
+          <div class="sd-info">
+            <span class="store-badge">${esc(st.badge)}</span>
+            <h3>${esc(s.name)}</h3>
+            <p>${esc(st.tagline || s.tagline || '')}</p>
+            <div class="sd-meta">${esc(OWNER_LABELS[s.ownerType] || '店主')} · ${s.verified ? '已认证商家' : '审核中'} · ${esc(s.since || '2026')} 年入驻</div>
+          </div>
+        </div>
+        <div class="feature-tags" style="margin-bottom:14px">${st.features.map(f => `<span class="feature-tag">${esc(f)}</span>`).join('')}</div>
+        <div class="detail-block"><h5>店铺介绍</h5><p>${esc(s.desc)}</p></div>
+        <div class="detail-kv">
+          <div class="kv"><span>在售应用</span><b>${apps.length} 款</b></div>
+          <div class="kv"><span>累计成交</span><b>${s.sales || 0} 笔</b></div>
+          <div class="kv"><span>店铺评分</span><b>${s.rating ? '★ ' + s.rating : '暂无'}</b></div>
+          <div class="kv"><span>主营方向</span><b>${esc((s.categories || []).join(' / ') || 'AI 业务应用')}</b></div>
+        </div>
+        <div class="detail-block"><h5>在售应用</h5><div class="store-apps">${rows}</div></div>
+        <div class="detail-block"><h5>平台保障</h5><ul class="detail-list">
+          <li>应用由店主自主开发并上架，平台完成主体与资质审核</li>
+          <li>交易资金由平台托管，验收确认后结算给店主</li>
+          <li>交付或售后争议由营销组介入协调</li>
+        </ul></div>`,
+      foot: `<button class="btn btn-ghost" data-close>关闭</button>
+        <button class="btn btn-ghost" data-store-decor="${s.id}">店铺装修</button>
+        <button class="btn btn-primary" data-store-contact="${s.id}">联系店主</button>`
+    });
+  }
+
+  function openStoreBuy(storeId, appId) {
+    const s = allStores().find(x => x.id === storeId);
+    if (!s) return;
+    const a = (s.apps || []).find(x => x.id === appId);
+    if (!a) return;
+    openModal({
+      title: '提交采购意向',
+      subtitle: `${s.name} · ${a.name} · ${a.price ? money(a.price) + ' ' + (a.unit || '') : '面议'}`,
+      body: `
+        <form id="storeBuyForm">
+          <div class="form-grid">
+            <div class="form-row"><label>采购方名称<em>*</em></label><input class="input" name="company" required placeholder="公司 / 机构 / 个人"></div>
+            <div class="form-row"><label>联系人<em>*</em></label><input class="input" name="contact" required placeholder="姓名"></div>
+            <div class="form-row"><label>联系电话<em>*</em></label><input class="input" name="phone" required placeholder="手机号"></div>
+            <div class="form-row"><label>部署方式</label>
+              <select class="select-full" name="deploy"><option>SaaS 订阅</option><option>私有化部署</option><option>混合云</option></select>
+            </div>
+          </div>
+          <div class="form-row"><label>采购说明</label><textarea class="textarea" name="note" placeholder="使用场景、账号数量、上线时间或其他要求"></textarea></div>
+          <div class="form-hint">采购意向会同时通知店主与营销组，1 个工作日内确认报价与交付方式。</div>
+          <div class="sim-note">演示环境：不会产生真实支付与合同。</div>
+        </form>`,
+      foot: `<button class="btn btn-ghost" data-close>取消</button>
+             <button class="btn btn-primary" data-submit-store-buy="${s.id}|${a.id}">提交意向</button>`
+    });
+  }
+
+  function openStoreContact(id) {
+    const s = allStores().find(x => x.id === id);
+    if (!s) return;
+    openModal({
+      title: '联系店主',
+      subtitle: `${s.name} · 营销组同步跟进`,
+      body: `
+        <form id="storeContactForm">
+          <div class="form-grid">
+            <div class="form-row"><label>你的名称<em>*</em></label><input class="input" name="company" required placeholder="公司 / 机构 / 个人"></div>
+            <div class="form-row"><label>联系人<em>*</em></label><input class="input" name="contact" required placeholder="姓名"></div>
+            <div class="form-row"><label>联系电话<em>*</em></label><input class="input" name="phone" required placeholder="手机号"></div>
+            <div class="form-row"><label>咨询类型</label>
+              <select class="select-full" name="kind"><option>采购应用</option><option>定制开发</option><option>渠道合作</option></select>
+            </div>
+          </div>
+          <div class="form-row"><label>说明<em>*</em></label><textarea class="textarea" name="note" required placeholder="你希望解决的问题或合作方式"></textarea></div>
+          <div class="sim-note">演示环境：信息仅保存在本机浏览器。</div>
+        </form>`,
+      foot: `<button class="btn btn-ghost" data-close>取消</button>
+             <button class="btn btn-primary" data-submit-store-contact="${s.id}">发送</button>`
+    });
+  }
+
+  function openStoreApply() {
+    openModal({
+      title: '我要开店',
+      subtitle: '个人、团队与企业都可以开自己的 AI 应用店',
+      body: `
+        <form id="storeApplyForm">
+          <div class="form-row"><label>店铺名称<em>*</em></label><input class="input" name="name" required placeholder="如：星野 AI 工作室"></div>
+          <div class="form-grid">
+            <div class="form-row"><label>主体类型<em>*</em></label>
+              <select class="select-full" name="ownerType">
+                <option value="individual">个人开发者</option>
+                <option value="team">团队工作室</option>
+                <option value="company">企业服务商</option>
+              </select>
+            </div>
+            <div class="form-row"><label>主营方向<em>*</em></label>
+              <select class="select-full" name="category">
+                <option>企业效率</option><option>智能制造</option><option>零售电商</option>
+                <option>医疗健康</option><option>教育培训</option><option>多模态</option>
+              </select>
+            </div>
+            <div class="form-row"><label>联系人<em>*</em></label><input class="input" name="contact" required placeholder="姓名"></div>
+            <div class="form-row"><label>联系电话<em>*</em></label><input class="input" name="phone" required placeholder="手机号"></div>
+          </div>
+          <div class="form-row"><label>店铺标签</label><input class="input" name="badge" maxlength="6" placeholder="如：跨境专营（最多 6 字）"></div>
+          <div class="form-row"><label>一句话特色</label><input class="input" name="tagline" placeholder="如：只做能直接投放的商品图"></div>
+          <div class="form-grid">
+            <div class="form-row"><label>店铺主题色</label>
+              <select class="select-full" name="theme">
+                <option value="emerald">青绿 · 专业可靠</option>
+                <option value="indigo">靛蓝 · 技术旗舰</option>
+                <option value="amber">琥珀 · 个人精选</option>
+                <option value="cyan">青碧 · 团队工作室</option>
+                <option value="rose">玫红 · 创意专营</option>
+              </select>
+            </div>
+            <div class="form-row"><label>店铺亮点</label><input class="input" name="features" placeholder="逗号分隔，最多 3 个"></div>
+          </div>
+          <div class="form-row"><label>主打应用<em>*</em></label><input class="input" name="app" required placeholder="你准备上架的第一款 AI 应用"></div>
+          <div class="form-row"><label>参考价格</label><input class="input" name="price" placeholder="如 1980（元/年），留空则显示面议"></div>
+          <div class="form-row"><label>店铺与应用介绍<em>*</em></label><textarea class="textarea" name="desc" required placeholder="应用解决什么问题、面向哪些客户、已有案例或资质"></textarea></div>
+          <div class="form-hint">提交后由营销组审核主体与上架材料，1 个工作日内联系你开通店铺。</div>
+          <div class="sim-note">演示环境：店铺信息仅保存在本机浏览器。</div>
+        </form>`,
+      foot: `<button class="btn btn-ghost" data-close>取消</button>
+             <button class="btn btn-primary" data-submit-store>提交开店申请</button>`
+    });
+  }
+
+  function openStoreDecor(id) {
+    const s = allStores().find(x => x.id === id);
+    if (!s) return;
+    const saved = storeDecor(id) || {};
+    const curThemeKey = Object.entries(DECOR_THEMES).find(([k, v]) => Array.isArray(saved.theme) && saved.theme[0] === v[0] && saved.theme[1] === v[1])?.[0] ||
+                        Object.entries(DECOR_THEMES).find(([k, v]) => v[0] === storeStyle(s).theme[0] && v[1] === storeStyle(s).theme[1])?.[0] || 'indigo';
+    const swatches = Object.entries(DECOR_THEMES).map(([k, c]) => `<button type="button" class="swatch${k === curThemeKey ? ' on' : ''}" data-decor-pick="theme" data-value="${k}" style="background:linear-gradient(135deg,${c[0]},${c[1]})" title="${k}"></button>`).join('') +
+      `<button type="button" class="swatch custom${curThemeKey === 'custom' ? ' on' : ''}" data-decor-pick="theme" data-value="custom" title="自定义">+</button>`;
+    const patternTiles = DECOR_PATTERNS.map(([pid, name]) => `<button type="button" class="pattern-tile${(saved.pattern || 'aurora') === pid ? ' on' : ''}" data-decor-pick="pattern" data-value="${pid}"><span class="pt-demo" data-pattern="${pid}" style="--a1:${storeStyle(s).theme[0]};--a2:${storeStyle(s).theme[1]}"></span>${name}</button>`).join('');
+    const radiusSeg = DECOR_RADII.map(([rid, name]) => `<button type="button" class="${(saved.radius || 'std') === rid ? 'on' : ''}" data-decor-pick="radius" data-value="${rid}">${name}</button>`).join('');
+    openModal({
+      title: '店铺装修',
+      subtitle: `${esc(s.name)} · 实时预览所见即所得`,
+      wide: true,
+      body: `
+        <div class="decor-wrap">
+          <div>
+            <form id="storeDecorForm" data-store-id="${s.id}">
+              <input type="hidden" id="decorTheme" value="${curThemeKey}">
+              <input type="hidden" id="decorPattern" value="${saved.pattern || 'aurora'}">
+              <input type="hidden" id="decorRadius" value="${saved.radius || 'std'}">
+              <div class="form-row"><label>主题色</label>
+                <div class="swatches">${swatches}</div>
+                <div class="decor-custom" id="decorCustom" ${curThemeKey === 'custom' ? '' : 'hidden'}>
+                  <input type="color" id="decorC1" value="${saved.theme ? saved.theme[0] : storeStyle(s).theme[0]}"> → <input type="color" id="decorC2" value="${saved.theme ? saved.theme[1] : storeStyle(s).theme[1]}">
+                </div>
+              </div>
+              <div class="form-row"><label>封面风格</label><div class="pattern-tiles">${patternTiles}</div></div>
+              <div class="form-row"><label>卡片圆角</label><div class="seg">${radiusSeg}</div></div>
+              <div class="form-grid">
+                <div class="form-row"><label>招牌标签</label><input class="input" name="badge" maxlength="6" value="${esc(saved.badge || '')}" placeholder="如：跨境专营"></div>
+                <div class="form-row"><label>一句话特色</label><input class="input" name="tagline" value="${esc(saved.tagline || '')}" placeholder="封面上的标语"></div>
+              </div>
+              <div class="form-row"><label>店铺亮点</label><input class="input" name="features" value="${esc((saved.features || []).join('，'))}" placeholder="逗号分隔，最多 3 个"></div>
+              <div class="form-hint">实时预览左侧卡片，保存后立即生效。可点「恢复默认」随时还原。</div>
+              <div class="sim-note">演示环境：装修配置仅保存在本机浏览器。</div>
+            </form>
+          </div>
+          <div class="decor-preview" id="decorPreview"></div>
+        </div>`,
+      foot: `<button class="btn btn-ghost" data-reset-decor="${s.id}">恢复默认</button>
+             <button class="btn btn-ghost" data-close>取消</button>
+             <button class="btn btn-primary" data-submit-decor="${s.id}">保存装修</button>`
+    });
+    updateDecorPreview();
+  }
+
+  function decorFormValue() {
+    const themeKey = ($('#decorTheme') || {}).value || 'indigo';
+    const theme = themeKey === 'custom' ? [($('#decorC1') || {}).value, ($('#decorC2') || {}).value] : DECOR_THEMES[themeKey];
+    const feats = String(($('#storeDecorForm [name=features]') || {}).value || '').split(/[,，]/).map(x => x.trim()).filter(Boolean).slice(0, 3);
+    return { theme, pattern: ($('#decorPattern') || {}).value || 'aurora', radius: ($('#decorRadius') || {}).value || 'std', badge: ($('#storeDecorForm [name=badge]') || {}).value.trim(), tagline: ($('#storeDecorForm [name=tagline]') || {}).value.trim(), features: feats };
+  }
+
+  function updateDecorPreview() {
+    const pv = $('#decorPreview');
+    const form = $('#storeDecorForm');
+    if (!pv || !form) return;
+    const s = allStores().find(x => x.id === form.dataset.storeId);
+    if (!s) return;
+    pv.innerHTML = storeCard(s, decorFormValue());
+  }
+
+  /* ---------- 发布需求 ---------- */
+  function openPublishDemand() {
+    openModal({
+      title: '发布需求',
+      subtitle: '需求组评估后，由开发组拆解、营销组对接交付',
+      body: `
+        <form id="publishDemandForm">
+          <div class="form-row"><label>需求标题<em>*</em></label><input class="input" name="title" required placeholder="如：产线视觉质检试点"></div>
+          <div class="form-grid">
+            <div class="form-row"><label>企业名称<em>*</em></label><input class="input" name="company" required placeholder="公司 / 机构名称"></div>
+            <div class="form-row"><label>所属行业<em>*</em></label>
+              <select class="select-full" name="industry">
+                <option>智能制造</option><option>零售电商</option><option>医疗健康</option><option>教育培训</option><option>其他行业</option>
+              </select>
+            </div>
+            <div class="form-row"><label>预算范围<em>*</em></label><input class="input" name="budget" required placeholder="如 30–50 万"></div>
+            <div class="form-row"><label>期望周期</label><input class="input" name="cycle" placeholder="如 8 周"></div>
+            <div class="form-row"><label>合作方式</label>
+              <select class="select-full" name="type"><option>项目制</option><option>场景订阅</option><option>SaaS 采购</option></select>
+            </div>
+            <div class="form-row"><label>联系电话<em>*</em></label><input class="input" name="phone" required placeholder="便于需求组联系"></div>
+          </div>
+          <div class="form-row"><label>需求描述<em>*</em></label><textarea class="textarea" name="desc" required placeholder="现有流程、痛点、数据情况与期望效果"></textarea></div>
+          <div class="form-hint">提交后进入需求组评估队列，1 个工作日内反馈是否进入立项。</div>
+          <div class="sim-note">演示环境：需求仅保存在本机浏览器。</div>
+        </form>`,
+      foot: `<button class="btn btn-ghost" data-close>取消</button>
+             <button class="btn btn-primary" data-submit-demand>提交需求</button>`
+    });
+  }
+
+  /* ---------- 订单 ---------- */
+  function openCheckout() {
+    const cart = getCart();
+    const items = Object.keys(cart).map(id => window.APPS.find(a => a.id === id)).filter(Boolean);
+    if (!items.length) { toast('购物车为空'); return; }
+    const total = Object.keys(cart).reduce((s, id) => {
+      const a = window.APPS.find(x => x.id === id);
+      return s + (a && a.price ? a.price * cart[id] : 0);
+    }, 0);
+    const totalText = total > 0 ? money(total) : '面议';
+    openModal({
+      title: '提交采购需求',
+      subtitle: `共 ${items.length} 款应用 · 参考合计 ${totalText}`,
+      body: `
+        <form id="checkoutForm">
+          <div class="form-grid">
+            <div class="form-row"><label>公司名称<em>*</em></label><input class="input" name="company" required placeholder="采购主体"></div>
+            <div class="form-row"><label>联系人<em>*</em></label><input class="input" name="contact" required placeholder="姓名"></div>
+            <div class="form-row"><label>联系电话<em>*</em></label><input class="input" name="phone" required placeholder="手机号"></div>
+            <div class="form-row"><label>部署方式</label>
+              <select class="select-full" name="deploy"><option>私有化部署</option><option>混合云</option><option>SaaS 订阅</option></select>
+            </div>
+          </div>
+          <div class="form-row"><label>采购说明</label><textarea class="textarea" name="note" placeholder="期望上线时间、集成系统或其他要求"></textarea></div>
+          <div class="sim-note">演示环境：提交不会产生真实订单与支付。营销组将根据清单确认合同与交付排期。</div>
+        </form>`,
+      foot: `<button class="btn btn-ghost" data-close>取消</button>
+             <button class="btn btn-primary" data-submit-order>提交</button>`
+    });
+  }
+
+  /* ---------- 事件绑定 ---------- */
+  document.addEventListener('click', e => {
+    const t = e.target;
+
+    if (t.closest('.js-cart')) { e.preventDefault(); openDrawer(); return; }
+    if (t.closest('[data-drawer-close]')) { closeDrawer(); return; }
+    if (t.closest('[data-close]')) { closeModal(); return; }
+    if (t.closest('#menuToggle')) { $('#navLinks').classList.toggle('open'); return; }
+
+    const add = t.closest('[data-add-cart]');
+    if (add) { addToCart(add.dataset.addCart); return; }
+
+    const detail = t.closest('[data-app-detail]');
+    if (detail) { openAppDetail(detail.dataset.appDetail); return; }
+
+    const cartOp = t.closest('[data-cart-op]');
+    if (cartOp) {
+      const cart = getCart();
+      const id = cartOp.dataset.id;
+      const op = cartOp.dataset.cartOp;
+      if (!cart[id]) return;
+      if (op === 'plus') cart[id] += 1;
+      if (op === 'minus') cart[id] = Math.max(1, cart[id] - 1);
+      if (op === 'remove') delete cart[id];
+      saveCart(cart);
+      renderCart();
+      return;
+    }
+
+    if (t.closest('[data-checkout]')) { closeDrawer(); openCheckout(); return; }
+
+    const dDetail = t.closest('[data-demand-detail]');
+    if (dDetail) { openDemandDetail(dDetail.dataset.demandDetail); return; }
+
+    const bid = t.closest('[data-bid]');
+    if (bid) { openBidForm(bid.dataset.bid); return; }
+
+    const storeDetail = t.closest('[data-store-detail]');
+    if (storeDetail) { e.preventDefault(); openStoreDetail(storeDetail.dataset.storeDetail); return; }
+
+    const storeBuy = t.closest('[data-store-buy]');
+    if (storeBuy) {
+      const [sid, aid] = storeBuy.dataset.storeBuy.split('|');
+      openStoreBuy(sid, aid);
+      return;
+    }
+
+    const storeContact = t.closest('[data-store-contact]');
+    if (storeContact) { openStoreContact(storeContact.dataset.storeContact); return; }
+
+    if (t.closest('#publishDemandBtn, [data-open-demand]')) { e.preventDefault(); openPublishDemand(); return; }
+    if (t.closest('#openStoreBtn, [data-open-store]')) { e.preventDefault(); openStoreApply(); return; }
+
+    /* 表单提交型按钮 */
+    if (t.closest('[data-submit-bid]')) {
+      const id = t.closest('[data-submit-bid]').dataset.submitBid;
+      const form = $('#bidForm');
+      if (!form || !form.reportValidity()) return;
+      const data = Object.fromEntries(new FormData(form).entries());
+      const bids = store.get(BID_KEY, {});
+      bids[id] = { company: data.company, contact: data.contact, phone: data.phone, quote: data.quote, plan: data.plan, at: Date.now() };
+      store.set(BID_KEY, bids);
+      closeModal();
+      toast('承接意向已提交，营销组将在 1 个工作日内联系');
+      renderDemands();
+      return;
+    }
+
+    if (t.closest('[data-submit-demand]')) {
+      const form = $('#publishDemandForm');
+      if (!form || !form.reportValidity()) return;
+      const data = Object.fromEntries(new FormData(form).entries());
+      const list = store.get(MY_DEMAND_KEY, []);
+      list.unshift({
+        id: 'mine-' + Date.now(), title: data.title, company: data.company, industry: data.industry,
+        type: data.type, budget: data.budget, cycle: data.cycle || '待评估', desc: data.desc,
+        phone: data.phone, status: '待评估', published: '今天'
+      });
+      store.set(MY_DEMAND_KEY, list);
+      closeModal();
+      toast('需求已提交，需求组将在 1 个工作日内反馈');
+      if ($('#demandList')) renderDemands();
+      return;
+    }
+
+    if (t.closest('[data-submit-store-buy]')) {
+      const form = $('#storeBuyForm');
+      if (!form || !form.reportValidity()) return;
+      closeModal();
+      toast('采购意向已提交，店主将在 1 个工作日内联系');
+      return;
+    }
+
+    if (t.closest('[data-submit-store-contact]')) {
+      const form = $('#storeContactForm');
+      if (!form || !form.reportValidity()) return;
+      closeModal();
+      toast('已发送给店主，营销组会同步跟进');
+      return;
+    }
+
+    const decorPick = t.closest('[data-decor-pick]');
+    if (decorPick) {
+      const kind = decorPick.dataset.decorPick, val = decorPick.dataset.value;
+      const map = { theme: '#decorTheme', pattern: '#decorPattern', radius: '#decorRadius' };
+      const input = $(map[kind]);
+      if (input) input.value = val;
+      decorPick.parentElement.querySelectorAll('[data-decor-pick]').forEach(b => b.classList.toggle('on', b === decorPick));
+      const custom = $('#decorCustom');
+      if (custom && kind === 'theme') custom.hidden = val !== 'custom';
+      updateDecorPreview();
+      return;
+    }
+    const storeDecorBtn = t.closest('[data-store-decor]');
+    if (storeDecorBtn) { e.preventDefault(); openStoreDecor(storeDecorBtn.dataset.storeDecor); return; }
+    if (t.closest('[data-submit-decor]')) {
+      const id = t.closest('[data-submit-decor]').dataset.submitDecor;
+      const d = decorFormValue();
+      const hexOk = /^#([0-9a-fA-F]{6})$/.test(d.theme[0]) && /^#([0-9a-fA-F]{6})$/.test(d.theme[1]);
+      if (hexOk) {
+        const all = store.get(DECOR_KEY, {});
+        all[id] = d;
+        store.set(DECOR_KEY, all);
+        closeModal();
+        toast('店面装修已保存并生效');
+        if ($('#mallGrid')) renderMall();
+        if ($('#featuredStores')) renderFeaturedStores();
+      }
+      return;
+    }
+    if (t.closest('[data-reset-decor]')) {
+      const id = t.closest('[data-reset-decor]').dataset.resetDecor;
+      const all = store.get(DECOR_KEY, {});
+      delete all[id];
+      store.set(DECOR_KEY, all);
+      closeModal();
+      toast('已恢复默认装修');
+      if ($('#mallGrid')) renderMall();
+      if ($('#featuredStores')) renderFeaturedStores();
+      return;
+    }
+    if (t.closest('[data-submit-store]')) {
+      const form = $('#storeApplyForm');
+      if (!form || !form.reportValidity()) return;
+      const data = Object.fromEntries(new FormData(form).entries());
+      const priceNum = Number(String(data.price || '').replace(/[^\d.]/g, ''));
+      const feats = String(data.features || '').split(/[,，]/).map(s => s.trim()).filter(Boolean).slice(0, 3);
+      const list = store.get(MY_STORE_KEY, []);
+      list.unshift({
+        id: 'ms-' + Date.now(), name: data.name, ownerType: data.ownerType,
+        tagline: data.tagline && data.tagline.trim() || `${data.category} · 新店开业`,
+        desc: data.desc, categories: [data.category], tags: [data.category, '新店'],
+        rating: null, sales: 0, since: '2026', verified: false, local: true,
+        theme: THEME_OPTIONS[data.theme] || THEME_OPTIONS.emerald,
+        badge: (data.badge && data.badge.trim()) || '新店开业',
+        features: feats.length ? feats : ['平台担保', '新店开业'],
+        apps: [{
+          id: 'ma-' + Date.now(), name: data.app && data.app.trim() || '待上架应用',
+          price: priceNum > 0 ? priceNum : null, unit: priceNum > 0 ? '/年' : '',
+          delivery: '待确认', desc: data.desc, tags: ['新上架']
+        }]
+      });
+      store.set(MY_STORE_KEY, list);
+      closeModal();
+      toast('开店申请已提交，营销组将在 1 个工作日内联系');
+      if ($('#mallGrid')) renderMall();
+      return;
+    }
+
+    if (t.closest('[data-submit-order]')) {
+      const form = $('#checkoutForm');
+      if (!form || !form.reportValidity()) return;
+      store.set(CART_KEY, {});
+      updateCartBadge();
+      closeModal();
+      toast('采购需求已提交，营销组将尽快与您联系');
+      return;
+    }
+  });
+
+  document.addEventListener('submit', e => e.preventDefault());
+
+  document.addEventListener('input', e => {
+    if (e.target.closest && e.target.closest('#storeDecorForm')) updateDecorPreview();
+  });
+
+  modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal(); });
+  drawerOverlay.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeModal(); closeDrawer(); }
+  });
+
+  /* 筛选与搜索 */
+  function bindChips(wrapSel, onPick) {
+    const wrap = $(wrapSel);
+    if (!wrap) return;
+    wrap.addEventListener('click', e => {
+      const btn = e.target.closest('.chip');
+      if (!btn) return;
+      $$('.chip', wrap).forEach(c => c.classList.toggle('on', c === btn));
+      onPick(btn.dataset.cat || btn.dataset.type || 'all');
+    });
+  }
+
+  function bindSearch(sel, onInput) {
+    const input = $(sel);
+    if (!input) return;
+    input.addEventListener('input', () => onInput(input.value));
+  }
+
+  function init() {
+    updateCartBadge();
+
+    // 应用广场
+    if ($('#appGrid')) {
+      bindChips('#appChips', v => { appState.cat = v; renderApps(); });
+      bindSearch('#appSearch', v => { appState.q = v; renderApps(); });
+      const sort = $('#appSort');
+      if (sort) sort.addEventListener('change', () => { appState.sort = sort.value; renderApps(); });
+      renderApps();
+    }
+    renderFeaturedApps();
+
+    // 需求广场
+    if ($('#demandList')) {
+      bindChips('#demandChips', v => { demandState.cat = v; renderDemands(); });
+      bindSearch('#demandSearch', v => { demandState.q = v; renderDemands(); });
+      renderDemands();
+    }
+    renderFeaturedDemands();
+
+    // 商城广场
+    if ($('#mallGrid')) {
+      bindChips('#mallChips', v => { mallState.owner = v; renderMall(); });
+      bindSearch('#mallSearch', v => { mallState.q = v; renderMall(); });
+      renderFeaturedStores();
+      renderMall();
+    }
+    renderFeaturedMall();
+  }
+
+  init();
+})();
