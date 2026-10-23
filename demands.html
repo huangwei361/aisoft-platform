@@ -37,19 +37,69 @@
     <div class="container">
       <div class="crumb"><a href="index.html">首页</a> / 需求广场</div>
       <h1>需求广场</h1>
-      <p>官方订单的承接入口。需求组已完成评估立项，开发组已拆解交付范围与验收标准，供应商可提交承接意向。</p>
+      <p>分两类来源：<b>官方订单</b>——需求组评估立项、开发组拆解、营销组统一对接；<b>用户发布</b>——企业或个人自主发布，经平台审核后上架，全程监管与担保。</p>
       <div class="hero-badges">
-        <span class="pill"><strong>需求真实</strong> 已评估立项</span>
-        <span class="pill"><strong>预算明确</strong> 范围与周期清晰</span>
-        <span class="pill"><strong>统一对接</strong> 营销组负责评标</span>
-        <span class="pill"><strong>验收有据</strong> 以评测与指标结算</span>
+        <span class="pill"><strong>双轨并行</strong> 官方立项 + 用户自主</span>
+        <span class="pill"><strong>审核机制</strong> 发布需过平台审核</span>
+        <span class="pill"><strong>信用担保</strong> 发布方信用 + 保证金</span>
+        <span class="pill"><strong>交付监管</strong> 分阶段验收 + 纠纷处理</span>
       </div>
     </div>
   </section>
 
   <section class="section" style="padding-top:26px">
     <div class="container">
-      <div class="guarantee">
+
+      <!-- 双来源 Tab + 行业筛选 -->
+      <div class="source-tabs" id="sourceTabs">
+        <button class="stab on" data-source="official">
+          <span class="stab-label">🏢 官方订单</span>
+          <span class="stab-desc">需求组已评估立项 · 开发组已拆解范围 · 营销组统一对接</span>
+          <span class="stab-count" id="officialCount">0</span>
+        </button>
+        <button class="stab" data-source="user">
+          <span class="stab-label">🛡️ 用户发布</span>
+          <span class="stab-desc">企业/个人自主发布 · 平台审核上架 · 信用+担保监管</span>
+          <span class="stab-count" id="userCount">0</span>
+        </button>
+      </div>
+
+      <!-- 用户发布监管说明（仅在 user tab 显示，或常驻） -->
+      <div class="supervision-box" id="supervisionBox">
+        <div class="sv-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <b>用户发布需求的监管机制</b>
+        </div>
+        <div class="sv-grid">
+          <div class="sv-item">
+            <span class="sv-num">1</span>
+            <div><b>平台审核</b><span>发布方需提交资质证明、需求描述与预算合理性审查，审核通过后才能上架</span></div>
+          </div>
+          <div class="sv-item">
+            <span class="sv-num">2</span>
+            <div><b>信用评级</b><span>基于发布方历史履约记录、企业资质、保证金缴纳情况，给予 A/B/C 信用等级</span></div>
+          </div>
+          <div class="sv-item">
+            <span class="sv-num">3</span>
+            <div><b>保证金担保</b><span>发布方须冻结预算 5–15% 的保证金，承接方按里程碑解冻，防不兑现</span></div>
+          </div>
+          <div class="sv-item">
+            <span class="sv-num">4</span>
+            <div><b>分阶段验收</b><span>合同要求拆解里程碑，营销组参与阶段性验收，防交付不了</span></div>
+          </div>
+          <div class="sv-item">
+            <span class="sv-num">5</span>
+            <div><b>纠纷仲裁</b><span>发布方违约 → 保证金赔付承接方；承接方违约 → 降低信用 + 停止投标资格</span></div>
+          </div>
+          <div class="sv-item">
+            <span class="sv-num">6</span>
+            <div><b>信息披露</b><span>每个用户发布的需求均显示发布方信用分、保证金状态、是否纳入平台担保</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 官方需求的四组流程条（仅在 official tab 显示） -->
+      <div class="guarantee" id="officialFlow">
         <div class="g-item"><span class="gi">01</span><div><b>需求组 · 评估立项</b><span>访谈业务、判断价值与数据可行性</span></div></div>
         <div class="g-item"><span class="gi">02</span><div><b>开发组 · 拆解范围</b><span>输出交付清单、里程碑与验收标准</span></div></div>
         <div class="g-item"><span class="gi">03</span><div><b>营销组 · 发布对接</b><span>发布订单、筛选供应商、组织评标</span></div></div>
@@ -63,10 +113,11 @@
           <button class="chip" data-cat="零售电商">零售电商</button>
           <button class="chip" data-cat="医疗健康">医疗健康</button>
           <button class="chip" data-cat="教育培训">教育培训</button>
+          <button class="chip" data-cat="其他行业">其他行业</button>
         </div>
         <div class="search">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-          <input id="demandSearch" type="search" placeholder="搜索订单标题、行业或能力标签">
+          <input id="demandSearch" type="search" placeholder="搜索标题、行业或能力标签">
         </div>
         <button class="btn btn-primary btn-sm" data-open-demand>发布需求</button>
       </div>
@@ -124,7 +175,7 @@
   </div>
 </footer>
 
-<script src="assets/data.js"></script>
-<script src="assets/app.js"></script>
+<script src="assets/data.js?v=2"></script>
+<script src="assets/app.js?v=2"></script>
 </body>
 </html>

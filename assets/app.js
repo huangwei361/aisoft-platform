@@ -234,23 +234,60 @@
   }
 
   /* ---------- 需求广场 ---------- */
-  const demandState = { cat: 'all', q: '' };
+  const demandState = { cat: 'all', q: '', source: 'official' };
 
   function myDemands() { return store.get(MY_DEMAND_KEY, []); }
 
   function demandCard(d) {
     const bids = store.get(BID_KEY, {});
     const signed = !!bids[d.id];
+    const isOfficial = d.source === 'official';
     const statusCls = d.status === '已定标' ? 'done' : (d.status === '待评估' ? 'hot' : '');
-    return `<article class="demand-card">
+
+    // 来源徽章：官方 vs 用户发布
+    const sourceBadge = isOfficial
+      ? '<span class="src-badge official">🏢 官方发布</span>'
+      : `<span class="src-badge user">🛡️ 用户发布</span>
+         ${d.auditStatus === '审核中' ? '<span class="status hot">审核中</span>' : ''}
+         ${d.auditStatus === '已通过' ? '<span class="status">审核通过</span>' : ''}`;
+
+    // 用户发布专属监管元信息
+    let extraMeta = '';
+    if (!isOfficial) {
+      // 信用等级颜色
+      const creditCls = (d.creditLevel || 'B').charAt(0);
+      const depositTag = d.deposit ? '<span class="sv-mini ok">保证金已缴</span>' : '<span class="sv-mini warn">保证金未缴</span>';
+      const guaranteeTag = d.guarantee ? '<span class="sv-mini ok">平台担保</span>' : '<span class="sv-mini off">担保未开通</span>';
+      const stars = Math.round((d.creditScore || 70) / 20); // 5档星
+      extraMeta = `
+        <div class="user-reg-box">
+          <div class="ur-row">
+            <span class="ur-label">信用评级</span>
+            <span class="ur-credit lv-${creditCls}">${esc(d.creditLevel || 'B')} · ${d.creditScore || 70} 分</span>
+            <span class="ur-stars">${'★'.repeat(stars)}${'☆'.repeat(5 - stars)}</span>
+          </div>
+          <div class="ur-row">
+            ${depositTag}${guaranteeTag}
+          </div>
+        </div>`;
+    }
+
+    // 右侧预算区底部提示
+    const dNote = isOfficial
+      ? (d.status === '已定标' ? '已完成定标，可查看归档' : '由营销组统一对接')
+      : (d.auditStatus === '审核中' ? '审核中，暂不可投标' : (d.guarantee ? '平台担保 · 保证金已冻结' : '无平台担保，注意风险'));
+
+    return `<article class="demand-card ${isOfficial ? 'card-official' : 'card-user'}">
       <div>
         <div class="d-head">
           <h3>${esc(d.title)}</h3>
+          ${sourceBadge}
           <span class="status ${statusCls}">${esc(d.status)}</span>
           ${d.hot ? '<span class="status hot">急单</span>' : ''}
         </div>
         <div class="d-tags">${d.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
         <p class="d-desc">${esc(d.desc)}</p>
+        ${extraMeta}
         <div class="meta-row">
           <span>发布方：<b>${esc(d.company)}</b></span>
           <span>行业：<b>${esc(d.industry)}</b></span>
@@ -262,25 +299,30 @@
       </div>
       <div class="d-side">
         <div class="budget"><b>${esc(d.budget)}</b><span>项目预算</span></div>
-        <button class="btn btn-primary btn-sm" data-demand-detail="${d.id}" ${signed ? 'disabled' : ''}>
+        <button class="btn btn-primary btn-sm" data-demand-detail="${d.id}" ${signed ? 'disabled' : (d.auditStatus === '审核中' ? 'disabled' : '')}>
           ${signed ? '已提交意向' : (d.status === '已定标' ? '查看结果' : '承接 / 投标')}
         </button>
-        <div class="d-note">${d.status === '已定标' ? '已完成定标，可查看归档' : '由营销组统一对接'}</div>
+        <div class="d-note">${dNote}</div>
       </div>
     </article>`;
   }
 
   function allDemands() {
+    // localStorage 中用户自己发布的需求（归到 user 渠道）
     const local = myDemands().map(d => ({
-      id: d.id, title: d.title, company: d.company || '我的企业', industry: d.industry,
+      id: d.id, source: 'user', title: d.title, company: d.company || '我的企业', industry: d.industry,
       type: d.type || '项目制', budget: d.budget || '面议', cycle: d.cycle || '待评估',
-      desc: d.desc, tags: ['新发布', '待评估'], bids: 0, status: '待评估', hot: false, published: '今天'
+      desc: d.desc, tags: ['新发布', '待审核'], bids: 0, status: '待评估', hot: false, published: '今天',
+      // 用户自发布默认监管字段（模拟刚提交，进入审核队列）
+      auditStatus: '审核中', creditScore: 75, creditLevel: 'B', deposit: false, guarantee: false
     }));
-    return local.concat(window.DEMANDS);
+    return window.DEMANDS.concat(local); // window.DEMANDS 已含 source 字段
   }
 
   function filteredDemands() {
     let list = allDemands();
+    // 按来源 Tab 过滤
+    list = list.filter(d => d.source === demandState.source);
     if (demandState.cat !== 'all') list = list.filter(d => d.industry === demandState.cat);
     const q = demandState.q.trim().toLowerCase();
     if (q) list = list.filter(d => (d.title + d.company + d.desc + d.tags.join('') + d.industry).toLowerCase().includes(q));
@@ -290,12 +332,30 @@
   function renderDemands() {
     const listEl = $('#demandList');
     if (!listEl) return;
+    const all = allDemands();
+    const officialCount = all.filter(d => d.source === 'official').length;
+    const userCount = all.filter(d => d.source === 'user').length;
+
+    // 更新 Tab 计数
+    const oc = $('#officialCount'); if (oc) oc.textContent = officialCount;
+    const uc = $('#userCount'); if (uc) uc.textContent = userCount;
+
+    // 根据当前 Tab 显隐：官方显示四组流程条，用户显示监管说明
+    const flow = $('#officialFlow'); if (flow) flow.style.display = demandState.source === 'official' ? '' : 'none';
+    const sv = $('#supervisionBox'); if (sv) sv.style.display = demandState.source === 'user' ? '' : 'none';
+
     const list = filteredDemands();
+    const isUserTab = demandState.source === 'user';
     listEl.innerHTML = list.length
       ? list.map(demandCard).join('')
-      : `<div class="empty"><b>暂无匹配需求</b><p>提交一个需求，需求组会在 1 个工作日内评估。</p></div>`;
+      : `<div class="empty"><b>暂无${isUserTab ? '用户发布' : '官方'}需求</b>
+         <p>${isUserTab
+            ? '还没有企业发布过需求，你可以成为第一个！发布前请先了解平台的审核与担保机制。'
+            : '当前没有匹配的官方订单，去商城广场逛逛各 AI 应用店，或自己发布一个需求。'}</p>
+         <div style="margin-top:12px"><button class="btn btn-primary btn-sm" data-open-demand>我要发布需求</button></div>
+         </div>`;
     const count = $('#demandCount');
-    if (count) count.textContent = `共 ${list.length} 个需求`;
+    if (count) count.textContent = `共 ${list.length} 个${isUserTab ? '用户发布' : '官方'}需求`;
   }
 
   function renderFeaturedDemands() {
@@ -739,30 +799,42 @@
   function openPublishDemand() {
     openModal({
       title: '发布需求',
-      subtitle: '需求组评估后，由开发组拆解、营销组对接交付',
+      subtitle: '自主发布 · 平台审核 · 信用担保 · 分阶段监管',
       body: `
         <form id="publishDemandForm">
-          <div class="form-row"><label>需求标题<em>*</em></label><input class="input" name="title" required placeholder="如：产线视觉质检试点"></div>
+          <!-- 监管提示 -->
+          <div class="form-alert info">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <div><b>发布须知</b><p>需求提交后进入平台审核队列（1–2 个工作日），审核通过才会对外上架。审核内容包括发布方资质、预算合理性、需求描述清晰度。上架后需缴纳保证金才能获得平台担保标识。</p></div>
+          </div>
+          <div class="form-row"><label>需求标题<em>*</em></label><input class="input" name="title" required placeholder="如：连锁餐饮智能排班助手"></div>
           <div class="form-grid">
-            <div class="form-row"><label>企业名称<em>*</em></label><input class="input" name="company" required placeholder="公司 / 机构名称"></div>
+            <div class="form-row"><label>企业/个人名称<em>*</em></label><input class="input" name="company" required placeholder="公司全称 / 个人姓名"></div>
             <div class="form-row"><label>所属行业<em>*</em></label>
               <select class="select-full" name="industry">
                 <option>智能制造</option><option>零售电商</option><option>医疗健康</option><option>教育培训</option><option>其他行业</option>
               </select>
             </div>
-            <div class="form-row"><label>预算范围<em>*</em></label><input class="input" name="budget" required placeholder="如 30–50 万"></div>
-            <div class="form-row"><label>期望周期</label><input class="input" name="cycle" placeholder="如 8 周"></div>
+            <div class="form-row"><label>预算范围<em>*</em></label><input class="input" name="budget" required placeholder="如 5–12 万"></div>
+            <div class="form-row"><label>期望周期</label><input class="input" name="cycle" placeholder="如 6 周"></div>
             <div class="form-row"><label>合作方式</label>
               <select class="select-full" name="type"><option>项目制</option><option>场景订阅</option><option>SaaS 采购</option></select>
             </div>
-            <div class="form-row"><label>联系电话<em>*</em></label><input class="input" name="phone" required placeholder="便于需求组联系"></div>
+            <div class="form-row"><label>联系电话<em>*</em></label><input class="input" name="phone" required placeholder="审核通过后营销组联系"></div>
           </div>
           <div class="form-row"><label>需求描述<em>*</em></label><textarea class="textarea" name="desc" required placeholder="现有流程、痛点、数据情况与期望效果"></textarea></div>
-          <div class="form-hint">提交后进入需求组评估队列，1 个工作日内反馈是否进入立项。</div>
-          <div class="sim-note">演示环境：需求仅保存在本机浏览器。</div>
+          <div class="form-row"><label>资质/担保<em>*</em></label>
+            <div class="check-row">
+              <label class="chk"><input type="checkbox" name="license" required> <span>我承诺提供真实有效的营业执照或身份信息</span></label>
+              <label class="chk"><input type="checkbox" name="deposit" value="yes"> <span>同意缴纳预算 5–15% 的保证金（可选，不缴则无平台担保）</span></label>
+              <label class="chk"><input type="checkbox" name="agree" required> <span>已阅读并同意《发布方监管协议》，了解违约将扣除保证金、降低信用分</span></label>
+            </div>
+          </div>
+          <div class="form-hint">提交后进入审核队列，审核结果将以短信 + 站内信通知。</div>
+          <div class="sim-note">演示环境：需求仅保存在本机浏览器，审核/保证金/信用分均为模拟流程。</div>
         </form>`,
       foot: `<button class="btn btn-ghost" data-close>取消</button>
-             <button class="btn btn-primary" data-submit-demand>提交需求</button>`
+             <button class="btn btn-primary" data-submit-demand>提交审核</button>`
     });
   }
 
@@ -869,15 +941,30 @@
       const form = $('#publishDemandForm');
       if (!form || !form.reportValidity()) return;
       const data = Object.fromEntries(new FormData(form).entries());
+      const hasDeposit = data.deposit === 'yes';
+      // 演示：勾选保证金 → 信用分提升、平台担保开启
+      const creditScore = hasDeposit ? 82 : 75;
+      const creditLevel = hasDeposit ? 'B+' : 'B';
       const list = store.get(MY_DEMAND_KEY, []);
       list.unshift({
-        id: 'mine-' + Date.now(), title: data.title, company: data.company, industry: data.industry,
-        type: data.type, budget: data.budget, cycle: data.cycle || '待评估', desc: data.desc,
-        phone: data.phone, status: '待评估', published: '今天'
+        id: 'mine-' + Date.now(),
+        title: data.title, company: data.company, industry: data.industry,
+        type: data.type, budget: data.budget, cycle: data.cycle || '待评估',
+        desc: data.desc, phone: data.phone,
+        status: '待评估', auditStatus: '审核中', published: '今天',
+        creditScore, creditLevel,
+        deposit: hasDeposit, guarantee: hasDeposit
       });
       store.set(MY_DEMAND_KEY, list);
       closeModal();
-      toast('需求已提交，需求组将在 1 个工作日内反馈');
+      toast(hasDeposit
+        ? '需求已提交 · 含保证金担保，预计 1-2 个工作日出审核结果'
+        : '需求已提交，预计 1-2 个工作日出审核结果');
+      // 自动切换到"用户发布"Tab
+      if ($('#sourceTabs')) {
+        demandState.source = 'user';
+        document.querySelectorAll('#sourceTabs .stab').forEach(b => b.classList.toggle('on', b.dataset.source === 'user'));
+      }
       if ($('#demandList')) renderDemands();
       return;
     }
@@ -1022,6 +1109,15 @@
 
     // 需求广场
     if ($('#demandList')) {
+      // 来源 Tab 切换
+      const tabs = document.querySelectorAll('#sourceTabs .stab');
+      tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+          demandState.source = btn.dataset.source;
+          tabs.forEach(b => b.classList.toggle('on', b === btn));
+          renderDemands();
+        });
+      });
       bindChips('#demandChips', v => { demandState.cat = v; renderDemands(); });
       bindSearch('#demandSearch', v => { demandState.q = v; renderDemands(); });
       renderDemands();

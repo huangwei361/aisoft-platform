@@ -111,8 +111,9 @@ window.APPS = [
 ];
 
 window.DEMANDS = [
+  // ============ 官方发布需求（需求组评估立项、开发组拆解、营销组对接） ============
   {
-    id: 'd1', title: '汽车零部件视觉质检试点', company: '某汽车零部件制造企业',
+    id: 'd1', source: 'official', title: '汽车零部件视觉质检试点', company: '某汽车零部件制造企业',
     industry: '智能制造', type: '项目制', budget: '30–50 万', cycle: '8 周',
     desc: '针对刹车盘表面的划痕、凹坑与锈蚀缺陷，在两条产线部署在线视觉质检，需支持小样本训练并与现有 MES 联动拦截。',
     tags: ['缺陷检测', '小样本', '边缘部署'], bids: 6, status: '招募中', hot: true, published: '10-18',
@@ -120,7 +121,7 @@ window.DEMANDS = [
     requirement: ['有汽车零部件视觉项目案例', '具备边缘设备部署能力', '可提供 8 周驻场交付']
   },
   {
-    id: 'd2', title: '连锁零售导购 Agent', company: '某全国连锁零售品牌',
+    id: 'd2', source: 'official', title: '连锁零售导购 Agent', company: '某全国连锁零售品牌',
     industry: '零售电商', type: '场景订阅', budget: '20–40 万', cycle: '3 个月',
     desc: '为 600 家门店导购提供商品知识、搭配推荐与会员运营助手，接入企微与现有会员系统，要求可配置话术与合规审核。',
     tags: ['导购助手', '企微', '会员运营'], bids: 9, status: '招募中', hot: false, published: '10-17',
@@ -128,7 +129,7 @@ window.DEMANDS = [
     requirement: ['有零售导购或私域项目经验', '熟悉企微生态', '具备多门店推广能力']
   },
   {
-    id: 'd3', title: '三甲医院病历质控升级', company: '某三甲医院',
+    id: 'd3', source: 'official', title: '三甲医院病历质控升级', company: '某三甲医院',
     industry: '医疗健康', type: '项目制', budget: '面议', cycle: '16 周',
     desc: '在院内私有化环境升级病历内涵质控能力，覆盖入院记录、病程记录与出院小结，需通过院内信息安全与等保测评。',
     tags: ['病历质控', '私有化', '等保'], bids: 4, status: '招募中', hot: true, published: '10-16',
@@ -136,7 +137,7 @@ window.DEMANDS = [
     requirement: ['有三甲医院交付案例', '满足等保三级要求', '具备医疗数据合规经验']
   },
   {
-    id: 'd4', title: '职教个性化学习路径', company: '某职业教育机构',
+    id: 'd4', source: 'official', title: '职教个性化学习路径', company: '某职业教育机构',
     industry: '教育培训', type: 'SaaS 采购', budget: '15–25 万', cycle: '10 周',
     desc: '面向 2 万名学员构建诊断测评、学习路径推荐与错题归因能力，需与现有 LMS 和题库系统打通。',
     tags: ['个性化学习', 'LMS 集成', '题库'], bids: 7, status: '招募中', hot: false, published: '10-15',
@@ -144,7 +145,7 @@ window.DEMANDS = [
     requirement: ['有教育 SaaS 交付经验', '具备推荐系统能力', '支持私有化或混合云']
   },
   {
-    id: 'd5', title: '多品种小批量智能排程', company: '某精密制造企业',
+    id: 'd5', source: 'official', title: '多品种小批量智能排程', company: '某精密制造企业',
     industry: '智能制造', type: '项目制', budget: '60–100 万', cycle: '12 周',
     desc: '订单多品种、小批量、插单频繁，需构建约束求解排程系统，支持插单影响模拟，并与 ERP、MES 双向同步。',
     tags: ['排产', '约束求解', 'ERP 集成'], bids: 5, status: '招募中', hot: false, published: '10-14',
@@ -152,7 +153,7 @@ window.DEMANDS = [
     requirement: ['有制造业排程落地案例', '具备运筹优化团队', '可提供现场调研']
   },
   {
-    id: 'd6', title: '跨境多语言内容工厂', company: '某跨境电商卖家',
+    id: 'd6', source: 'official', title: '跨境多语言内容工厂', company: '某跨境电商卖家',
     industry: '零售电商', type: '场景订阅', budget: '10–20 万', cycle: '6 周',
     desc: '覆盖英语、德语、日语等 6 个语种，批量生成商品主图、场景图与短视频素材，要求符合各平台内容规范。',
     tags: ['多语言', '商品内容', '多模态'], bids: 11, status: '招募中', hot: true, published: '10-13',
@@ -160,7 +161,7 @@ window.DEMANDS = [
     requirement: ['有多语言内容生产经验', '熟悉主流跨境平台规则', '具备视觉生成能力']
   },
   {
-    id: 'd7', title: '医药医学知识问答', company: '某医药企业',
+    id: 'd7', source: 'official', title: '医药医学知识问答', company: '某医药企业',
     industry: '医疗健康', type: '项目制', budget: '20–35 万', cycle: '8 周',
     desc: '面向医药代表与内部医学团队搭建合规知识问答，覆盖产品说明书、指南与常见问题，全部答案需引用原文。',
     tags: ['医学知识', '可溯源', '合规'], bids: 3, status: '招募中', hot: false, published: '10-12',
@@ -168,7 +169,7 @@ window.DEMANDS = [
     requirement: ['有医药行业知识库案例', '具备合规评审经验', '支持私有化部署']
   },
   {
-    id: 'd8', title: '中学校本知识库', company: '某市重点中学',
+    id: 'd8', source: 'official', title: '中学校本知识库', company: '某市重点中学',
     industry: '教育培训', type: 'SaaS 采购', budget: '8–15 万', cycle: '4 周',
     desc: '整合教材、讲义与校规，建设教师与学生分权的校本问答，答案需溯源到章节，支持校内私有化部署。',
     tags: ['校本知识', '分权', '私有化'], bids: 12, status: '已定标', hot: false, published: '09-28',
@@ -176,12 +177,41 @@ window.DEMANDS = [
     requirement: ['有教育行业案例', '支持私有化部署', '具备内容安全审核']
   },
   {
-    id: 'd9', title: '工业设备预测性维护', company: '某新能源电池厂',
+    id: 'd9', source: 'official', title: '工业设备预测性维护', company: '某新能源电池厂',
     industry: '智能制造', type: '项目制', budget: '80–120 万', cycle: '16 周',
     desc: '针对涂布、辊压与叠片关键设备，接入振动、温度与电流数据，构建健康度评分与故障预警，降低非计划停机。',
     tags: ['预测性维护', '时序数据', '工单'], bids: 2, status: '招募中', hot: false, published: '10-10',
     scope: ['传感器数据接入', '健康度模型与预警', '检修工单联动', '效果评估与迭代'],
     requirement: ['有锂电或流程工业案例', '具备时序算法能力', '可驻场实施']
+  },
+
+  // ============ 用户自主发布需求（经平台审核通过后上架，带监管与担保机制） ============
+  {
+    id: 'u1', source: 'user', title: '连锁餐饮门店智能排班助手', company: '食光餐饮管理有限公司',
+    industry: '零售电商', type: 'SaaS 采购', budget: '5–12 万', cycle: '6 周',
+    desc: '28 家连锁门店，高峰排班全靠店长经验，希望按客流预测自动生成排班表，并支持临时换班审批与人力成本看板。',
+    tags: ['智能排班', '客流预测', '小程序'], bids: 4, status: '招募中', hot: false, published: '10-20',
+    auditStatus: '已通过', creditScore: 92, creditLevel: 'A', deposit: true, guarantee: true,
+    scope: ['客流数据接入与预测模型', '自动排班引擎与店长调班界面', '换班审批流程', '人力成本看板'],
+    requirement: ['有连锁餐饮或零售排班经验', '支持小程序端', '可提供原型演示']
+  },
+  {
+    id: 'u2', source: 'user', title: '跨境客服多语种自动回复', company: '海鸥跨境贸易',
+    industry: '零售电商', type: '场景订阅', budget: '8–15 万', cycle: '4 周',
+    desc: '亚马逊 + 独立站合计 6 个语种的站内信，要求 AI 自动回复常见问题，复杂问题转人工，所有回复需可追溯修改。',
+    tags: ['多语种', '客服自动化', '合规可追溯'], bids: 7, status: '招募中', hot: true, published: '10-21',
+    auditStatus: '已通过', creditScore: 86, creditLevel: 'B+', deposit: true, guarantee: true,
+    scope: ['多语种客服知识库', '自动回复与人工接管', '回复审计与回溯', '数据看板'],
+    requirement: ['有跨境电商客服经验', '熟悉 Amazon 平台规则', '可快速部署']
+  },
+  {
+    id: 'u3', source: 'user', title: '律所合同智能审校助手', company: '德明律师事务所',
+    industry: '其他行业', type: 'SaaS 采购', budget: '10–20 万', cycle: '8 周',
+    desc: '30 人规模律所，希望对商务合同做条款比对、风险标注与修改建议，需支持私有化部署并对敏感词做脱敏。',
+    tags: ['合同审校', '风险标注', '私有化'], bids: 2, status: '招募中', hot: false, published: '10-22',
+    auditStatus: '审核中', creditScore: 78, creditLevel: 'B', deposit: true, guarantee: false,
+    scope: ['合同模板库构建', '条款比对与风险识别', '修改建议生成', '私有化部署与脱敏'],
+    requirement: ['有法律行业 AI 案例', '支持私有化', '对数据安全有承诺']
   }
 ];
 
