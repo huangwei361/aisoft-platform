@@ -69,10 +69,16 @@
   <div class="wrap" id="app"></div>
   <script src="../../assets/data.js"></script>
   <script>
-    /* 从 URL 目录名识别产品 id：products/{id}/index.html */
+    /* 从 URL 目录名识别产品：/products/目录名/ → 取 products 后一段（兼容 index.html 结尾） */
     const seg = location.pathname.split('/').filter(Boolean);
-    const pid = (seg.length >= 2 && seg[seg.length - 2] !== 'products') ? seg[seg.length - 2] : 'speaking-pixel';
-    const a = (window.APPS || []).find(x => x.id === pid);
+    const pi = seg.indexOf('products');
+    let dir = '像素英语口语练习';
+    if (pi >= 0) {
+      const rest = seg.slice(pi + 1).filter(s => s !== 'index.html');
+      if (rest.length) dir = rest[0];
+    }
+    try { dir = decodeURIComponent(dir); } catch (e) {}
+    const a = (window.APPS || []).find(x => x.name === dir || x.id === dir);
     const root = document.getElementById('app');
 
     if (!a) {
