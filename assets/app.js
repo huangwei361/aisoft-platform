@@ -128,7 +128,7 @@
     }
     body.innerHTML = items.map(({ app, qty }) => `
       <div class="cart-item">
-        <div class="ct" style="background:linear-gradient(135deg,${app.colors[0]},${app.colors[1]})">${app.mark}</div>
+        <div class="ct" style="background:linear-gradient(135deg,${app.colors[0]},${app.colors[1]})">${app.img ? `<img src="${esc(app.img)}" alt="" loading="lazy">` : esc(app.mark)}</div>
         <div style="flex:1;min-width:0">
           <h4>${esc(app.name)}</h4>
           <div class="ci-price">${app.price ? money(app.price) + app.unit : '面议'}</div>
@@ -156,9 +156,10 @@
   function appCard(a) {
     return `<article class="app-card">
       <div class="app-cover" style="--c1:${a.colors[0]};--c2:${a.colors[1]}">
+        ${a.img ? `<img class="cover-img" src="${esc(a.img)}" alt="${esc(a.name)}" loading="lazy">` : ''}
         <span class="cat">${esc(a.catLabel)}</span>
         <span class="badge">${esc(a.badge)}</span>
-        <span class="mark">${esc(a.mark)}</span>
+        ${a.img ? '' : `<span class="mark">${esc(a.mark)}</span>`}
       </div>
       <div class="app-body">
         <h3>${esc(a.name)}</h3>
@@ -214,6 +215,7 @@
       subtitle: `${a.catLabel} · ${a.badge} · ${a.sales} 家企业采购`,
       body: `
         <div class="modal-cover" style="background:linear-gradient(135deg,${a.colors[0]},${a.colors[1]})">
+          ${a.img ? `<img class="modal-img" src="${esc(a.img)}" alt="${esc(a.name)}" loading="lazy">` : ''}
           <h4>${esc(a.name)}</h4>
           <p>${esc(a.desc)}</p>
         </div>
