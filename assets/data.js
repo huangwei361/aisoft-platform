@@ -13,6 +13,15 @@ window.CATEGORIES = [
 
 window.APPS = [
   {
+    id: 'speaking-pixel', name: '像素英语口语练习', cat: 'education', catLabel: '教育培训', mark: 'SP',
+    desc: '像素风英语口语 A1 训练工具：AI 自由对话、训练材料生成与每日复习，打卡 · 等级 · XP 游戏化成长体系，把练口语变成每天的小游戏。支持移动端 H5 与小程序部署。',
+    features: ['AI 自由对话：像美国朋友一样自然聊天', '训练材料生成：对话 / 故事 / 演讲 / 场景练习', '今日复习：单词与句子间隔复习', '8-bit 像素风 · 打卡等级 XP 成长体系'],
+    tags: ['口语练习', '游戏化', '像素风'],
+    price: 6800, unit: '/年', priceNote: '含 1 个班级 40 个学员账号 + AI 对话额度',
+    sales: 96, rating: 4.9, badge: '新上', colors: ['#e8608a', '#f59e0b'],
+    demo: 'speaking.html'
+  },
+  {
     id: 'cs-agent', name: '智能客服 Agent', cat: 'efficiency', catLabel: '企业效率', mark: 'CS',
     desc: '覆盖售前咨询、售后工单与私域运营的多轮对话智能体，可调用订单、物流与CRM工具。',
     features: ['多渠道接入：网页、企微、公众号、App', '工单自动流转与人工无缝接管', '知识库实时更新，答案可溯源', '对话质检与满意度分析'],
@@ -107,14 +116,6 @@ window.APPS = [
     tags: ['数字人', '视频生成', '多语言'],
     price: 39800, unit: '/年', priceNote: '含 120 分钟成片额度',
     sales: 240, rating: 4.6, badge: '官方自营', colors: ['#be185d', '#f472b6']
-  },
-  {
-    id: 'speaking-pixel', name: '像素英语口语练习', cat: 'education', catLabel: '教育培训', mark: 'SP',
-    desc: '像素风英语口语 A1 训练工具：AI 自由对话、训练材料生成与每日复习，打卡 · 等级 · XP 游戏化成长体系，把练口语变成每天的小游戏。支持移动端 H5 与小程序部署。',
-    features: ['AI 自由对话：像美国朋友一样自然聊天', '训练材料生成：对话 / 故事 / 演讲 / 场景练习', '今日复习：单词与句子间隔复习', '8-bit 像素风 · 打卡等级 XP 成长体系'],
-    tags: ['口语练习', '游戏化', '像素风'],
-    price: 6800, unit: '/年', priceNote: '含 1 个班级 40 个学员账号 + AI 对话额度',
-    sales: 96, rating: 4.9, badge: '新上', colors: ['#e8608a', '#f59e0b']
   }
 ];
 

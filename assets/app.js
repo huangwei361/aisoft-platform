@@ -169,6 +169,7 @@
           <span class="rating">★ <b>${a.rating}</b> · ${a.sales} 家采购</span>
         </div>
         <div class="app-foot">
+          ${a.demo ? `<a class="btn btn-ghost btn-sm" href="${esc(a.demo)}" target="_blank" rel="noopener">▶ 在线演示</a>` : `<a class="btn btn-ghost btn-sm" href="products/${esc(a.id)}/">产品目录</a>`}
           <button class="btn btn-ghost btn-sm" data-app-detail="${a.id}">查看详情</button>
           <button class="btn btn-primary btn-sm" data-add-cart="${a.id}">加入购物车</button>
         </div>
@@ -228,7 +229,9 @@
         </div>
         <div class="price-line"><b>${a.price ? money(a.price) : '面议'}</b><span>${a.price ? esc(a.priceNote || '') : '按规模与部署方式报价'}</span></div>
         <div class="sim-note">演示环境：价格为示意，真实采购以合同与实施范围为准。</div>`,
-      foot: `<button class="btn btn-ghost" data-close>关闭</button>
+      foot: `<a class="btn btn-ghost" href="products/${esc(a.id)}/">产品目录</a>
+             ${a.demo ? `<a class="btn btn-ghost" href="${esc(a.demo)}" target="_blank" rel="noopener">▶ 在线演示</a>` : ''}
+             <button class="btn btn-ghost" data-close>关闭</button>
              <button class="btn btn-primary" data-add-cart="${a.id}">加入购物车</button>`
     });
   }
