@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>英语口语练习 · 像素训练工具</title>
+<style>
+  /* ============ 全局：8-bit 像素风 ============ */
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  :root{
+    --px-line:#c9b9a8;          /* 像素描边 */
+    --px-shadow:0 3px 0 rgba(90,60,30,.18);   /* 像素投影：2-3px 下偏移，无模糊 */
+    --ink:#4a3728;              /* 深棕文字 */
+    --ink2:#8a7460;             /* 浅棕文字 */
+    --pink:#f4679d;             /* 主题粉红（选中态） */
+  }
+  html,body{ height:100%; }
+  body{
+    font-family:"PingFang SC","Microsoft YaHei",sans-serif;
+    background:#1c2733;                     /* 桌面查看时的深色衬底 */
+    display:flex; justify-content:center;
+    color:var(--ink);
+  }
+  /* 手机竖屏容器：375-430px 适配 */
+  .phone{
+    width:100%; max-width:430px; min-height:100vh; position:relative;
+    background:linear-gradient(180deg,#9fd9ff 0%,#c9edff 30%,#e8f9ff 55%,#fdf3e3 100%);
+    overflow-x:hidden;
+    padding-bottom:120px;                    /* 底部 Tab 悬浮安全区 */
+  }
+  /* 像素云朵（装饰） */
+  .cloud{ position:absolute; image-rendering:pixelated; opacity:.85; pointer-events:none; }
+  .cloud.c1{ top:96px; right:-14px; }
+  .cloud.c2{ top:230px; left:-20px; transform:scale(.7); }
+  /* 通用像素卡片 */
+  .px-card{
+    background:#fffdf6; border:2px solid var(--px-line);
+    border-radius:8px; box-shadow:var(--px-shadow);
+  }
+  /* 按压反馈：0.95 缩放 */
+  .press{ transition:transform .08s; cursor:pointer; }
+  .press:active{ transform:scale(.95); }
+
+  /* ============ 模块1：系统状态栏 + 品牌头部 ============ */
+  .statusbar{
+    height:34px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 16px; font-size:12px; font-weight:700; color:#33475b;
+    background:rgba(255,255,255,.55); backdrop-filter:blur(2px);
+  }
+  .statusbar .sicons{ letter-spacing:2px; font-size:11px; }
+  .capsule{
+    border:1.5px solid rgba(51,71,91,.4); border-radius:14px; padding:1px 10px;
+    font-size:11px; color:#33475b; background:rgba(255,255,255,.7);
+  }
+  .brand{ position:relative; padding:14px 16px 6px; }
+  .brand h1{
+    text-align:center; font-size:24px; letter-spacing:3px; color:#3d2b1f;
+    text-shadow:2px 2px 0 #ffe9c9, 4px 4px 0 rgba(90,60,30,.12);   /* 像素阶梯字 */
+    font-weight:900;
+  }
+  .brand-row{ display:flex; align-items:flex-end; gap:8px; margin-top:10px; }
+  /* CSS 像素画：Q版女孩（16x18 网格，box-shadow 画法） */
+  .pixel-girl{ width:96px; height:108px; flex:none; position:relative; image-rendering:pixelated; }
+  .pixel-girl i{ position:absolute; width:6px; height:6px; }
+  .bubble{
+    position:relative; background:#fff; border:2px solid var(--px-line);
+    border-radius:8px; padding:8px 12px; font-size:13px; font-weight:700; color:#6b4b2a;
+    box-shadow:var(--px-shadow); margin-bottom:10px;
+  }
+  .bubble::before{
+    content:""; position:absolute; left:-8px; bottom:12px;
+    border:6px solid transparent; border-right-color:#fff;
+  }
+  .deco{ margin-left:auto; display:flex; gap:6px; align-items:flex-end; font-size:20px; filter:saturate(1.1); }
+
+  /* ============ 模块2：数据看板（3 指标卡） ============ */
+  .board{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:16rpx; gap:8px;
+    margin:10px 16px 0;
+  }
+  .stat{ padding:10px 6px; text-align:center; }
+  .stat .ic{ font-size:18px; }
+  .stat b{ display:block; font-size:16px; margin-top:2px; color:#3d2b1f; }
+  .stat span{ font-size:10px; color:var(--ink2); }
+
+  /* ============ 模块3：核心功能入口（3 大功能卡） ============ */
+  .funcs{ margin:14px 16px 0; display:flex; flex-direction:column; gap:14px; }
+  .func{
+    height:120px; border-radius:8px; border:2px solid var(--px-line);
+    box-shadow:var(--px-shadow); display:flex; align-items:center; gap:12px; padding:0 16px;
+    position:relative; overflow:hidden;
+  }
+  .func .f-ic{ font-size:34px; filter:drop-shadow(2px 2px 0 rgba(90,60,30,.25)); }
+  .func .f-txt{ flex:1; }
+  .func .f-txt b{ font-size:19px; letter-spacing:1px; display:block; }
+  .func .f-txt span{ font-size:13px; opacity:.85; }
+  .func .arrow{ font-size:20px; }
+  .f1{ background:linear-gradient(135deg,#FFB6C1,#FF9AA2); } .f1 b{ color:#2b1a1a; } .f1 span{ color:#7c3a44; }
+  .f2{ background:linear-gradient(135deg,#FFE29A,#FFCC66); } .f2 b{ color:#4a3315; } .f2 span{ color:#8a6a2f; }
+  .f3{ background:linear-gradient(135deg,#B5EAD7,#8DD8B0); } .f3 b{ color:#1f4a33; } .f3 span{ color:#3e6e52; }
+  .go-btn{
+    background:#ff8a5c; color:#fff; font-size:13px; font-weight:900;
+    border:2px solid #d96a3f; border-radius:8px; padding:8px 14px; box-shadow:0 3px 0 #d96a3f;
+  }
+  .go-btn:active{ transform:scale(.95); filter:brightness(.9); }
+
+  /* ============ 模块4：今日推荐主题 ============ */
+  .sect{ margin:20px 16px 0; }
+  .sect-head{ display:flex; align-items:center; gap:6px; margin-bottom:10px; }
+  .sect-head b{ font-size:17px; color:#3d2b1f; }
+  .sect-head small{ font-size:12px; color:var(--ink2); }
+  .sect-head .more{ margin-left:auto; font-size:12px; color:#8a7460; display:flex; align-items:center; gap:4px; }
+  .topics{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .topic{ padding:6px; position:relative; }
+  .topic .pic{
+    height:74px; border-radius:4px; border:2px solid var(--px-line);
+    display:grid; place-items:center; font-size:30px;
+  }
+  .topic .pic.p1{ background:linear-gradient(180deg,#ffe3c2,#ffd0a3); }
+  .topic .pic.p2{ background:linear-gradient(180deg,#d8e8ff,#b9d4ff); }
+  .topic .pic.p3{ background:linear-gradient(180deg,#d6f5d0,#b3e6ab); }
+  .topic .name{ text-align:center; font-size:13px; font-weight:700; margin-top:6px; }
+  .topic .stars{ text-align:center; font-size:11px; color:#f5a623; letter-spacing:1px; }
+  .heart{
+    position:absolute; top:10px; left:10px; font-size:15px; cursor:pointer;
+    filter:drop-shadow(1px 1px 0 rgba(255,255,255,.8)); user-select:none;
+  }
+
+  /* ============ 模块5：最近训练记录 ============ */
+  .rec{ display:flex; align-items:center; gap:10px; padding:12px; }
+  .rec + .rec{ margin-top:8px; }
+  .rec .r-ic{
+    width:38px; height:38px; flex:none; border-radius:6px; border:2px solid var(--px-line);
+    display:grid; place-items:center; font-size:18px; background:#fdeed7;
+  }
+  .rec .r-mid{ flex:1; }
+  .rec .r-mid b{ font-size:14px; color:#3d2b1f; display:block; }
+  .rec .r-mid span{ font-size:11px; color:var(--ink2); }
+  .rec .xp{
+    background:#f4679d; color:#fff; font-size:11px; font-weight:900;
+    border-radius:4px; padding:3px 8px; border:1.5px solid #d94f83;
+  }
+
+  /* ============ 模块6：底部 Tab 导航 ============ */
+  .tabbar{
+    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:430px; height:100px; background:#fffdf6;
+    border-top:2px solid var(--px-line); display:flex; z-index:50;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .tab{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:3px; font-size:11px; color:#7c6a55; cursor:pointer; transition:color .1s;
+  }
+  .tab .t-ic{ font-size:22px; }
+  .tab.on{ color:var(--pink); font-weight:900; }
+  .tab.on .t-ic{ filter:drop-shadow(1px 1px 0 rgba(244,103,157,.35)); }
+
+  /* ============ Toast ============ */
+  #toast{
+    position:fixed; left:50%; bottom:130px; transform:translateX(-50%) translateY(20px);
+    background:rgba(40,30,20,.92); color:#ffe9c9; font-size:13px; padding:10px 18px;
+    border-radius:6px; border:2px solid #6b533b; opacity:0; pointer-events:none;
+    transition:.25s; z-index:99; max-width:80vw; text-align:center;
+  }
+  #toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* 竖屏窄屏适配：375px 以下微调 */
+  @media (max-width:375px){
+    .brand h1{ font-size:21px; }
+    .func{ height:108px; }
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- 像素云朵装饰 -->
+  <div class="cloud c1">☁️</div>
+  <div class="cloud c2">☁️</div>
+
+  <!-- 模块1a：模拟系统状态栏 -->
+  <div class="statusbar">
+    <span>22:06</span>
+    <span class="sicons">📶 📡 🔋</span>
+    <span class="capsule">◉ &nbsp;|&nbsp; ◧</span>
+  </div>
+
+  <!-- 模块1b：品牌头部区 -->
+  <header class="brand">
+    <h1>英语口语练习</h1>
+    <div class="brand-row">
+      <div class="pixel-girl" id="pixelGirl"></div>
+      <div class="bubble">Hi，Vicky 喊你练口语啦！</div>
+      <div class="deco">🪟🌱📚</div>
+    </div>
+  </header>
+
+  <!-- 模块2：数据看板 -->
+  <section class="board">
+    <div class="px-card stat press" data-toast="打卡日历：本月已练 18 天！"><div class="ic">🔥</div><b>12 天</b><span>连续打卡</span></div>
+    <div class="px-card stat press" data-toast="当前等级 Lv.7 · 距 Lv.8 还差 240 XP"><div class="ic">⭐</div><b>Lv.7</b><span>当前等级</span></div>
+    <div class="px-card stat press" data-toast="今日已练 9 分钟，再练 6 分钟达标！"><div class="ic">🎯</div><b>15 分钟</b><span>今日目标</span></div>
+  </section>
+
+  <!-- 模块3：三大核心功能入口 -->
+  <section class="funcs">
+    <div class="func f1 press" data-toast="演示：跳转「AI 自由对话聊天页」">
+      <span class="f-ic">🎤</span>
+      <div class="f-txt"><b>自由对话</b><span>像美国朋友一样自然聊天</span></div>
+      <span class="arrow">▸</span>
+    </div>
+    <div class="func f2 press" data-toast="演示：跳转「训练材料生成页」">
+      <span class="f-ic">💻📚</span>
+      <div class="f-txt"><b>生成训练材料</b><span>对话 / 故事 / 演讲 / 场景练习</span></div>
+      <span class="arrow">▸</span>
+    </div>
+    <div class="func f3 press" data-toast="演示：跳转「今日复习训练页」">
+      <span class="f-ic">📖⏰</span>
+      <div class="f-txt"><b>今日复习</b><span>待复习：8 个单词 · 5 个句子</span></div>
+      <button class="go-btn">立即开始</button>
+    </div>
+  </section>
+
+  <!-- 模块4：今日推荐主题 -->
+  <section class="sect">
+    <div class="sect-head">
+      ⭐<b>今日推荐主题</b>
+      <span class="more press" id="shuffleBtn">换一换 🔄</span>
+    </div>
+    <div class="topics" id="topics"></div>
+  </section>
+
+  <!-- 模块5：最近训练记录 -->
+  <section class="sect">
+    <div class="sect-head">
+      🏋️<b>最近训练记录</b>
+      <span class="more press" data-toast="演示：跳转完整历史记录页">查看更多 ▸</span>
+    </div>
+    <div class="px-card rec press" data-toast="演示：跳转「7月25日 聊旅行」详情复盘页">
+      <span class="r-ic">🧳</span>
+      <div class="r-mid"><b>7 月 25 日 · 聊旅行</b><span>时长 18 分钟 ｜ 表现 ★★★★☆</span></div>
+      <span class="xp">92 XP</span>
+    </div>
+    <div class="px-card rec press" data-toast="演示：跳转「7月24日 餐厅点餐」详情复盘页">
+      <span class="r-ic">🍽️</span>
+      <div class="r-mid"><b>7 月 24 日 · 餐厅点餐</b><span>时长 15 分钟 ｜ 表现 ★★★★☆</span></div>
+      <span class="xp">86 XP</span>
+    </div>
+  </section>
+
+  <!-- 模块6：底部 Tab 导航栏 -->
+  <nav class="tabbar" id="tabbar">
+    <div class="tab on" data-tab="首页"><span class="t-ic">🏠</span>首页</div>
+    <div class="tab" data-tab="练习"><span class="t-ic">⚔️</span>练习</div>
+    <div class="tab" data-tab="收藏复习"><span class="t-ic">📦</span>收藏复习</div>
+    <div class="tab" data-tab="历史"><span class="t-ic">📜</span>历史</div>
+  </nav>
+
+  <div id="toast"></div>
+</div>
+
+<script>
+/* ============ 像素女孩（box-shadow 像素画，16x18 网格） ============ */
+/* 色板：棕发#8a5a3b 深棕#6b4423 肤色#ffd9b8 腮红#ff9e9e 黄内搭#ffd23e 蓝背带#4a90d9 红蝴蝶结#e84d6b */
+(function(){
+  const P = {
+    '.':'', 'h':'#8a5a3b', 'H':'#6b4423', 'f':'#ffd9b8', 'r':'#ff9e9e',
+    'y':'#ffd23e', 'b':'#4a90d9', 'R':'#e84d6b', 'e':'#3d2b1f', 'w':'#fff'
+  };
+  const art = [
+    '....RR....RR.....',
+    '...RRR....RRR....',
+    '....hhhhhhhh.....',
+    '...hhhhhhhhhh....',
+    '..hhhhhhhhhhhh...',
+    '..hhHffffffHhh...',
+    '..hHffffffffHh...',
+    '....fefffef.f....',
+    '....fffffff.r....',
+    '....fRffffRf.....',
+    '.....ffffff......',
+    '....yyfffyy......',
+    '...bbbfffbbb.....',
+    '...bbbbbbbbbb....',
+    '...bybbbbbbby....',
+    '...bybbbbbbby....',
+    '...bbbb..bbbb....',
+    '...HHH....HHH....'
+  ];
+  const girl = document.getElementById('pixelGirl');
+  let shadow = [];
+  art.forEach((row,y)=>{
+    [...row].forEach((ch,x)=>{
+      const c = P[ch];
+      if (c) shadow.push(`${(x+1)*6}px ${(y+1)*6}px 0 0 ${c}`);
+    });
+  });
+  const dot = document.createElement('i');
+  dot.style.background = 'transparent';
+  dot.style.boxShadow = shadow.join(',');
+  dot.style.width = '6px'; dot.style.height = '6px';
+  dot.style.left = '0'; dot.style.top = '0';
+  girl.appendChild(dot);
+})();
+
+/* ============ 模块4：推荐主题渲染（含 换一换 / 爱心收藏） ============ */
+const THEME_POOL = [
+  { name:'餐厅点餐', icon:'🍽️', cls:'p1', fav:true  },
+  { name:'聊工作',   icon:'💼', cls:'p2', fav:false },
+  { name:'旅行英语', icon:'🧳', cls:'p3', fav:false },
+  { name:'咖啡点单', icon:'☕', cls:'p1', fav:false },
+  { name:'面试准备', icon:'🤝', cls:'p2', fav:false },
+  { name:'机场值机', icon:'✈️', cls:'p3', fav:false },
+  { name:'酒店入住', icon:'🏨', cls:'p1', fav:false },
+  { name:'购物砍价', icon:'🛍️', cls:'p2', fav:false },
+  { name:'问路导航', icon:'🗺️', cls:'p3', fav:false }
+];
+let cur = THEME_POOL.slice(0,3);
+
+function renderTopics(){
+  document.getElementById('topics').innerHTML = cur.map((t,i)=>`
+    <div class="px-card topic press" data-toast="演示：进入「${t.name}」专项训练页">
+      <span class="heart" data-heart="${i}">${t.fav ? '❤️' : '🤍'}</span>
+      <div class="pic ${t.cls}">${t.icon}</div>
+      <div class="name">${t.name}</div>
+      <div class="stars">★★★★☆</div>
+    </div>`).join('');
+}
+renderTopics();
+
+/* 换一换：随机刷新 3 个新主题 */
+document.getElementById('shuffleBtn').addEventListener('click', e=>{
+  e.stopPropagation();
+  const pool = [...THEME_POOL].sort(()=>Math.random()-.5);
+  cur = pool.slice(0,3);
+  renderTopics();
+  toast('已为你换 3 个新主题！');
+});
+
+/* ============ 事件委托：toast / 爱心 / Tab ============ */
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+document.addEventListener('click', e=>{
+  /* 爱心收藏切换（阻止冒泡到卡片跳转） */
+  const h = e.target.closest('[data-heart]');
+  if (h){
+    e.stopPropagation();
+    const i = +h.dataset.heart;
+    cur[i].fav = !cur[i].fav;
+    h.textContent = cur[i].fav ? '❤️' : '🤍';
+    toast(cur[i].fav ? `已收藏「${cur[i].name}」` : `已取消收藏「${cur[i].name}」`);
+    return;
+  }
+  /* Tab 切换 */
+  const tab = e.target.closest('.tab');
+  if (tab){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t===tab));
+    toast(tab.dataset.tab === '首页' ? '已在首页' : `演示：切换到「${tab.dataset.tab}」页`);
+    return;
+  }
+  /* 通用 toast 卡片 */
+  const card = e.target.closest('[data-toast]');
+  if (card) toast(card.dataset.toast);
+});
+</script>
+</body>
+</html>
