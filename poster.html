@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公司宣传海报 · 扫码进入官网</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;min-height:100%;background:#0b0f1a;font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;color:#fff}
+  .poster{
+    width:794px;min-height:1123px;margin:24px auto;position:relative;overflow:hidden;
+    background:
+      radial-gradient(1200px 700px at 15% -10%, rgba(124,58,237,.45), transparent 60%),
+      radial-gradient(900px 600px at 110% 20%, rgba(47,92,255,.40), transparent 55%),
+      radial-gradient(800px 800px at 50% 120%, rgba(236,72,153,.25), transparent 55%),
+      linear-gradient(160deg,#0b0f1a 0%,#131a2e 50%,#0b0f1a 100%);
+    border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.5);
+  }
+  /* 装饰光斑 */
+  .glow{position:absolute;border-radius:50%;filter:blur(60px);opacity:.5;pointer-events:none}
+  .glow.a{width:280px;height:280px;background:#7c3aed;top:-60px;right:-40px}
+  .glow.b{width:220px;height:220px;background:#2f5cff;bottom:120px;left:-50px}
+
+  .inner{position:relative;padding:70px 70px 60px;display:flex;flex-direction:column;min-height:1123px}
+
+  /* 顶部品牌 */
+  .brand{display:flex;align-items:center;gap:14px;margin-bottom:46px}
+  .logo{
+    width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-weight:900;font-size:22px;
+    background:linear-gradient(135deg,#2f5cff,#7c3aed);box-shadow:0 8px 22px rgba(47,92,255,.45);color:#fff;letter-spacing:-1px;
+  }
+  .brand-text b{display:block;font-size:20px;letter-spacing:2px}
+  .brand-text span{font-size:12px;color:#aab0c4;letter-spacing:4px}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:6px 14px;border-radius:999px;font-size:12px;color:#cfd6ea;letter-spacing:1px;margin-bottom:22px}
+  .eyebrow i{width:6px;height:6px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399}
+
+  h1{font-size:60px;line-height:1.15;font-weight:900;letter-spacing:-1px}
+  h1 .grad{background:linear-gradient(90deg,#7dd3fc,#a78bfa,#f0abfc);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{margin-top:18px;font-size:17px;line-height:1.8;color:#c3c9dc;max-width:600px}
+
+  /* 三板块 */
+  .squares{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:42px}
+  .sq{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:22px 18px;backdrop-filter:blur(6px)}
+  .sq .ic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-size:20px;margin-bottom:12px}
+  .sq:nth-child(1) .ic{background:linear-gradient(135deg,#2f5cff,#60a5fa)}
+  .sq:nth-child(2) .ic{background:linear-gradient(135deg,#7c3aed,#ec4899)}
+  .sq:nth-child(3) .ic{background:linear-gradient(135deg,#059669,#34d399)}
+  .sq h3{font-size:18px;margin-bottom:6px}
+  .sq p{font-size:12.5px;line-height:1.7;color:#aab0c4}
+
+  /* 二维码区 */
+  .qr-wrap{margin-top:auto;display:flex;align-items:center;gap:36px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:28px 30px}
+  .qr-box{
+    background:#fff;border-radius:16px;padding:16px;box-shadow:0 12px 30px rgba(0,0,0,.35);flex-shrink:0;
+  }
+  .qr-box img{display:block;width:200px;height:200px}
+  .qr-info b{font-size:26px;display:block;margin-bottom:8px}
+  .qr-info .url{font-size:14px;color:#9aa3bd;margin-bottom:14px;word-break:break-all}
+  .qr-info .tip{display:flex;align-items:center;gap:8px;font-size:13px;color:#cfd6ea}
+  .qr-info .tip span{background:linear-gradient(90deg,#7c3aed,#2f5cff);padding:4px 12px;border-radius:999px;font-weight:700;font-size:12px}
+
+  /* 底部 */
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,.1);font-size:12px;color:#8b92a8}
+  .foot .grad-text{background:linear-gradient(90deg,#7dd3fc,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
+
+  @media print{
+    body{background:#fff;margin:0}
+    .poster{margin:0;border-radius:0;box-shadow:none;width:210mm;min-height:297mm}
+    .glow{opacity:.35}
+    @page{size:A4 portrait;margin:0}
+  }
+  @media (max-width:820px){
+    .poster{width:92%;margin:16px auto}
+    .inner{padding:40px 28px}
+    h1{font-size:40px}
+    .squares{grid-template-columns:1fr}
+    .qr-wrap{flex-direction:column;text-align:center}
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="glow a"></div>
+  <div class="glow b"></div>
+  <div class="inner">
+
+    <div class="brand">
+      <div class="logo">AI</div>
+      <div class="brand-text">
+        <b>AI 业务应用软件开发</b>
+        <span>AI · APPLICATION · PLATFORM</span>
+      </div>
+    </div>
+
+    <span class="eyebrow"><i></i>官方自营 + 个人/组织开店 · 全流程担保交易</span>
+
+    <h1>让每一个 AI 需求<br><span class="grad">找到对的人</span></h1>
+    <p class="sub">应用广场直接采购官方成熟产品；需求广场承接官方发布的项目订单；商城广场让个人和组织开自己的 AI 应用店。一条链路，把需求、开发与交易连接起来。</p>
+
+    <div class="squares">
+      <div class="sq">
+        <div class="ic">🛒</div>
+        <h3>应用广场</h3>
+        <p>12 款官方自研 AI 应用，开箱即用，支持演示与采购。</p>
+      </div>
+      <div class="sq">
+        <div class="ic">📋</div>
+        <h3>需求广场</h3>
+        <p>官方发布 AI 外包订单，用户也可自主发布，含信用与保证金监管。</p>
+      </div>
+      <div class="sq">
+        <div class="ic">🏪</div>
+        <h3>商城广场</h3>
+        <p>个人/团队/企业开店，自定义装修，在线接单与结算。</p>
+      </div>
+    </div>
+
+    <div class="qr-wrap">
+      <div class="qr-box">
+        <img src="assets/img/qr-site.png" alt="扫码进入官网">
+      </div>
+      <div class="qr-info">
+        <b>扫码进入官网</b>
+        <div class="url">https://huangwei361.github.io/aisoft-platform/</div>
+        <div class="tip"><span>扫一扫</span>手机访问 · 浏览应用 · 发布需求 · 开店接单</div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div>© <span class="grad-text">AI 业务应用软件开发公司</span> · 演示站点</div>
+      <div>AI · 让需求直达交付</div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
