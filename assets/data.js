@@ -13,12 +13,30 @@ window.CATEGORIES = [
 
 window.APPS = [
   {
+    id: 'ai-music', name: 'AI 音乐音效创作平台', cat: 'multimodal', catLabel: '多模态', mark: 'MU',
+    desc: '面向音乐人、UP 主与影视团队的 AI 音乐创作工作台：文字成曲、片段续写、风格迁移、音效生成与分轨导出，支持商业授权与版权登记。',
+    features: ['文字成曲：10 秒生成完整编曲', '风格迁移：流行 / 古风 / 电子 / 电影配乐一键切换', '音效生成：环境音、转场音、乐器采样按描述生成', '分轨导出 + 商业授权 + 版权登记一站式'],
+    tags: ['音乐生成', '音效', '多模态'],
+    price: null, unit: '', priceNote: '内测中 · 欢迎预约',
+    sales: 0, rating: 0, badge: '开发中', colors: ['#10b981', '#34d399'],
+    comingSoon: true
+  },
+  {
+    id: 'ai-vchar', name: 'AI 虚拟角色对话', cat: 'multimodal', catLabel: '多模态', mark: 'VC',
+    desc: '与你喜爱的虚拟角色进行多轮对话：支持上传人设卡、捏脸换装、语音克隆与表情动画，打造专属陪伴 / 教育 / 偶像角色。',
+    features: ['人设卡驱动：上传角色卡即开聊', '语音克隆：10 秒样本克隆角色声音', '表情动画：对话实时驱动面部微表情', '多端同步：小程序 + H5 + 智能音箱'],
+    tags: ['虚拟角色', '多模态', '对话'],
+    price: null, unit: '', priceNote: '内测中 · 欢迎预约',
+    sales: 0, rating: 0, badge: '开发中', colors: ['#f472b6', '#a78bfa'],
+    comingSoon: true
+  },
+  {
     id: 'speaking-pixel', name: '像素英语口语练习', cat: 'education', catLabel: '教育培训', mark: 'SP',
     desc: '像素风英语口语 A1 训练工具：AI 自由对话、训练材料生成与每日复习，打卡 · 等级 · XP 游戏化成长体系，把练口语变成每天的小游戏。支持移动端 H5 与小程序部署。',
     features: ['AI 自由对话：像美国朋友一样自然聊天', '训练材料生成：对话 / 故事 / 演讲 / 场景练习', '今日复习：单词与句子间隔复习', '8-bit 像素风 · 打卡等级 XP 成长体系'],
     tags: ['口语练习', '游戏化', '像素风'],
     price: 6800, unit: '/年', priceNote: '含 1 个班级 40 个学员账号 + AI 对话额度',
-    sales: 96, rating: 4.9, badge: '新上', colors: ['#e8608a', '#f59e0b'], img: 'assets/img/products/speaking-pixel.jpg',
+    sales: 96, rating: 4.9, badge: '新上', colors: ['#e8608a', '#f59e0b'],
     demo: 'speaking.html'
   },
   {
@@ -27,7 +45,7 @@ window.APPS = [
     features: ['多渠道接入：网页、企微、公众号、App', '工单自动流转与人工无缝接管', '知识库实时更新，答案可溯源', '对话质检与满意度分析'],
     tags: ['多轮对话', '工单流转', '工具调用'],
     price: 19800, unit: '/年', priceNote: '含 5 个坐席与首年运维',
-    sales: 1260, rating: 4.9, badge: '官方自营', colors: ['#2f5cff', '#7c3aed'], img: 'assets/img/products/cs-agent.jpg'
+    sales: 1260, rating: 4.9, badge: '官方自营', colors: ['#2f5cff', '#7c3aed']
   },
   {
     id: 'kb-qa', name: '企业知识库问答', cat: 'efficiency', catLabel: '企业效率', mark: 'KB',
@@ -35,7 +53,7 @@ window.APPS = [
     features: ['结构化与非结构化文档统一入库', '部门/角色级权限隔离', '答案附原文出处与置信度', '评测集驱动的效果持续优化'],
     tags: ['RAG', '权限隔离', '私有化'],
     price: 29800, unit: '/年', priceNote: '含 50 万页文档额度',
-    sales: 860, rating: 4.8, badge: '热销', colors: ['#0ea5e9', '#2f5cff'], img: 'assets/img/products/kb-qa.jpg'
+    sales: 860, rating: 4.8, badge: '热销', colors: ['#0ea5e9', '#2f5cff']
   },
   {
     id: 'vision-qc', name: '视觉质检平台', cat: 'manufacturing', catLabel: '智能制造', mark: 'VQ',
@@ -43,7 +61,7 @@ window.APPS = [
     features: ['小样本训练，新缺陷 1–2 天上线', '边缘部署，单工位低时延推理', '缺陷分类、定位与统计看板', '与 MES / PLC 联动拦截'],
     tags: ['缺陷检测', '边缘部署', 'MES 集成'],
     price: 88000, unit: '起', priceNote: '按工位与产线数量报价',
-    sales: 180, rating: 4.9, badge: '行业标杆', colors: ['#b45309', '#f59e0b'], img: 'assets/img/products/vision-qc.jpg'
+    sales: 180, rating: 4.9, badge: '行业标杆', colors: ['#b45309', '#f59e0b']
   },
   {
     id: 'pdm', name: '设备预测性维护', cat: 'manufacturing', catLabel: '智能制造', mark: 'PM',
@@ -51,7 +69,7 @@ window.APPS = [
     features: ['多源传感器数据接入与特征工程', '健康度评分与故障早期预警', '检修工单自动派发与闭环', '设备知识库与故障复盘'],
     tags: ['时序预测', '健康度', '工单联动'],
     price: 128000, unit: '起', priceNote: '含 20 台关键设备授权',
-    sales: 96, rating: 4.7, badge: '官方自营', colors: ['#92400e', '#ea580c'], img: 'assets/img/products/pdm.jpg'
+    sales: 96, rating: 4.7, badge: '官方自营', colors: ['#92400e', '#ea580c']
   },
   {
     id: 'content-factory', name: '电商内容工厂', cat: 'retail', catLabel: '零售电商', mark: 'CF',
@@ -59,7 +77,7 @@ window.APPS = [
     features: ['多平台规格一键适配', '品牌风格模板与审核规则', '多语言文案与本地化表达', '生成内容自动标识与留痕'],
     tags: ['多模态生成', '商品内容', '多语言'],
     price: 16800, unit: '/年', priceNote: '含 5,000 张/条内容额度',
-    sales: 730, rating: 4.8, badge: '热销', colors: ['#0891b2', '#22d3ee'], img: 'assets/img/products/content-factory.jpg'
+    sales: 730, rating: 4.8, badge: '热销', colors: ['#0891b2', '#22d3ee']
   },
   {
     id: 'ops-copilot', name: '经营分析 Copilot', cat: 'retail', catLabel: '零售电商', mark: 'OC',
@@ -67,7 +85,7 @@ window.APPS = [
     features: ['自然语言转 SQL / 指标查询', '异常波动自动归因', '活动复盘模板与图表生成', '语义层统一指标口径'],
     tags: ['数据分析', '归因', '语义层'],
     price: 24800, unit: '/年', priceNote: '含 3 个数据源接入',
-    sales: 410, rating: 4.7, badge: '新上', colors: ['#0d9488', '#22d3ee'], img: 'assets/img/products/ops-copilot.jpg'
+    sales: 410, rating: 4.7, badge: '新上', colors: ['#0d9488', '#22d3ee']
   },
   {
     id: 'emr', name: '病历质控助手', cat: 'medical', catLabel: '医疗健康', mark: 'EM',
@@ -75,7 +93,7 @@ window.APPS = [
     features: ['诊间语音实时转写与结构化', '病历完整性、时效性、内涵质控', '私有化部署，数据不出院', '质控规则可配置与统计'],
     tags: ['语音转写', '病历质控', '私有化'],
     price: null, unit: '面议', priceNote: '按院区与科室规模报价',
-    sales: 64, rating: 4.8, badge: '合规版', colors: ['#047857', '#34d399'], img: 'assets/img/products/emr.jpg'
+    sales: 64, rating: 4.8, badge: '合规版', colors: ['#047857', '#34d399']
   },
   {
     id: 'medkb', name: '医学知识助手', cat: 'medical', catLabel: '医疗健康', mark: 'MK',
@@ -83,7 +101,7 @@ window.APPS = [
     features: ['指南 / 文献 / 说明书统一检索', '答案逐条引用原文出处', '角色分权与问答审计', '培训题库与学习记录'],
     tags: ['医学知识', '可溯源', '角色分权'],
     price: 36000, unit: '/年', priceNote: '含 200 个账号',
-    sales: 210, rating: 4.7, badge: '官方自营', colors: ['#059669', '#22d3ee'], img: 'assets/img/products/medkb.jpg'
+    sales: 210, rating: 4.7, badge: '官方自营', colors: ['#059669', '#22d3ee']
   },
   {
     id: 'school-kb', name: '校本知识库', cat: 'education', catLabel: '教育培训', mark: 'SK',
@@ -91,7 +109,7 @@ window.APPS = [
     features: ['教材章节级溯源', '教师端 / 学生端分权', '答疑记录与高频问题分析', '支持校内私有化部署'],
     tags: ['校本知识', '溯源', '分权'],
     price: 12800, unit: '/年', priceNote: '含 1 个校区授权',
-    sales: 520, rating: 4.8, badge: '官方自营', colors: ['#7c3aed', '#a855f7'], img: 'assets/img/products/school-kb.jpg'
+    sales: 520, rating: 4.8, badge: '官方自营', colors: ['#7c3aed', '#a855f7']
   },
   {
     id: 'course-gen', name: '课件生成工作台', cat: 'education', catLabel: '教育培训', mark: 'CG',
@@ -99,7 +117,7 @@ window.APPS = [
     features: ['大纲到 PPT / 图解 / 脚本', '分层题库与答案解析', '校本模板与品牌规范', '生成内容人工校验流程'],
     tags: ['课件生成', '题库', '多模态'],
     price: 9800, unit: '/年', priceNote: '含 10 个教师账号',
-    sales: 680, rating: 4.6, badge: '新上', colors: ['#9333ea', '#ec4899'], img: 'assets/img/products/course-gen.jpg'
+    sales: 680, rating: 4.6, badge: '新上', colors: ['#9333ea', '#ec4899']
   },
   {
     id: 'scheduling', name: '智能排程调度', cat: 'manufacturing', catLabel: '智能制造', mark: 'SC',
@@ -107,7 +125,7 @@ window.APPS = [
     features: ['多约束求解与可执行排程', '插单影响模拟与建议', '与 ERP / MES 数据同步', '自然语言查询生产计划'],
     tags: ['约束求解', '排产', 'ERP 集成'],
     price: 158000, unit: '起', priceNote: '按产线与订单规模报价',
-    sales: 72, rating: 4.7, badge: '官方自营', colors: ['#c2410c', '#f59e0b'], img: 'assets/img/products/scheduling.jpg'
+    sales: 72, rating: 4.7, badge: '官方自营', colors: ['#c2410c', '#f59e0b']
   },
   {
     id: 'digital-human', name: '数字人内容生产', cat: 'multimodal', catLabel: '多模态', mark: 'DH',
@@ -115,7 +133,7 @@ window.APPS = [
     features: ['形象与音色定制', '脚本到成片批量生产', '多语言配音与字幕', '内容合规审核与标识'],
     tags: ['数字人', '视频生成', '多语言'],
     price: 39800, unit: '/年', priceNote: '含 120 分钟成片额度',
-    sales: 240, rating: 4.6, badge: '官方自营', colors: ['#be185d', '#f472b6'], img: 'assets/img/products/digital-human.jpg'
+    sales: 240, rating: 4.6, badge: '官方自营', colors: ['#be185d', '#f472b6']
   }
 ];
 

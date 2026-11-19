@@ -154,25 +154,34 @@
   const appState = { cat: 'all', q: '', sort: 'rec' };
 
   function appCard(a) {
-    return `<article class="app-card">
+    const soon = !!a.comingSoon;
+    return `<article class="app-card${soon ? ' coming-soon' : ''}">
       <div class="app-cover" style="--c1:${a.colors[0]};--c2:${a.colors[1]}">
         ${a.img ? `<img class="cover-img" src="${esc(a.img)}" alt="${esc(a.name)}" loading="lazy">` : ''}
         <span class="cat">${esc(a.catLabel)}</span>
-        <span class="badge">${esc(a.badge)}</span>
+        <span class="badge${soon ? ' badge-soft' : ''}">${soon ? '🔨 开发中' : esc(a.badge)}</span>
         ${a.img ? '' : `<span class="mark">${esc(a.mark)}</span>`}
+        ${soon ? `<span class="soon-tag">🚧 即将上线</span>` : ''}
       </div>
       <div class="app-body">
         <h3>${esc(a.name)}</h3>
         <p class="app-desc">${esc(a.desc)}</p>
         <div class="app-tags">${a.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
         <div class="app-meta">
-          <div class="price"><b>${a.price ? money(a.price) : '面议'}</b>${a.price ? `<span>${esc(a.unit)}</span>` : ''}</div>
-          <span class="rating">★ <b>${a.rating}</b> · ${a.sales} 家采购</span>
+          ${soon
+            ? `<div class="price"><b>🚀 内测中</b><span>${esc(a.priceNote || '欢迎预约')}</span></div><span class="rating">敬请期待</span>`
+            : `<div class="price"><b>${a.price ? money(a.price) : '面议'}</b>${a.price ? `<span>${esc(a.unit)}</span>` : ''}</div>
+               <span class="rating">★ <b>${a.rating}</b> · ${a.sales} 家采购</span>`
+          }
         </div>
         <div class="app-foot">
-          ${a.demo ? `<a class="btn btn-ghost btn-sm" href="${esc(a.demo)}" target="_blank" rel="noopener">▶ 在线演示</a>` : `<a class="btn btn-ghost btn-sm" href="products/${encodeURIComponent(a.name)}/">产品目录</a>`}
-          <button class="btn btn-ghost btn-sm" data-app-detail="${a.id}">查看详情</button>
-          <button class="btn btn-primary btn-sm" data-add-cart="${a.id}">加入购物车</button>
+          ${soon
+            ? `<button class="btn btn-ghost btn-sm" data-app-detail="${a.id}">查看详情</button>
+               <button class="btn btn-primary btn-sm" data-soon-book="${a.id}">📝 预约内测</button>`
+            : `${a.demo ? `<a class="btn btn-ghost btn-sm" href="${esc(a.demo)}" target="_blank" rel="noopener">▶ 在线演示</a>` : `<a class="btn btn-ghost btn-sm" href="products/${encodeURIComponent(a.name)}/">产品目录</a>`}
+               <button class="btn btn-ghost btn-sm" data-app-detail="${a.id}">查看详情</button>
+               <button class="btn btn-primary btn-sm" data-add-cart="${a.id}">加入购物车</button>`
+          }
         </div>
       </div>
     </article>`;
@@ -210,9 +219,10 @@
   function openAppDetail(id) {
     const a = window.APPS.find(x => x.id === id);
     if (!a) return;
+    const soon = !!a.comingSoon;
     openModal({
       title: esc(a.name),
-      subtitle: `${a.catLabel} · ${a.badge} · ${a.sales} 家企业采购`,
+      subtitle: soon ? `🚧 ${a.catLabel} · 即将上线 · ${a.priceNote || '内测中'}` : `${a.catLabel} · ${a.badge} · ${a.sales} 家企业采购`,
       body: `
         <div class="modal-cover" style="background:linear-gradient(135deg,${a.colors[0]},${a.colors[1]})">
           ${a.img ? `<img class="modal-img" src="${esc(a.img)}" alt="${esc(a.name)}" loading="lazy">` : ''}
@@ -224,17 +234,25 @@
           <ul class="detail-list">${a.features.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
         </div>
         <div class="detail-kv">
-          <div class="kv"><span>交付方式</span><b>私有化 / 混合云</b></div>
-          <div class="kv"><span>实施周期</span><b>2–6 周（视场景）</b></div>
-          <div class="kv"><span>服务内容</span><b>部署 + 培训 + 首年运维</b></div>
-          <div class="kv"><span>评价</span><b>★ ${a.rating} / 5.0</b></div>
+          <div class="kv"><span>交付方式</span><b>${soon ? '规划中' : '私有化 / 混合云'}</b></div>
+          <div class="kv"><span>预计上线</span><b>${soon ? 'Q1 · 2027' : '2–6 周（视场景）'}</b></div>
+          <div class="kv"><span>服务内容</span><b>${soon ? '内测名额 · 优先定价权' : '部署 + 培训 + 首年运维'}</b></div>
+          <div class="kv"><span>状态</span><b>${soon ? '🚧 开发中' : `★ ${a.rating} / 5.0`}</b></div>
         </div>
-        <div class="price-line"><b>${a.price ? money(a.price) : '面议'}</b><span>${a.price ? esc(a.priceNote || '') : '按规模与部署方式报价'}</span></div>
-        <div class="sim-note">演示环境：价格为示意，真实采购以合同与实施范围为准。</div>`,
-      foot: `<a class="btn btn-ghost" href="products/${encodeURIComponent(a.name)}/">产品目录</a>
-             ${a.demo ? `<a class="btn btn-ghost" href="${esc(a.demo)}" target="_blank" rel="noopener">▶ 在线演示</a>` : ''}
-             <button class="btn btn-ghost" data-close>关闭</button>
-             <button class="btn btn-primary" data-add-cart="${a.id}">加入购物车</button>`
+        <div class="price-line">
+          ${soon
+            ? `<b>🚀 内测中</b><span>${esc(a.priceNote || '欢迎预约，首批用户享折扣')}</span>`
+            : `<b>${a.price ? money(a.price) : '面议'}</b><span>${a.price ? esc(a.priceNote || '') : '按规模与部署方式报价'}</span>`
+          }
+        </div>
+        <div class="sim-note">演示环境：${soon ? '本产品尚未上线，预约后我们会在第一时间通知你。' : '价格为示意，真实采购以合同与实施范围为准。'}</div>`,
+      foot: soon
+        ? `<button class="btn btn-ghost" data-close>关闭</button>
+           <button class="btn btn-primary" data-soon-book="${a.id}">📝 预约内测</button>`
+        : `<a class="btn btn-ghost" href="products/${encodeURIComponent(a.name)}/">产品目录</a>
+           ${a.demo ? `<a class="btn btn-ghost" href="${esc(a.demo)}" target="_blank" rel="noopener">▶ 在线演示</a>` : ''}
+           <button class="btn btn-ghost" data-close>关闭</button>
+           <button class="btn btn-primary" data-add-cart="${a.id}">加入购物车</button>`
     });
   }
 
@@ -921,6 +939,19 @@
 
     const add = t.closest('[data-add-cart]');
     if (add) { addToCart(add.dataset.addCart); return; }
+
+    const soon = t.closest('[data-soon-book]');
+    if (soon) {
+      const a = window.APPS.find(x => x.id === soon.dataset.soonBook);
+      if (a) {
+        const key = 'aisoft_soon_book_v1';
+        const list = JSON.parse(localStorage.getItem(key) || '[]');
+        if (!list.includes(a.id)) list.push(a.id);
+        localStorage.setItem(key, JSON.stringify(list));
+        toast(`✅ 已预约「${a.name}」内测，上线第一时间通知你`);
+      }
+      return;
+    }
 
     const detail = t.closest('[data-app-detail]');
     if (detail) { openAppDetail(detail.dataset.appDetail); return; }
