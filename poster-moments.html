@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>朋友圈方形海报 · 扫码进入官网</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;height:100%;margin:0;background:#0b0f1a;font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;color:#fff}
+  body{display:flex;align-items:center;justify-content:center}
+  .poster{
+    width:1080px;height:1080px;position:relative;overflow:hidden;
+    background:
+      radial-gradient(900px 600px at 12% -8%, rgba(124,58,237,.50), transparent 60%),
+      radial-gradient(800px 600px at 108% 18%, rgba(47,92,255,.45), transparent 55%),
+      radial-gradient(700px 700px at 50% 118%, rgba(236,72,153,.28), transparent 55%),
+      linear-gradient(160deg,#0b0f1a 0%,#131a2e 50%,#0b0f1a 100%);
+    border-radius:28px;box-shadow:0 30px 90px rgba(0,0,0,.55);
+  }
+  /* 装饰光斑 */
+  .glow{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;pointer-events:none}
+  .glow.a{width:320px;height:320px;background:#7c3aed;top:-80px;right:-60px}
+  .glow.b{width:260px;height:260px;background:#2f5cff;bottom:180px;left:-70px}
+  .glow.c{width:220px;height:220px;background:#ec4899;bottom:-60px;right:120px;opacity:.35}
+
+  .inner{position:relative;height:100%;padding:66px 66px 54px;display:flex;flex-direction:column}
+
+  /* 顶部品牌 */
+  .brand{display:flex;align-items:center;gap:14px;margin-bottom:30px}
+  .logo{
+    width:54px;height:54px;border-radius:14px;display:grid;place-items:center;font-weight:900;font-size:21px;
+    background:linear-gradient(135deg,#2f5cff,#7c3aed);box-shadow:0 8px 22px rgba(47,92,255,.5);color:#fff;letter-spacing:-1px;
+  }
+  .brand-text b{display:block;font-size:20px;letter-spacing:2px}
+  .brand-text span{font-size:12px;color:#aab0c4;letter-spacing:4px}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:7px 16px;border-radius:999px;font-size:13px;color:#cfd6ea;letter-spacing:1px;margin-bottom:22px;width:max-content}
+  .eyebrow i{width:6px;height:6px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399}
+
+  h1{font-size:72px;line-height:1.12;font-weight:900;letter-spacing:-1px}
+  h1 .grad{background:linear-gradient(90deg,#7dd3fc,#a78bfa,#f0abfc);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{margin-top:18px;font-size:17px;line-height:1.75;color:#c3c9dc;max-width:760px}
+
+  /* 三板块 */
+  .squares{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
+  .sq{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:24px 20px;backdrop-filter:blur(6px)}
+  .sq .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;margin-bottom:14px}
+  .sq:nth-child(1) .ic{background:linear-gradient(135deg,#2f5cff,#60a5fa)}
+  .sq:nth-child(2) .ic{background:linear-gradient(135deg,#7c3aed,#ec4899)}
+  .sq:nth-child(3) .ic{background:linear-gradient(135deg,#059669,#34d399)}
+  .sq h3{font-size:19px;margin-bottom:8px}
+  .sq p{font-size:13px;line-height:1.7;color:#aab0c4}
+
+  /* 二维码区 */
+  .qr-wrap{margin-top:auto;display:flex;align-items:center;gap:34px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:26px 30px}
+  .qr-box{background:#fff;border-radius:16px;padding:14px;box-shadow:0 12px 30px rgba(0,0,0,.4);flex-shrink:0}
+  .qr-box img{display:block;width:168px;height:168px}
+  .qr-info b{font-size:26px;display:block;margin-bottom:8px}
+  .qr-info .url{font-size:14px;color:#9aa3bd;margin-bottom:14px;word-break:break-all}
+  .qr-info .tip{display:flex;align-items:center;gap:8px;font-size:13px;color:#cfd6ea;flex-wrap:wrap}
+  .qr-info .tip span{background:linear-gradient(90deg,#7c3aed,#2f5cff);padding:4px 12px;border-radius:999px;font-weight:700;font-size:12px}
+
+  /* 底部 */
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);font-size:12px;color:#8b92a8}
+  .foot .grad-text{background:linear-gradient(90deg,#7dd3fc,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="glow a"></div>
+  <div class="glow b"></div>
+  <div class="glow c"></div>
+  <div class="inner">
+
+    <div class="brand">
+      <div class="logo">AI</div>
+      <div class="brand-text">
+        <b>AI 业务应用软件开发</b>
+        <span>AI · APPLICATION · PLATFORM</span>
+      </div>
+    </div>
+
+    <span class="eyebrow"><i></i>官方自营 + 个人/组织开店 · 全流程担保交易</span>
+
+    <h1>让每一个 AI 需求<br><span class="grad">找到对的人</span></h1>
+    <p class="sub">应用广场直接采购官方成熟产品；需求广场承接官方发布的项目订单；商城广场让个人和组织开自己的 AI 应用店。一条链路，把需求、开发与交易连接起来。</p>
+
+    <div class="squares">
+      <div class="sq">
+        <div class="ic">🛒</div>
+        <h3>应用广场</h3>
+        <p>13 款官方自研 AI 应用，开箱即用，支持在线演示与采购。</p>
+      </div>
+      <div class="sq">
+        <div class="ic">📋</div>
+        <h3>需求广场</h3>
+        <p>官方发布 AI 外包订单，用户也可自主发布，含信用与保证金监管。</p>
+      </div>
+      <div class="sq">
+        <div class="ic">🏪</div>
+        <h3>商城广场</h3>
+        <p>个人/团队/企业开店，自定义装修风格，在线接单与结算。</p>
+      </div>
+    </div>
+
+    <div class="qr-wrap">
+      <div class="qr-box">
+        <img src="assets/img/qr-site.png" alt="扫码进入官网">
+      </div>
+      <div class="qr-info">
+        <b>扫码进入官网</b>
+        <div class="url">https://huangwei361.github.io/aisoft-platform/</div>
+        <div class="tip"><span>扫一扫</span>手机访问 · 浏览应用 · 发布需求 · 开店接单</div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div>© <span class="grad-text">AI 业务应用软件开发公司</span> · 演示站点</div>
+      <div>AI · 让需求直达交付</div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
