@@ -40,6 +40,16 @@ window.APPS = [
     demo: 'speaking.html'
   },
   {
+    id: 'qike-studio', name: '启课智能教学台', cat: 'education', catLabel: '教育培训', mark: 'QK',
+    desc: '面向小学、初中、高中教师的 AI 教学生成软件：按课标与教材版本一键生成课件、互动课堂、作业评测、几何图形与模拟实验，九大模块一体化工作台，内容对齐国家课程标准。',
+    features: ['题目讲课：文字/语音提问，像搜索一样自动生成讲解 PPT', '课件生成：五环节完整课件，可编辑、可导出', '互动课堂：提问、抢答、随堂测一键生成', '九大模块：几何引擎 / AI 课堂 / 模拟实验 / 项目学习 / 联网搜索', '本地引擎可离线生成，配置大模型 API 升级深度生成'],
+    tags: ['教学生成', 'K12', '课标对齐'],
+    price: 9800, unit: '/年', priceNote: '含 20 个教师账号 + 本地生成引擎',
+    sales: 0, rating: 4.8, badge: '新上', colors: ['#1457d9', '#0ea5e9'],
+    img: 'assets/img/products/qike-studio.jpg',
+    demo: 'qike-studio.html'
+  },
+  {
     id: 'cs-agent', name: '智能客服 Agent', cat: 'efficiency', catLabel: '企业效率', mark: 'CS',
     desc: '覆盖售前咨询、售后工单与私域运营的多轮对话智能体，可调用订单、物流与CRM工具。',
     features: ['多渠道接入：网页、企微、公众号、App', '工单自动流转与人工无缝接管', '知识库实时更新，答案可溯源', '对话质检与满意度分析'],
