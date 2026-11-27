@@ -8,10 +8,21 @@ window.CATEGORIES = [
   { key: 'retail', label: '零售电商' },
   { key: 'medical', label: '医疗健康' },
   { key: 'education', label: '教育培训' },
+  { key: 'legal', label: '法律合规' },
   { key: 'multimodal', label: '多模态' }
 ];
 
 window.APPS = [
+  {
+    id: 'legal-ai', name: '智法通AI法律咨询', cat: 'legal', catLabel: '法律合规', mark: 'LF',
+    desc: '面向个人与中小企业的 AI 法律咨询助手：小问题秒级问答并附法条依据与行动建议，复杂纠纷一键生成含事实梳理、法律依据、争议焦点、行动方案与文书模板的专题意见书；内置专题案例库、诉讼费等四类计算器与法规速查，全端适配移动设备。',
+    features: ['快速问答：秒级解答 + 法条依据 + 可执行行动建议', '专题意见书：事实梳理 / 法律依据 / 争议焦点 / 行动方案 / 文书模板', '专题案例库：房产漏水、家装增项、刑事举报、公司架构等真实案例', '法律工具：诉讼费 / 加班费 / 借贷利息 / 经济补偿金计算器', '法规速查：高频法条按领域检索，答案可溯源'],
+    tags: ['法律咨询', '专题意见书', '法规检索', '法律计算器'],
+    price: 2980, unit: '/年', priceNote: '含 1 个机构账号 + 不限次 AI 问答（专业版）',
+    sales: 0, rating: 4.8, badge: '新上', colors: ['#0f2847', '#c8a45c'],
+    img: 'assets/img/products/legal-ai.jpg',
+    demo: 'legal.html'
+  },
   {
     id: 'ai-music', name: 'AI 音乐音效创作平台', cat: 'multimodal', catLabel: '多模态', mark: 'MU',
     desc: '面向音乐人、UP 主与影视团队的 AI 音乐创作工作台：文字成曲、片段续写、风格迁移、音效生成与分轨导出，支持商业授权与版权登记。',
