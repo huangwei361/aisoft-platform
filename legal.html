@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>智法通 · AI法律咨询助手</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{
+    --navy:#0f2847; --navy2:#16365f; --blue:#1e5fbf; --blue2:#2f80ed;
+    --gold:#c8a45c; --gold2:#e6c886; --cyan:#22b8cf;
+    --ink:#1f2a3d; --ink2:#5b6b84; --ink3:#8a98ad;
+    --bg:#f2f5fa; --card:#ffffff; --line:#e6ebf3;
+    --red:#d64545; --green:#1a9e6e; --orange:#e8873a;
+  }
+  html,body{height:100%}
+  body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0c1c33;color:var(--ink);display:flex;justify-content:center}
+  .phone{width:100%;max-width:460px;min-height:100vh;background:var(--bg);position:relative;overflow-x:hidden;padding-bottom:76px;box-shadow:0 0 40px rgba(0,0,0,.35)}
+  img{display:block;max-width:100%}
+  .press{transition:transform .08s;cursor:pointer}.press:active{transform:scale(.96)}
+
+  /* ===== 顶部品牌区 ===== */
+  .hero{background:linear-gradient(150deg,#0f2847 0%,#16365f 55%,#1e5088 100%);color:#fff;padding:18px 18px 26px;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(200,164,92,.28),transparent 70%)}
+  .hero::before{content:"";position:absolute;left:-40px;bottom:-70px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(47,128,237,.25),transparent 70%)}
+  .hero-top{display:flex;align-items:center;gap:10px;position:relative;z-index:2}
+  .logo-ic{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));display:grid;place-items:center;font-size:20px;flex:none}
+  .hero-top b{font-size:19px;letter-spacing:2px}
+  .hero-top small{display:block;font-size:11px;color:rgba(255,255,255,.65);letter-spacing:1px;font-weight:400}
+  .hero-badge{margin-left:auto;font-size:11px;border:1px solid rgba(200,164,92,.6);color:var(--gold2);padding:3px 10px;border-radius:999px}
+  .hero h2{position:relative;z-index:2;font-size:21px;margin:18px 0 6px;letter-spacing:1px}
+  .hero p{position:relative;z-index:2;font-size:13px;color:rgba(255,255,255,.78);line-height:1.6}
+  .hero-search{position:relative;z-index:2;margin-top:16px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:12px 14px;font-size:14px;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:8px;backdrop-filter:blur(4px)}
+  .hero-search .ph{flex:1;opacity:.75}
+  .hero-search .go{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#2a1f08;font-weight:800;font-size:13px;padding:6px 14px;border-radius:8px}
+
+  /* ===== 通用分区 ===== */
+  .sect{margin:18px 14px 0}
+  .sect-head{display:flex;align-items:center;gap:7px;margin-bottom:11px}
+  .sect-head .bar{width:4px;height:16px;border-radius:2px;background:linear-gradient(180deg,var(--gold),var(--gold2))}
+  .sect-head b{font-size:16px;color:var(--navy)}
+  .sect-head .more{margin-left:auto;font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:2px}
+
+  /* ===== 双模式入口 ===== */
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:16px 14px 0}
+  .mode{border-radius:14px;padding:16px 14px;color:#fff;position:relative;overflow:hidden;min-height:128px;display:flex;flex-direction:column}
+  .mode.m1{background:linear-gradient(145deg,#1e5fbf,#2f80ed)}
+  .mode.m2{background:linear-gradient(145deg,#8a5a17,#c8a45c)}
+  .mode .mic{font-size:26px}
+  .mode b{font-size:16px;margin-top:8px;letter-spacing:1px}
+  .mode span{font-size:11.5px;opacity:.88;margin-top:4px;line-height:1.5;flex:1}
+  .mode .mbtn{margin-top:10px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:8px;text-align:center;font-size:12.5px;font-weight:700;padding:7px 0}
+
+  /* ===== 卡片通用 ===== */
+  .card{background:var(--card);border-radius:14px;box-shadow:0 3px 14px rgba(20,40,80,.06)}
+  .field-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 14px}
+  .field{background:#fff;border-radius:12px;padding:13px 4px;text-align:center;box-shadow:0 3px 12px rgba(20,40,80,.05)}
+  .field .fic{font-size:24px}
+  .field span{display:block;font-size:11.5px;color:var(--ink2);margin-top:5px}
+
+  /* ===== 案例卡 ===== */
+  .case-card{padding:15px;margin-bottom:12px;position:relative;border-left:4px solid var(--gold)}
+  .case-tag{display:inline-block;font-size:11px;padding:2px 9px;border-radius:5px;background:#f6efdd;color:#8a6420;font-weight:700;margin-bottom:8px}
+  .case-card h4{font-size:15.5px;color:var(--navy);line-height:1.5}
+  .case-card p{font-size:12.5px;color:var(--ink2);line-height:1.7;margin-top:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .case-meta{display:flex;align-items:center;gap:10px;margin-top:11px;font-size:11.5px;color:var(--ink3)}
+  .case-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--ink3)}
+  .case-card .open{position:absolute;right:14px;bottom:13px;font-size:12px;color:var(--blue);font-weight:700}
+  .case-card.real{border-left-color:var(--red)}
+  .case-card.real .case-tag{background:#fdeaea;color:#b33}
+
+  /* ===== 底部 Tab ===== */
+  .tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;height:64px;background:#fff;border-top:1px solid var(--line);display:flex;z-index:60;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -2px 12px rgba(20,40,80,.05)}
+  .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;color:var(--ink3)}
+  .tab .tic{font-size:21px;line-height:1}
+  .tab.on{color:var(--blue);font-weight:700}
+
+  /* ===== 页面切换 ===== */
+  .page{display:none}.page.on{display:block;animation:fade .2s}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* ===== 子页头部 ===== */
+  .sub-head{background:linear-gradient(140deg,#0f2847,#1e5088);color:#fff;padding:16px 16px 18px;display:flex;align-items:center;gap:10px}
+  .sub-head .back{font-size:20px;width:30px;cursor:pointer}
+  .sub-head h3{font-size:17px;letter-spacing:1px}
+  .sub-head small{font-size:11px;color:rgba(255,255,255,.6);display:block;font-weight:400;margin-top:2px}
+
+  /* ===== 问答页 ===== */
+  .chat-box{padding:14px 12px 16px;min-height:calc(100vh - 64px);display:flex;flex-direction:column}
+  .msg{max-width:84%;padding:11px 14px;border-radius:13px;font-size:13.5px;line-height:1.75;margin-bottom:12px;white-space:pre-wrap;word-break:break-word}
+  .msg.ai{background:#fff;border:1px solid var(--line);border-top-left-radius:4px;align-self:flex-start;box-shadow:0 2px 8px rgba(20,40,80,.05)}
+  .msg.me{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border-top-right-radius:4px;align-self:flex-end}
+  .msg.ai .law{margin-top:9px;background:#f4f8ff;border-left:3px solid var(--blue2);padding:8px 10px;border-radius:0 8px 8px 0;font-size:12px;color:var(--ink2);line-height:1.7;white-space:normal}
+  .msg.ai .law b{color:var(--blue)}
+  .msg.ai .acts{margin-top:9px;background:#fbf7ee;border-left:3px solid var(--gold);padding:8px 10px;border-radius:0 8px 8px 0;font-size:12px;color:#6d5526;line-height:1.7;white-space:normal}
+  .quick{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 12px;align-self:flex-start}
+  .quick span{font-size:12px;background:#fff;border:1px solid #cdddf2;color:var(--blue);padding:6px 12px;border-radius:999px}
+  .chat-input{position:fixed;bottom:64px;left:50%;transform:translateX(-50%);width:100%;max-width:460px;background:#fff;border-top:1px solid var(--line);padding:9px 12px;display:flex;gap:8px;z-index:55}
+  .chat-input input{flex:1;border:1px solid var(--line);border-radius:999px;padding:10px 16px;font-size:14px;outline:none;background:var(--bg)}
+  .chat-input input:focus{border-color:var(--blue2)}
+  .chat-input button{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border:none;border-radius:999px;padding:0 20px;font-size:14px;font-weight:700}
+  .typing{display:inline-flex;gap:4px;align-items:center;color:var(--ink3);font-size:13px}
+  .typing i{width:6px;height:6px;border-radius:50%;background:var(--ink3);animation:blink 1.2s infinite}
+  .typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+  .chat-body{flex:1;padding-bottom:70px}
+
+  /* ===== 案例详情 ===== */
+  .detail{background:#fff;margin:0;border-radius:0}
+  .detail-pad{padding:18px 16px 40px}
+  .detail h1{font-size:19px;color:var(--navy);line-height:1.5}
+  .detail .info-line{font-size:12px;color:var(--ink3);margin:10px 0 4px}
+  .detail h2{font-size:16px;color:var(--navy);margin:24px 0 10px;padding-left:10px;border-left:4px solid var(--gold);line-height:1.4}
+  .detail h3{font-size:14.5px;color:var(--ink);margin:16px 0 7px}
+  .detail p{font-size:14px;line-height:1.9;color:#33415a;margin-bottom:10px}
+  .detail ol,.detail ul{margin:0 0 12px 20px}
+  .detail li{font-size:14px;line-height:1.9;color:#33415a;margin-bottom:5px}
+  .detail strong{color:var(--navy)}
+  .detail table{width:100%;border-collapse:collapse;margin:10px 0 16px;font-size:12.5px;display:block;overflow-x:auto}
+  .detail th,.detail td{border:1px solid var(--line);padding:8px 10px;text-align:left;line-height:1.6;min-width:90px}
+  .detail th{background:#f4f7fc;color:var(--navy);white-space:nowrap}
+  .detail hr{border:none;border-top:1px dashed var(--line);margin:20px 0}
+  .quote-box{background:linear-gradient(135deg,#f4f8ff,#fafcff);border:1px solid #dce8fa;border-radius:12px;padding:14px 16px;margin:12px 0;font-size:13px;line-height:1.8;color:#33415a;white-space:pre-wrap}
+  .risk-box{background:#fdf3f3;border:1px solid #f3d4d4;border-radius:12px;padding:14px 16px;margin:12px 0}
+  .risk-box b{color:var(--red);font-size:13.5px}
+  .concl-box{background:linear-gradient(135deg,#fbf7ee,#fdfbf5);border:1px solid #e8d9b4;border-radius:12px;padding:15px 16px;margin:14px 0;font-size:13.5px;line-height:1.9;color:#5c4a22}
+  .disclaimer{background:#f6f8fb;border-radius:10px;padding:12px 14px;font-size:11.5px;color:var(--ink3);line-height:1.7;margin-top:22px}
+
+  /* ===== 工具页 ===== */
+  .tool-list{padding:14px}
+  .tool-item{display:flex;align-items:center;gap:13px;padding:16px;background:#fff;border-radius:14px;margin-bottom:11px;box-shadow:0 3px 12px rgba(20,40,82,.05)}
+  .tool-item .ticon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;flex:none}
+  .tool-item .t1{background:linear-gradient(135deg,#e8f0fe,#d4e4fb)}
+  .tool-item .t2{background:linear-gradient(135deg,#fdf2e2,#f8e2c4)}
+  .tool-item .t3{background:linear-gradient(135deg,#e6f7f0,#cdeede)}
+  .tool-item .t4{background:linear-gradient(135deg,#f3edfc,#e4d7f7)}
+  .tool-item b{font-size:14.5px;color:var(--navy);display:block}
+  .tool-item span{font-size:12px;color:var(--ink2);margin-top:3px;display:block}
+  .tool-item .arr{margin-left:auto;color:var(--ink3);font-size:18px}
+
+  /* ===== 计算器弹层 ===== */
+  .sheet-mask{position:fixed;inset:0;background:rgba(10,20,40,.5);z-index:80;display:none;align-items:flex-end;justify-content:center}
+  .sheet-mask.on{display:flex}
+  .sheet{width:100%;max-width:460px;background:#fff;border-radius:20px 20px 0 0;padding:20px 18px 28px;max-height:86vh;overflow-y:auto;animation:up .25s}
+  @keyframes up{from{transform:translateY(100%)}to{transform:none}}
+  .sheet h3{font-size:17px;color:var(--navy);margin-bottom:16px;display:flex;align-items:center}
+  .sheet h3 .x{margin-left:auto;font-size:22px;color:var(--ink3);cursor:pointer;line-height:1}
+  .field-row{margin-bottom:14px}
+  .field-row label{display:block;font-size:13px;color:var(--ink2);margin-bottom:7px;font-weight:600}
+  .field-row input,.field-row select{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:14px;outline:none;background:var(--bg)}
+  .field-row input:focus,.field-row select:focus{border-color:var(--blue2)}
+  .seg{display:flex;gap:8px}
+  .seg label{flex:1;border:1px solid var(--line);border-radius:10px;padding:10px 0;text-align:center;font-size:13px;color:var(--ink2);background:var(--bg);font-weight:400;margin:0;cursor:pointer}
+  .seg input{display:none}
+  .seg input:checked+span{color:#fff}
+  .seg label:has(input:checked){background:linear-gradient(135deg,var(--blue),var(--blue2));border-color:var(--blue);color:#fff;font-weight:700}
+  .calc-btn{width:100%;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border:none;border-radius:12px;padding:13px;font-size:15px;font-weight:800;margin-top:6px;letter-spacing:2px}
+  .calc-result{margin-top:16px;background:linear-gradient(135deg,#0f2847,#1e5088);color:#fff;border-radius:14px;padding:18px;display:none}
+  .calc-result.on{display:block}
+  .calc-result .big{font-size:28px;font-weight:900;color:var(--gold2);margin:6px 0 4px}
+  .calc-result small{font-size:12px;color:rgba(255,255,255,.7);line-height:1.7;display:block}
+  .calc-result .det{margin-top:12px;border-top:1px solid rgba(255,255,255,.18);padding-top:10px;font-size:12.5px;color:rgba(255,255,255,.85);line-height:2}
+
+  /* ===== 法规速查 ===== */
+  .law-search{padding:14px 14px 0}
+  .law-search input{width:100%;border:1px solid var(--line);border-radius:999px;padding:11px 18px;font-size:14px;outline:none}
+  .law-cat{display:flex;gap:8px;padding:12px 14px;overflow-x:auto}
+  .law-cat span{flex:none;font-size:12.5px;padding:6px 14px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--ink2)}
+  .law-cat span.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .law-item{background:#fff;border-radius:12px;padding:14px 16px;margin:0 14px 10px;box-shadow:0 2px 10px rgba(20,40,82,.05)}
+  .law-item b{font-size:14px;color:var(--navy);display:block;line-height:1.5}
+  .law-item .law-no{font-size:11.5px;color:var(--gold);font-weight:700;margin:3px 0 6px;display:block}
+  .law-item p{font-size:12.5px;color:var(--ink2);line-height:1.75}
+  .law-empty{text-align:center;color:var(--ink3);font-size:13px;padding:40px 0}
+
+  /* 数据看板 */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:16px 14px 0}
+  .stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:11px 6px;text-align:center;color:#fff}
+  .stat b{font-size:18px;color:var(--gold2);display:block}
+  .stat span{font-size:10.5px;color:rgba(255,255,255,.7)}
+
+  /* 双模式选择弹层（大问题） */
+  .mode-tip{font-size:11.5px;color:var(--ink3);line-height:1.7;background:#f6f8fb;border-radius:8px;padding:9px 12px;margin-bottom:10px}
+  .toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(15,30,55,.92);color:#fff;padding:12px 22px;border-radius:10px;font-size:13.5px;z-index:200;display:none;max-width:80%}
+</style>
+</head>
+<body>
+<div class="phone" id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   智法通 · AI法律咨询助手  —— 单文件 H5
+   模块：快速问答（小问题）/ 专题意见书（大问题）/ 专题案例库 / 法律工具 / 法规速查
+   ============================================================ */
+
+/* ---------- 快速问答知识库（小问题：秒级问答） ---------- */
+const QA = [
+{
+  cat:'劳动用工', icon:'👷',
+  q:'公司拖欠工资 / 不发加班费怎么办？',
+  keys:['工资','欠薪','拖欠','加班费','不发','克扣','提成','奖金'],
+  a:'拖欠工资和加班费属于典型的劳动争议，你有明确的法律救济路径。首先明确：用人单位应当按劳动合同约定和国家规定，及时足额支付劳动报酬，不得克扣或无故拖欠。',
+  law:'《劳动法》第五十条：工资应当以货币形式按月支付给劳动者本人，不得克扣或者无故拖欠。《劳动合同法》第八十五条：未及时足额支付劳动报酬的，劳动行政部门可责令限期支付；逾期不付的，按应付金额 50%–100% 加付赔偿金。',
+  acts:'① 收集证据：劳动合同、考勤记录、工资条/银行流水、工作群聊天记录、加班审批记录；② 先书面（微信/邮件）向公司催告并留存记录；③ 向当地劳动保障监察大队投诉，或向劳动人事争议仲裁委员会申请仲裁（劳动仲裁不收费，时效一般为 1 年）；④ 对仲裁结果不服，可在 15 日内向法院起诉。'
+},
+{
+  cat:'劳动用工', icon:'👷',
+  q:'公司无故辞退我，能拿多少赔偿？',
+  keys:['辞退','开除','解除','裁员','离职','赔偿金','N+1','2N','补偿'],
+  a:'关键看公司解除是否合法、是否履行法定程序。违法解除的，你可以要求继续履行合同，或要求支付赔偿金（经济补偿标准的 2 倍，即 2N）。',
+  law:'《劳动合同法》第四十七条：经济补偿按工作年限，每满一年支付一个月工资；六个月以上不满一年按一年计；不满六个月支付半个月工资。第八十七条：违法解除或终止劳动合同的，按经济补偿标准的二倍支付赔偿金。第四十条：无过失性辞退需提前 30 日书面通知或额外支付一个月工资（即 N+1）。',
+  acts:'① 不要签署任何"自愿离职""协商解除"文件；② 索要书面《解除劳动合同通知书》并保留；③ 核对工作年限与月平均工资（含奖金、补贴，按解除前 12 个月平均）；④ 先协商，协商不成申请劳动仲裁主张 2N 赔偿金；⑤ 用下方「经济补偿金计算器」快速估算金额。'
+},
+{
+  cat:'劳动用工', icon:'👷',
+  q:'入职后一直没签劳动合同，可以主张双倍工资吗？',
+  keys:['未签合同','没签合同','双倍工资','劳动合同','试用期'],
+  a:'可以。用人单位自用工之日起超过一个月不满一年未与劳动者订立书面劳动合同的，应当向劳动者每月支付二倍的工资。',
+  law:'《劳动合同法》第八十二条：用人单位自用工之日起超过一个月不满一年未与劳动者订立书面劳动合同的，应当向劳动者每月支付二倍的工资。第十条：建立劳动关系应当订立书面劳动合同，已建立劳动关系未同时订立的，应自用工之日起一个月内订立。',
+  acts:'① 保留入职证明：工牌、考勤、工资发放记录、工作群、社保缴纳记录；② 双倍工资差额最多主张 11 个月；③ 注意仲裁时效（一般为 1 年，从应支付之日起算）；④ 申请劳动仲裁时一并主张未签合同双倍工资差额与拖欠工资。'
+},
+{
+  cat:'劳动用工', icon:'👷',
+  q:'上班时受伤算工伤吗？工伤了怎么索赔？',
+  keys:['工伤','受伤','上班','干活','职业病','伤残','认定'],
+  a:'在工作时间和工作场所内，因工作原因受到事故伤害的，应当认定为工伤。认定工伤后可依法享受工伤保险待遇；单位未缴工伤保险的，由单位按工伤保险待遇项目和标准支付。',
+  law:'《工伤保险条例》第十四条列举应当认定为工伤的情形（工作时间工作场所因工作原因受伤、上下班途中非本人主要责任的交通事故等）。第十七条：单位应自事故伤害发生之日起 30 日内申请工伤认定；单位未申请的，职工或其近亲属可在 1 年内直接申请。',
+  acts:'① 第一时间就医并保留病历、诊断证明、费用票据；② 要求单位 30 日内申请工伤认定，单位不申请的，自己 1 年内向人社局申请；③ 认定为工伤后申请劳动能力鉴定确定伤残等级；④ 依据伤残等级主张医疗费、停工留薪期工资、一次性伤残补助金等；⑤ 单位未缴社保的，全部待遇由单位承担。'
+},
+{
+  cat:'婚姻家事', icon:'💍',
+  q:'离婚时房产怎么分？婚前买房婚后还贷怎么算？',
+  keys:['离婚','房产','房子','财产分割','婚后','婚前','还贷','加名'],
+  a:'房产分割看"出资时间 + 登记 + 还贷来源"。婚前一方首付并登记在自己名下、婚后共同还贷的，房屋归产权登记方，但共同还贷部分及其增值应给予另一方补偿。',
+  law:'《民法典》第一千零六十二条：夫妻在婚姻关系存续期间所得的工资、奖金、生产经营收益等归共同所有。第一千零八十七条：离婚时共同财产由双方协议处理；协议不成由法院根据财产具体情况，照顾子女、女方和无过错方权益的原则判决。《民法典婚姻家庭编解释（一）》第七十八条：婚前首付、婚后共同还贷的，房屋归登记方，共同还贷及增值部分由登记方补偿另一方。',
+  acts:'① 梳理出资证据：首付转账记录、贷款合同、还款流水、装修出资凭证；② 明确登记情况与还贷账户来源；③ 优先协商并签订书面《离婚财产分割协议》；④ 协商不成起诉时，申请对房屋现值评估；⑤ 涉及隐匿、转移财产的，可主张少分或不分。'
+},
+{
+  cat:'婚姻家事', icon:'💍',
+  q:'结婚给的彩礼，离婚时能要回来吗？',
+  keys:['彩礼','返还','退彩礼','结婚','订婚','三金'],
+  a:'彩礼是否返还，取决于是否办理结婚登记、是否共同生活、给付是否导致给付方生活困难三个因素，并非"离婚就一定能退"或"一定不能退"。',
+  law:'《最高人民法院关于审理涉彩礼纠纷案件适用法律若干问题的规定》（2024年施行）：双方已办理结婚登记且共同生活的，离婚时一般不支持返还；但共同生活时间较短且彩礼数额过高的，可结合彩礼实际使用、嫁妆、共同生活及孕育情况、双方过错等确定是否返还及返还比例。未办理结婚登记的，原则上应返还。',
+  acts:'① 保留彩礼给付证据：转账记录、媒人证言、聊天记录、婚礼影像；② 区分彩礼与恋爱期间一般赠与（特殊节日小额转账一般不属彩礼）；③ 共同生活时间、是否孕育是重要考量因素；④ 优先协商，协商不成诉讼时提交给付与共同生活证据。'
+},
+{
+  cat:'交通事故', icon:'🚗',
+  q:'发生交通事故，能主张哪些赔偿项目？',
+  keys:['交通事故','车祸','撞','赔偿','医疗费','误工费','伤残','责任认定'],
+  a:'交通事故赔偿项目包括人身损害与财产损失两部分。人身损害主要有医疗费、误工费、护理费、交通费、住院伙食补助费、营养费；构成伤残的还有残疾赔偿金、精神损害抚慰金等。',
+  law:'《民法典》第一千一百七十九条：侵害他人造成人身损害的，应赔偿医疗费、护理费、交通费、营养费、住院伙食补助费等治疗康复合理费用，以及因误工减少的收入；造成残疾的还应赔偿辅助器具费和残疾赔偿金。赔偿顺序：先由交强险在责任限额内赔偿，不足部分由商业三者险按责任比例赔偿，仍不足由侵权人承担。',
+  acts:'① 立即报警并取得《道路交通事故认定书》（责任划分的关键）；② 全面保留票据：医疗费、护理费、交通费、误工证明（工资流水+单位证明）；③ 伤情稳定后申请伤残鉴定；④ 先与保险公司协商，协商不成起诉肇事方与保险公司；⑤ 注意人身损害赔偿诉讼时效为 3 年。'
+},
+{
+  cat:'房产纠纷', icon:'🏠',
+  q:'房屋漏水、质量问题，开发商不保修怎么办？',
+  keys:['漏水','渗漏','保修','开发商','质量问题','物业','维修','交付'],
+  a:'房屋主体结构和防水等有法定最低保修期，保修义务是开发商的强制性法定义务，不能以"已装修""已交付"为由免除。',
+  law:'《房屋建筑工程质量保修办法》第七条：屋面防水、有防水要求的卫生间/房间和外墙面防渗漏最低保修期为 5 年；供热供冷系统为 2 个采暖期/供冷期；电气管线、给排水管道、设备安装和装修工程为 2 年。该义务为法定强制性责任，不能通过约定或业主装修行为排除。',
+  acts:'① 录像拍照固定漏水位置、时间与损失；② 书面（微信/短信）告知开发商与物业并要求回复，留存记录；③ 向当地建设工程质量监督站投诉，要求督促履行保修义务（投诉只处理保修，不处理赔偿）；④ 造成损失的另行协商或诉讼索赔；⑤ 可查看本软件「专题案例」中的完整维权意见书与告知模板。'
+},
+{
+  cat:'借贷债权', icon:'💰',
+  q:'借钱给别人不还，怎么要回来？利息怎么算？',
+  keys:['借钱','借款','欠款','不还','民间借贷','利息','欠条','借条','转账'],
+  a:'民间借贷关系受法律保护，关键是证据链：借贷合意（借条/聊天）+ 款项交付（转账记录）。约定利息不得超过合同成立时一年期 LPR 的四倍，超过部分不受保护。',
+  law:'《民法典》第六百六十七条、第六百七十九条：借款合同自贷款人提供借款时成立。《最高人民法院关于审理民间借贷案件适用法律若干问题的规定》：出借人请求借款人按合同约定利率支付利息的，法院应予支持，但双方约定利率超过合同成立时一年期 LPR 四倍的除外。',
+  acts:'① 整理借条/欠条、转账凭证、催款聊天与通话录音；② 无借条的，可通过微信、短信引导对方确认借款事实；③ 先书面催告并保留送达证据；④ 诉讼时效 3 年，注意保留催告导致时效中断的证据；⑤ 起诉时可申请财产保全；⑥ 用下方「借贷利息计算器」核算合法利息上限。'
+},
+{
+  cat:'消费维权', icon:'🛒',
+  q:'买到假货 / 被商家欺诈，能要求退一赔三吗？',
+  keys:['假货','欺诈','退一赔三','消费者','网购','退货','退款','赔偿','虚假宣传'],
+  a:'经营者提供商品或服务有欺诈行为的，消费者可要求"退一赔三"，即退还货款并支付三倍价款赔偿；三倍不足 500 元的按 500 元计。食品领域不符合食品安全标准的可主张十倍赔偿。',
+  law:'《消费者权益保护法》第五十五条：经营者提供商品或者服务有欺诈行为的，应当按照消费者的要求增加赔偿其受到的损失，增加赔偿的金额为消费者购买商品的价款或者接受服务的费用的三倍；增加赔偿的金额不足五百元的，为五百元。《食品安全法》第一百四十八条：不符合食品安全标准的食品，可要求价款十倍或损失三倍赔偿，不足一千元的按一千元计。',
+  acts:'① 保留订单、支付记录、商品页面截图（含宣传承诺）、开箱视频；② 先向平台投诉并申请"仅退款/退货退款"；③ 向 12315 平台或市场监管部门投诉；④ 主张三倍赔偿需证明"欺诈"（明知虚假仍宣传），保留商家承诺证据；⑤ 协商不成可起诉。'
+},
+{
+  cat:'合同纠纷', icon:'📄',
+  q:'签了合同对方违约，定金能退吗？违约金怎么算？',
+  keys:['合同','违约','定金','违约金','订金','毁约','赔偿','解除'],
+  a:'定金适用"定金罚则"：给付方违约无权要求返还，收受方违约应双倍返还。违约金以弥补实际损失为原则，过分高于损失的可请求法院调减。',
+  law:'《民法典》第五百八十六条至五百八十八条：定金合同自实际交付定金时成立，定金数额不得超过主合同标的额的 20%，超过部分不产生定金效力。第五百八十五条：约定违约金的，违约方应支付；约定违约金过分高于造成的损失的，法院或仲裁机构可根据当事人请求予以适当减少。注意"定金"与"订金"法律效果不同，订金一般不适用定金罚则。',
+  acts:'① 核对合同中写的是"定金"还是"订金""预付款"；② 保留付款凭证与对方违约证据（拒绝履行、延迟交付的沟通记录）；③ 书面催告对方履行并保留送达证据；④ 主张双倍返还定金或违约金（二者择一，不能并用）；⑤ 违约金明显低于实际损失的，可主张按实际损失赔偿。'
+},
+{
+  cat:'遗产继承', icon:'📜',
+  q:'遗产继承的顺序是什么？遗嘱怎么写才有效？',
+  keys:['继承','遗产','遗嘱','房产继承','顺序','法定继承','公证'],
+  a:'继承开始后，有遗嘱的按遗嘱继承，没有遗嘱的按法定继承。法定继承第一顺序为配偶、子女、父母；第二顺序为兄弟姐妹、祖父母、外祖父母。',
+  law:'《民法典》第一千一百二十七条：遗产按下列顺序继承——第一顺序：配偶、子女、父母；第二顺序：兄弟姐妹、祖父母、外祖父母。继承开始后由第一顺序继承人继承，第二顺序不继承；没有第一顺序继承人继承的，由第二顺序继承人继承。第一千一百三十四条至一千一百三十九条规定了自书、代书、打印、录音录像、口头、公证六种遗嘱形式及各自要件。',
+  acts:'① 先清点遗产范围（房产、存款、股权、债权）并收集权属证明；② 有遗嘱的核查形式要件（自书须亲笔书写签名并注明年月日；代书须两个以上见证人等）；③ 全体继承人可协商签订《遗产分割协议》并办理公证；④ 有争议的向法院提起继承纠纷诉讼；⑤ 涉及房产过户的，凭继承公证书或法院生效文书办理登记。'
+},
+{
+  cat:'个人信息', icon:'🔒',
+  q:'个人信息被泄露 / 被商家留存，能要求删除吗？',
+  keys:['个人信息','泄露','隐私','删除','人脸','照片','手机号','骚扰电话'],
+  a:'可以。处理个人信息应遵循合法、正当、必要和诚信原则，不得过度收集。个人有权要求查阅、复制、更正、删除其个人信息。',
+  law:'《个人信息保护法》第五条、第六条：处理个人信息应具有明确、合理的目的，与处理目的直接相关，采取对个人权益影响最小的方式，收集限于实现处理目的的最小范围。《个人信息保护法》第四十七条：处理目的已实现、无法实现或者为实现处理目的不再必要的，个人信息处理者应当主动删除；个人也有权请求删除。《民法典》第一千零三十四条至一千零三十九条对隐私权与个人信息保护作了规定。',
+  acts:'① 固定证据：截图、聊天记录、通话录音、拍照时间地点与对方身份；② 书面要求对方删除并确认（可要求截图或当面操作）；③ 拒绝删除或造成损害的，向网信、市场监管等部门投诉；④ 涉及诈骗、骚扰、倒卖的向公安机关报案；⑤ 造成实际损害的，可依《个人信息保护法》提起民事诉讼主张赔偿。'
+},
+{
+  cat:'程序常识', icon:'⏳',
+  q:'打官司的诉讼时效是多久？过期了还能起诉吗？',
+  keys:['诉讼时效','时效','过期','起诉','三年','中断','中止'],
+  a:'普通诉讼时效为 3 年，自权利人知道或应当知道权利受到损害以及义务人之日起计算。超过时效并不丧失起诉权，但对方可提出时效抗辩，可能导致败诉风险。',
+  law:'《民法典》第一百八十八条：向人民法院请求保护民事权利的诉讼时效期间为三年；自权利受到损害之日起超过二十年的，人民法院不予保护（特殊情况可延长）。第一百九十五条：权利人向义务人提出履行请求、义务人同意履行、提起诉讼或申请仲裁的，诉讼时效中断，从中断、有关程序终结时起重新计算。',
+  acts:'① 尽早主张权利，不要拖到临期；② 通过微信、短信、书面函件催告并保留送达证据，可导致时效中断并重新计算；③ 保留对方"同意履行"的回复（还款承诺、分期计划）；④ 即使超过时效仍可起诉，若对方未提时效抗辩，法院不主动适用；⑤ 特殊情形（如人身损害）时效起算点另有规定，需个案判断。'
+}
+];
+
+/* ---------- 法规速查库 ---------- */
+const LAWS = [
+  {cat:'民法', name:'民法典（合同编）', no:'2021年1月1日施行',
+   txt:'第五百七十七条 当事人一方不履行合同义务或者履行合同义务不符合约定的，应当承担继续履行、采取补救措施或者赔偿损失等违约责任。'},
+  {cat:'民法', name:'民法典（合同编）· 定金', no:'第五百八十六至五百八十八条',
+   txt:'定金数额不得超过主合同标的额的百分之二十，超过部分不产生定金效力。收受定金一方不履行债务的，应当双倍返还定金。'},
+  {cat:'民法', name:'民法典（物权编）· 不动产登记', no:'第二百零九条',
+   txt:'不动产物权的设立、变更、转让和消灭，经依法登记，发生效力；未经登记，不发生效力，但是法律另有规定的除外。'},
+  {cat:'民法', name:'民法典（侵权责任编）· 人身损害', no:'第一千一百七十九条',
+   txt:'侵害他人造成人身损害的，应当赔偿医疗费、护理费、交通费、营养费、住院伙食补助费等为治疗和康复支出的合理费用，以及因误工减少的收入。'},
+  {cat:'劳动', name:'劳动合同法 · 经济补偿', no:'第四十七条',
+   txt:'经济补偿按劳动者在本单位工作的年限，每满一年支付一个月工资的标准向劳动者支付。六个月以上不满一年的，按一年计算；不满六个月的，向劳动者支付半个月工资的经济补偿。'},
+  {cat:'劳动', name:'劳动合同法 · 违法解除', no:'第八十七条',
+   txt:'用人单位违反本法规定解除或者终止劳动合同的，应当依照本法第四十七条规定的经济补偿标准的二倍向劳动者支付赔偿金。'},
+  {cat:'劳动', name:'劳动合同法 · 双倍工资', no:'第八十二条',
+   txt:'用人单位自用工之日起超过一个月不满一年未与劳动者订立书面劳动合同的，应当向劳动者每月支付二倍的工资。'},
+  {cat:'劳动', name:'工伤保险条例 · 认定范围', no:'第十四条',
+   txt:'在工作时间和工作场所内，因工作原因受到事故伤害的；工作时间前后在工作场所内，从事与工作有关的预备性或者收尾性工作受到事故伤害的，应当认定为工伤。'},
+  {cat:'劳动', name:'劳动争议调解仲裁法 · 时效', no:'第二十七条',
+   txt:'劳动争议申请仲裁的时效期间为一年，从当事人知道或者应当知道其权利被侵害之日起计算。劳动关系存续期间因拖欠劳动报酬发生争议的，不受一年时效限制。'},
+  {cat:'婚姻家庭', name:'民法典（婚姻家庭编）· 共同财产', no:'第一千零六十二条',
+   txt:'夫妻在婚姻关系存续期间所得的工资、奖金、劳务报酬，生产、经营、投资的收益，知识产权的收益等，为夫妻的共同财产，归夫妻共同所有。'},
+  {cat:'婚姻家庭', name:'涉彩礼纠纷司法解释', no:'2024年2月1日施行',
+   txt:'双方已办理结婚登记且共同生活，离婚时一方请求返还按照习俗给付的彩礼的，人民法院一般不予支持；但共同生活时间较短且彩礼数额过高的，可结合实际使用、嫁妆、孕育情况、双方过错等确定是否返还及比例。'},
+  {cat:'消费', name:'消费者权益保护法 · 欺诈赔偿', no:'第五十五条',
+   txt:'经营者提供商品或者服务有欺诈行为的，应当按照消费者的要求增加赔偿其受到的损失，增加赔偿的金额为消费者购买商品的价款或者接受服务的费用的三倍；增加赔偿的金额不足五百元的，为五百元。'},
+  {cat:'个人信息', name:'个人信息保护法 · 删除权', no:'第四十七条',
+   txt:'处理目的已实现、无法实现或者为实现处理目的不再必要，个人信息处理者停止提供产品或者服务，或者保存期限已届满等情形下，个人信息处理者应当主动删除个人信息；个人信息处理者未删除的，个人有权请求删除。'},
+  {cat:'诉讼', name:'诉讼费用交纳办法 · 财产案件', no:'第十三条',
+   txt:'财产案件根据诉讼请求的金额或者价额，按比例分段累计交纳：不超过1万元的每件交50元；超过1万元至10万元的部分按2.5%交纳；超过10万元至20万元的部分按2%交纳；超过20万元至50万元的部分按1.5%交纳……'},
+  {cat:'诉讼', name:'民法典 · 诉讼时效', no:'第一百八十八条',
+   txt:'向人民法院请求保护民事权利的诉讼时效期间为三年。法律另有规定的，依照其规定。自权利受到损害之日起超过二十年的，人民法院不予保护，有特殊情况的，人民法院可以根据权利人的申请决定延长。'},
+  {cat:'房产', name:'房屋建筑工程质量保修办法 · 保修期', no:'第七条',
+   txt:'在正常使用下，房屋建筑工程的最低保修期限为：屋面防水工程、有防水要求的卫生间、房间和外墙面的防渗漏，为5年；电气管线、给排水管道、设备安装和装修工程，为2年。'}
+];
+
+const CASES = [
+{
+  id:'case-water',
+  title:'卫生间暗埋排水管漏水，开发商以"已装修"拒保修，业主如何维权？',
+  cat:'房产纠纷',
+  tag:'真实咨询案例 · 完整维权意见书',
+  real:true,
+  source:'武汉青山区业主 · 2026年11月整理',
+  views:'2,871',
+  summary:'楼下渗漏、回填层无水、可见管无破损，漏水点指向楼板内装修公司无法触及的暗埋管段。开发商法定5年防渗漏保修义务能否因业主装修而免除？举证责任在谁？本文给出完整法律分析与四步行动方案。',
+  key:['开发商法定5年防渗漏保修义务','举证责任在开发商','程序瑕疵不等于因果关系','质监投诉与书面告知模板'],
+  html:`
+  <p class="info-line">委托人：业主（武汉青山区某小区）　｜　争议相对方：开发商 / 装修公司 / 物业公司　｜　整理日期：2026年11月</p>
+
+  <h2>一、事实经过</h2>
+  <ol>
+    <li>开发商交付房屋时，卫生间沉箱内已有基层防水层。</li>
+    <li>装修公司进场施工，水电管线走顶，未在卫生间地面开槽；但工人在布管拼接过程中<strong>有踩踏基层防水层的行为</strong>。</li>
+    <li>装修公司<strong>未做回填前闭水试验</strong>，直接将沉箱回填，随后完成表面防水及后续施工。</li>
+    <li>楼下（2楼）出现渗漏。挖开回填层检查后发现：<strong>回填层内无水，可见管段无破损</strong>，问题指向埋在楼板内部的暗埋排水管段。</li>
+    <li>物业曾配合灌水排查，但拒绝出具书面记录或签字确认。</li>
+    <li>开发商以"装修公司已动工、未做第一道闭水试验即回填"为由拒绝保修，且无法举证是装修公司破坏了楼板内管段。</li>
+    <li>装修公司口头愿更换可见管段，开发商口头表示可提供材料。</li>
+  </ol>
+
+  <h2>二、法律依据</h2>
+  <h3>（一）开发商保修义务是法定的，不能因装修而免除</h3>
+  <p><strong>1. 卫生间防渗漏最低保修期为 5 年。</strong>根据《房屋建筑工程质量保修办法》第七条，有防水要求的卫生间、房间和外墙面的防渗漏，最低保修期限为 <strong>5 年</strong>，自工程竣工验收合格之日起计算。该保修义务是强制性法定责任。</p>
+  <p><strong>2. 法定保修义务不能通过约定或业主装修行为排除。</strong>福建省高级人民法院在黄某、郑某诉某房地产公司案中明确：房地产开发企业负有的保修义务系法律规定的、关系住房安全和民生基本需求的强制性义务，不能通过当事人意思自治排除；<strong>即使业主出具了免责承诺书，法院仍认定承诺无效，开发商仍须承担保修责任</strong>。开发商连"业主签了免责承诺书"都不能免责，更何况仅因业主进行了正常装修。</p>
+  <p><strong>3. 举证责任在开发商，不在业主。</strong>上述判例中，法院认定开发商担责的关键理由之一是：在案证据不足以证明业主装修中存在导致渗水的不当使用行为。开发商若主张"是装修破坏的"，应由开发商举证。本案回填层无水、可见管无破损、问题指向楼板内暗埋管段——该段管子装修公司物理上无法接触，开发商举证不能，免责主张不能成立。</p>
+  <h3>（二）关于"未做回填前闭水试验"这一瑕疵</h3>
+  <p>装修公司未做回填前闭水试验，确属施工程序瑕疵，但该瑕疵与"楼板内暗埋管段漏水"之间<strong>没有因果关系</strong>。闭水试验是检测手段，不是保护措施；没做检测不等于管子是装修公司弄坏的。楼板内管段装修公司根本碰不到，开发商的免责主张在物理上不成立。</p>
+  <h3>（三）关于楼下邻居的索赔路径</h3>
+  <p>楼下（2楼）受损，首先主张权利的对象是楼上业主（3楼），依据是相邻关系或侵权责任。业主赔付后，可再依据保修合同向开发商追偿，或依据装修合同向装修公司追偿。2楼不能跳过楼上业主直接起诉开发商，这是两个不同的法律关系。</p>
+  <p>汕头中院一则判例中：楼上业主因无法排除自身装修与漏水关联且拒不配合鉴定，被判承担部分责任；开发商因未及时处理保修问题亦有过错，同样被判部分责任。可见开发商"不理不睬"本身即可能构成过错。</p>
+
+  <h2>三、核心争议焦点与业主立场</h2>
+  <table>
+    <tr><th>争议点</th><th>开发商主张</th><th>业主立场与依据</th></tr>
+    <tr><td>责任归属</td><td>装修公司动过工，找装修公司</td><td>问题指向楼板内暗埋管段，装修公司物理上无法触及；开发商举证不能，应承担保修责任</td></tr>
+    <tr><td>保修义务</td><td>已装修，不归开发商管</td><td>法定5年防渗漏保修期未过；法定义务不因业主装修而免除（福建高院判例）</td></tr>
+    <tr><td>未做闭水试验</td><td>装修公司程序违规，责任在装修公司</td><td>程序瑕疵与楼板内管段损坏无因果关系；开发商仍须举证破坏行为</td></tr>
+    <tr><td>物业不签字</td><td>（无回应）</td><td>物业无签字义务；自行录像＋书面告知同样可固定证据</td></tr>
+  </table>
+
+  <h2>四、已采取及待采取的行动</h2>
+  <h3>已采取（证据基础）</h3>
+  <ul>
+    <li>挖开回填层检查，确认回填层无水、可见管无破损（有录像/照片）；</li>
+    <li>物业配合灌水测试（有录像，无书面签字）；</li>
+    <li>与开发商、装修公司、物业均有沟通记录（微信/通话记录）。</li>
+  </ul>
+  <h3>待采取（按优先级）</h3>
+  <p><strong>第一步：固定现有证据（立即）。</strong>整理全部录像、照片并标注时间、地点、内容；将关键事实以书面形式（微信/短信）发给开发商和物业负责人，要求确认或回应——对方不回，不影响"已告知并留证"的事实。</p>
+  <p><strong>第二步：向青山区质监站投诉（本周内）。</strong>电话 027-86850100（青山区建筑管理站质量监督科），备选 027-86883199。投诉要点：卫生间楼板内暗埋排水管漏水，开发商以"已装修"为由拒保但无法举证装修破坏该管段，请求主管部门督促其履行保修义务。</p>
+  <p><strong>第三步：换管时同步固定证据（换管前）。</strong>让装修公司书面确认更换的是哪一段、旧管状态、楼板内暗埋段是否在其施工范围；换下的旧管保留勿丢；换管全程录像。</p>
+  <p><strong>第四步：与2楼邻居保持沟通（持续）。</strong>告知正在协调，避免邻居因"失联"直接起诉；2楼损失扩大将增加楼上业主作为第一责任人的风险。</p>
+
+  <h2>五、风险提示</h2>
+  <div class="risk-box">
+    <b>⚠ 三项关键风险</b>
+    <ol style="margin-top:8px">
+      <li><strong>不要"完全不管"：</strong>2楼起诉对象首先是楼上业主。置之不理会导致证据与协商空间大幅缩水。</li>
+      <li><strong>装修公司换管 ≠ 开发商免责：</strong>只要能证明换的是"可见段"、问题在"楼板内暗埋段"，开发商责任推不掉，关键是换之前固定证据。</li>
+      <li><strong>质监站不受理"经济赔偿"：</strong>投诉只处理"保修责任"（督促维修），赔偿须协商或诉讼。投诉时聚焦"要求履行保修义务"，不要提赔偿金额。</li>
+    </ol>
+  </div>
+
+  <h2>六、关键联系方式</h2>
+  <table>
+    <tr><th>机构</th><th>电话</th><th>用途</th></tr>
+    <tr><td>青山区建筑管理站质量监督科</td><td>027-86850100</td><td>质量投诉主要渠道</td></tr>
+    <tr><td>青山区建筑工程质安中心</td><td>027-86883199</td><td>备用</td></tr>
+    <tr><td>青山区住房和城市更新局</td><td>027-86845819</td><td>上级主管部门</td></tr>
+    <tr><td>武汉市建筑工程质量监督站</td><td>027-85752320</td><td>市级备选</td></tr>
+  </table>
+
+  <hr>
+  <h2>附：发给开发商的书面告知（模板）</h2>
+  <div class="quote-box">致（开发商名称）：
+
+本人系（小区名称）（房号）业主。现就本户卫生间暗埋排水管漏水事宜告知如下：
+
+经挖开回填层检查，回填层内无水，可见管段无破损，漏水点指向楼板内部暗埋排水管段。该管段属于贵司交付的原始隐蔽工程范围，装修施工未触及该部位。
+
+根据《房屋建筑工程质量保修办法》第七条，卫生间防渗漏保修期为5年。贵司以"已装修"为由拒绝保修，缺乏法律依据。贵司如主张系装修施工破坏，请出具书面证据证明破坏行为与楼板内管段损坏之间的因果关系。
+
+请贵司于收到本告知后7日内书面回复处理意见。逾期未回复或拒绝处理的，本人将向青山区建设工程质量监督站投诉，并保留通过法律途径追究贵司保修责任的权利。
+
+业主（签名）：　　　　　　日期：2026年11月　日</div>
+  <div class="disclaimer">本意见书基于委托人陈述事实及现行法律法规整理，仅供维权参考，不构成正式法律意见。涉及具体诉讼，建议委托执业律师。</div>`
+},
+{
+  id:'case-certificate',
+  title:'中介过户后拍摄并留存新房产证照片，有法律风险吗？能要求删除吗？',
+  cat:'房产交易 · 个人信息',
+  tag:'真实咨询案例 · 法律分析意见书',
+  real:true,
+  source:'二手商铺买受人咨询 · 2026年11月整理',
+  views:'1,960',
+  summary:'二手商铺（约四五十万元）过户完成后，中介拍摄新不动产权证书照片并自行留存带走。照片是否会危及产权安全？中介行为是否合规？能否要求删除？本文从物权、个人信息权益、行业监管三个层面分析并给出行动方案。',
+  key:['物权变动以登记为生效要件','房产证照片属于个人信息','有权要求删除（个保法第47条）','住建投诉与证据固定'],
+  html:`
+  <p class="info-line">事由：二手商铺过户完成后，中介拍摄新房产证照片并自行留存，权利人咨询风险与应对<br>分析依据：《民法典》《不动产登记暂行条例》《房地产经纪管理办法》《个人信息保护法》</p>
+
+  <h2>一、事实梳理</h2>
+  <ol>
+    <li>咨询人购买二手商铺，交易金额约 <strong>四五十万元</strong>；</li>
+    <li>过户手续已完成，新不动产权证书已核发至咨询人名下；</li>
+    <li>中介在证书出具后对新证拍照，并将照片<strong>自行留存带走</strong>；</li>
+    <li>核心关切：照片被拿走是否影响产权安全、是否存在法律风险。</li>
+  </ol>
+
+  <h2>二、产权安全分析：照片不构成物权变动依据</h2>
+  <h3>（一）不动产物权变动以登记为生效要件</h3>
+  <p>根据《民法典》第二百零九条，不动产物权的设立、变更、转让和消灭，<strong>经依法登记，发生效力；未经登记，不发生效力</strong>。房产证仅是权利人享有物权的证明，而非物权本身；照片作为证书的影像复制件，不具有任何登记效力。</p>
+  <h3>（二）办理抵押、过户须核验原件并本人到场</h3>
+  <p>依据《不动产登记暂行条例》及登记实务，办理抵押登记、转移登记等业务，登记机构必须：</p>
+  <ul>
+    <li>核验不动产权证书<strong>原件</strong>与权利人身份证件原件；</li>
+    <li>要求权利人<strong>本人到场签字</strong>，或持经依法公证的委托代理；</li>
+    <li>部分业务还需人脸识别或视频核验。</li>
+  </ul>
+  <p>仅凭一张照片无法完成上述任何法定程序，故中介持有照片不会导致房屋被过户、抵押或处分，<strong>产权安全不受直接威胁</strong>。</p>
+  <div class="concl-box">小结：产权层面无实质风险，不必因照片被留存而担心物权丧失。</div>
+
+  <h2>三、个人信息权益分析：中介可能构成违规处理个人信息</h2>
+  <h3>（一）房产证照片属于受法律保护的个人信息</h3>
+  <p>照片载有权利人姓名、房屋坐落、证书编号等，单独或结合其他信息可识别特定自然人，属于《民法典》第一千零三十四条及《个人信息保护法》第四条所称<strong>个人信息</strong>。中介作为交易服务提供者，属于个人信息处理者。</p>
+  <h3>（二）处理个人信息应遵循合法、正当、必要原则</h3>
+  <p>根据《个人信息保护法》第五条、第六条，处理个人信息应具有明确合理目的、与目的直接相关、采取影响最小的方式、<strong>收集限于最小范围、不得过度收集</strong>。中介拍照若仅为核验过户结果或内部归档，应在必要范围内处理并于目的实现后及时删除或匿名化。若存在以下情形则可能侵害个人信息权益：</p>
+  <ul>
+    <li>未告知拍照用途、保存期限；</li>
+    <li>超出本次交易必要范围留存；</li>
+    <li>未经同意用于宣传、转发、倒卖或其他目的。</li>
+  </ul>
+  <p>咨询人依据《个人信息保护法》<strong>第四十七条</strong>，有权要求其删除相关个人信息。</p>
+  <h3>（三）可能涉及的民事责任</h3>
+  <p>若中介泄露、篡改、丢失照片，或未经同意向他人提供造成损害，依据《个人信息保护法》第六十九条，中介<strong>不能证明自己没有过错的，应承担损害赔偿等侵权责任</strong>（过错推定）。还可依《民法典》主张停止侵害、赔礼道歉等。</p>
+
+  <h2>四、行业监管分析：受房地产经纪规范约束</h2>
+  <p>根据《房地产经纪管理办法》第二十五条，经纪机构和人员不得<strong>泄露或不当使用委托人个人信息或商业秘密谋取不正当利益</strong>。照片若被用于推销、信息倒卖或造成泄露，即落入禁止情形。住建主管部门可对机构处以罚款、记入信用档案，情节严重的取消网上签约资格；对从业人员可处罚款并记入信用档案。</p>
+
+  <h2>五、法律行动建议</h2>
+  <h3>（一）固定证据</h3>
+  <ul>
+    <li>保留就"拍照留存"及"要求删除"沟通的微信记录、短信或通话录音；</li>
+    <li>记录拍照时间、地点、在场人员及中介所属机构名称。</li>
+  </ul>
+  <h3>（二）书面要求删除</h3>
+  <p>向中介及其所属机构明确提出：① 立即删除照片；② 确认删除（可要求截图或当面操作）；③ 声明未经同意不得留存、转发、复制或用于本次交易之外的任何用途；④ 告知违反将向住建部门投诉并追责。</p>
+  <h3>（三）视情况投诉或进一步维权</h3>
+  <ul>
+    <li>中介拒绝删除或发现信息被滥用 → 向当地<strong>住建（房地产主管）部门</strong>投诉；</li>
+    <li>造成实际损害（被诈骗、被骚扰、信息被倒卖）→ 向公安机关报案，或依《个人信息保护法》《民法典》提起民事诉讼。</li>
+  </ul>
+  <h3>（四）日常防范</h3>
+  <p>对能准确报出房屋地址、姓名的陌生推销或"退税""贷款"电话保持警惕，不透露银行卡信息与验证码；定期线上查询不动产登记信息，确认无异常登记。</p>
+
+  <h2>六、结论</h2>
+  <table>
+    <tr><th>事项</th><th>法律判断</th></tr>
+    <tr><td>产权是否会被照片影响</td><td>不会。物权变动须登记、核验原件、本人到场，照片无法律效力</td></tr>
+    <tr><td>中介留存照片是否合规</td><td>可能违规。超必要范围留存个人信息，涉嫌违反《个人信息保护法》及经纪管理办法</td></tr>
+    <tr><td>是否有权要求删除</td><td>有权。依据《个人信息保护法》第四十七条</td></tr>
+    <tr><td>主要风险性质</td><td>信息泄露风险，而非产权丧失风险</td></tr>
+    <tr><td>建议行动</td><td>固定证据、书面要求删除、视情况向住建部门投诉</td></tr>
+  </table>
+  <div class="concl-box"><b>一句话总结：</b>产权无虞，信息权益有虞。法律上权利人有权要求删除，监管上中介行为有违规之嫌——保留证据、主动交涉即可有效控制风险。</div>
+  <div class="disclaimer">本文档基于咨询人陈述事实及现行法律法规作出分析，仅供参考，不构成正式法律意见。如涉及具体纠纷，建议咨询执业律师。</div>`
+},
+{
+  id:'case-report',
+  title:'发现央企处长涉嫌靠行贿上位、长期受贿，如何规范举报并申请人身保护？',
+  cat:'刑事举报 · 纪检监察',
+  tag:'真实咨询案例 · 举报指引与法律保护',
+  real:true,
+  source:'举报人咨询 · 2026年11月整理',
+  views:'1,542',
+  summary:'举报人清楚往来人员但不知具体金额，担心打击报复、打击面过大与关系网干扰。本文给出可直接套用的举报信模板、行贿罪与受贿罪的法律定性、三大顾虑的逐一回应，以及实名举报的保护申请与投递渠道。',
+  key:['举报信模板可直接套用','行贿罪与受贿罪定性','不知金额不影响受理','实名举报可申请保护'],
+  html:`
+  <p class="info-line">举报对象：某央企处长　｜　举报事项：涉嫌靠行贿受贿谋取处长职务，并利用职务便利在项目安排中收受贿赂，时间跨度十余年<br>举报人掌握情况：清楚具体往来人员但不掌握精确金额；担心打击报复、打击面过大及关系网干扰</p>
+
+  <h2>一、举报信撰写模板（可直接套用）</h2>
+  <p>不需要写全所有知情人，挑选最有把握的 <strong>3—5 条</strong>事实即可。金额写"不清楚"不影响受理。</p>
+  <div class="quote-box">被举报人：XXX，XX央企XX处（部门）处长
+
+举报事项：
+一、被举报人涉嫌通过行贿手段谋取处长职务；
+二、被举报人担任处长后，涉嫌利用职务便利，在项目审批、安排、发包过程中收受贿赂，时间跨度十余年。
+
+具体线索：
+1. 约XXXX年（或XXXX年至XXXX年间），在"XX项目"中，被举报人接受XXX（行贿人姓名/单位）的请托，为其谋取利益。我知悉此事的依据是：______（如：亲眼见到双方私下接触、该项目中标方明显不符合常规条件、事后听行贿人亲口提及等）。具体金额不详，但双方往来频繁。
+2. （同上格式，写第二条最有把握的线索）
+3. （同上，第三条）
+
+补充说明：被举报人涉及的项目和人员较多，时间跨度长。本人仅就上述确认的部分提供线索，其余情况请组织依职权核查。本人清楚与哪些人员有往来，但具体金额不详。
+
+举报人诉求：请求对上述问题依法初核。因担心遭受打击报复，申请对举报人身份信息严格保密，并依法提供保护。</div>
+
+  <h2>二、具体情形与法律定性</h2>
+  <h3>1. "靠行贿当上处长"——涉嫌行贿罪（《刑法》第389条）</h3>
+  <p>为谋取不正当利益，给予国家工作人员以财物的，是行贿罪。如系通过向有决定权的人行贿而获得处长职位，该行为本身即涉嫌行贿，且属于"为谋取职务提拔、调整而行贿"，<strong>依法应从重处罚</strong>。</p>
+  <h3>2. "利用职务之便做项目收受贿赂"——涉嫌受贿罪（《刑法》第385条）</h3>
+  <p>国家工作人员利用职务上的便利，索取他人财物的，或者非法收受他人财物，为他人谋取利益的，是受贿罪。央企中从事公务的人员（如拥有项目审批、发包实权的处长），<strong>以国家工作人员论</strong>，所述情形符合受贿罪构成要件。</p>
+  <h3>3. 时间跨度十余年不影响追诉</h3>
+  <p>受贿罪的追诉时效根据法定最高刑确定。受贿数额巨大或有其他严重情节的，追诉时效可达十五年甚至二十年。时间跨度长恰恰说明行为具有持续性，纪委监委可通过调取历年项目档案、银行流水等方式核查。</p>
+
+  <h2>三、三个顾虑的逐一回应</h2>
+  <h3>顾虑一：不知道具体金额，有胜算吗？</h3>
+  <p>有。纪检监察机关受理举报的门槛是<strong>有具体事实可查</strong>，不是"证据确凿"。《纪检监察机关处理检举控告工作规则》第十三条明确，仅列举违纪行为名称但无实质内容的不予受理。掌握"谁跟谁有往来、什么项目、时间跨度十几年"属于实质内容。金额查证是办案机关的职责，可通过调取项目档案、银行流水、谈话等方式固定证据——你提供的是核查方向，不是完整证据链。</p>
+  <h3>顾虑二：怕打击面太大怎么办？</h3>
+  <p>不需要举报所有行贿人。围绕被举报人本人的受贿事实，提供能确认的具体项目、时间、请托事项，以及一两个最确凿的行贿人线索作为佐证即可。行贿人是否被追究、追究到什么程度，由纪检监察机关依纪依法决定，不需要为"打击面"负责。</p>
+  <h3>顾虑三：怕关系网互相照顾怎么办？</h3>
+  <ul>
+    <li><strong>向上级举报，避开本单位：</strong>央企处长的监察管辖通常归中央纪委国家监委或省级纪委监委，直接向上级反映；</li>
+    <li><strong>回避制度：</strong>如发现受理机关人员与其有利害关系，有权申请回避；</li>
+    <li><strong>保护申请：</strong>因举报感到人身安全或合法权利受威胁，可明确提出保护申请；</li>
+    <li><strong>打击报复是加重情节：</strong>被举报人实施打击报复，属于从重或加重处分情节。</li>
+  </ul>
+
+  <h2>四、法律给你的保护</h2>
+  <p><strong>1. 实名举报优先办理、有程序性反馈。</strong>实名举报优先办理、优先处置、给予答复；纪检监察机关在收到之日起 <strong>15 个工作日内</strong>告知是否受理，办结后 <strong>15 个工作日内</strong>反馈处理结果。</p>
+  <p><strong>2. 有权申请保护。</strong>《纪检监察机关处理检举控告工作规则》第三十五条：因检举控告致合法权利受到威胁或侵害的，可以提出保护申请；第四十九条：提出保护申请后，纪检监察机关应当依法、及时提供保护，必要时可商请有关机关协助。</p>
+  <p><strong>3. 被举报人"不得打击报复"是法定义务</strong>，实施打击报复属于从重处理情节。</p>
+  <p><strong>4. 严格保密义务。</strong>纪检监察机关必须对举报人姓名、工作单位、住址等信息严格保密，严禁泄露给被举报人。</p>
+
+  <h2>五、受理机关与投递渠道</h2>
+  <table>
+    <tr><th>渠道</th><th>信息</th></tr>
+    <tr><td>湖北省纪委监委举报电话</td><td>027-12388</td></tr>
+    <tr><td>湖北省纪委监委举报网址</td><td>hubei.12388.gov.cn</td></tr>
+    <tr><td>中央纪委国家监委</td><td>12388 / www.12388.gov.cn</td></tr>
+  </table>
+  <p>建议优先向省级纪委监委实名举报，避开本单位内部可能的干扰；填写时在"是否申请保护"栏明确勾选或注明"申请保护"。</p>
+
+  <h2>六、操作步骤（按顺序执行）</h2>
+  <p><strong>第一步：整理材料。</strong>按第一部分模板写清 3—5 条最硬线索，聚焦被举报人本人的受贿事实，不需要写所有你知道的人。</p>
+  <p><strong>第二步：提交举报。</strong>拨打 027-12388 或登录 hubei.12388.gov.cn，选择实名举报，注明"申请保护"。</p>
+  <p><strong>第三步：提交后保持低调。</strong>不要在单位内部与任何人讨论此事。所掌握的往来信息本身具有敏感性，走漏风声可能导致对方串供或销毁痕迹。</p>
+  <p><strong>第四步：等待反馈。</strong>15 个工作日内会收到受理告知；如超期未收到，可再次致电 12388 询问。</p>
+
+  <div class="concl-box"><b>最后提醒：</b>你只需对自己提供的那部分事实的真实性负责，不需要承担"把所有行贿人都揪出来"的压力。把最硬的那一块交上去，剩下的交给组织。</div>
+  <div class="disclaimer">本文档基于咨询人陈述整理，举报内容须真实，不得捏造、诬告陷害；具体处理以纪检监察机关依法认定为准。</div>`
+},
+{
+  id:'case-decoration',
+  title:'97㎡装修"挤牙膏式"增项加钱，哪些费用该付？如何维权？',
+  cat:'消费维权 · 家装纠纷',
+  tag:'真实咨询案例 · 增项费用法律分析',
+  real:true,
+  source:'业主咨询 · 2026年11月整理',
+  views:'2,115',
+  summary:'半包 6.5 万、定制家具 3.4 万，施工中不断冒出增项：门槛石、窗台石、美缝、灯带型材、贴砖背胶、橱柜碗篮。哪些有合同依据、哪些涉嫌侵害知情权？本文逐项定性并给出四步维权方案。',
+  key:['逐项区分主材与辅材','知情权侵害认定','恶意增项属违约','12315 投诉与证据固定'],
+  html:`
+  <p class="info-line">房屋情况：97㎡住宅　｜　涉及合同：半包施工合同 65,000 元、定制家具合同 34,000 元<br>目的：梳理各项费用争议性质，界定装修公司义务边界与业主权利依据</p>
+
+  <h2>一、半包合同项下争议费用</h2>
+  <h3>（一）门槛石、窗台石</h3>
+  <p>门槛石 150 元/条，窗台石 110 元/条（共 2 条）。石材类材料通常属<strong>主材</strong>，不在半包辅材范围内。行业惯例是"辅材由施工方提供，主材由业主采购"。装修公司代购可以，但费用本就不应包含在 65,000 元半包费中——此项收费有合同依据，但公司应在签约时明确告知主材清单范围，而非施工中途才告知。</p>
+  <h3>（二）美缝（22 元/㎡，约 70 余㎡，总价约 1,500 余元）</h3>
+  <p>是否属辅材，取决于合同附件《辅材清单》是否列明"美缝剂"或"美缝施工"。若未列明，另行收费不必然违法，但关键在于<strong>是否履行了如实告知义务</strong>。依据《消费者权益保护法》第八条，消费者享有知悉所购商品或服务真实情况的权利。报价时故意模糊美缝归属、施工中才提出收费，涉嫌侵犯知情权。22 元/㎡ 处于市场中低水平，但应确认材料品牌与型号，避免以次充好。</p>
+  <h3>（三）灯带型材</h3>
+  <p>灯带属灯具类主材，安装所需的铝槽、卡扣等型材在半包合同中通常不自动包含。除非合同明确写明"含灯带型材及安装"，另行收费有行业惯例支撑，但同样应事先告知而非事后追加。</p>
+  <h3>（四）贴砖背胶（几百元）</h3>
+  <p>这是半包增项最常见的争议点。传统半包辅材仅含水泥、沙子，背胶/瓷砖胶是大砖上墙工艺普及后新增材料。若《辅材清单》未列明背胶，收费有合同文本依据；但若签约时未提示可能产生费用，同样涉及知情权问题。</p>
+
+  <h2>二、定制家具合同项下争议：橱柜碗篮</h2>
+  <p>合同 34,000 元（含橱柜），对方主张不含碗篮。碗碟拉篮属<strong>功能五金</strong>，在定制家具行业通常单独计费，与柜体、门板、台面分列。若合同明细仅含柜体、门板、台面而未列碗碟拉篮，对方主张有行业惯例支撑。</p>
+  <p>但需注意：若销售中曾口头承诺"该有的都有""全包"，或宣传材料有暗示性表述，可能构成误导。依据《民法典》第一百四十八条，一方以欺诈手段使对方在违背真实意思的情况下实施的民事法律行为，受欺诈方有权请求撤销。不过口头承诺举证难度较大，建议核查微信聊天记录或宣传单页。</p>
+
+  <h2>三、核心问题："挤牙膏式加钱"是否违法</h2>
+  <h3>（一）知情权侵害</h3>
+  <p>《消费者权益保护法》第八条明确，消费者有权要求经营者提供服务价格、规格、费用等有关情况。签约时未完整披露可能产生的费用项目、施工中逐项追加，侵犯了对装修总成本的<strong>知情权</strong>。</p>
+  <h3>（二）恶意增项的违约性质</h3>
+  <p>依据《民法典》合同编，履行合同义务不符合约定的，应承担继续履行、采取补救措施或赔偿损失等违约责任。未事先告知并征得同意即无正当理由增加项目并要求加价，属<strong>单方面变更合同内容，构成违约</strong>。</p>
+  <p>《住宅室内装饰装修管理办法》要求签订书面合同、明确双方权利义务。合同约定不明时，依《民法典》第五百一十条可协议补充；不能达成补充协议的，按合同相关条款或交易习惯确定。因此费用归属模糊不清时，你有权要求按交易习惯重新协商，而非被动接受单方定价。</p>
+
+  <h2>四、法律依据汇总</h2>
+  <table>
+    <tr><th>法律规范</th><th>核心条款</th><th>与你情况的关联</th></tr>
+    <tr><td>《消费者权益保护法》第八条</td><td>消费者知情权</td><td>装修公司未事先披露增项费用</td></tr>
+    <tr><td>《消费者权益保护法》第十条</td><td>公平交易权</td><td>有权拒绝不合理的强制交易条件</td></tr>
+    <tr><td>《民法典》第一百四十八条</td><td>欺诈可撤销</td><td>若故意隐瞒重要费用信息</td></tr>
+    <tr><td>《民法典》第五百一十条</td><td>约定不明的补充规则</td><td>合同模糊地带按交易习惯协商</td></tr>
+    <tr><td>《民法典》第五百七十七条</td><td>违约责任</td><td>单方增项构成违约</td></tr>
+    <tr><td>《住宅室内装饰装修管理办法》</td><td>书面合同要求</td><td>合同应明确双方权利义务</td></tr>
+  </table>
+
+  <h2>五、行动建议</h2>
+  <p><strong>第一步：固定证据。</strong>将半包合同《辅材清单》、定制家具合同明细页拍照留存；整理与装修公司沟通的微信记录，特别是费用承诺部分；要求公司把 22 元/㎡ 美缝的材料品牌、型号以<strong>文字形式</strong>发给你。</p>
+  <p><strong>第二步：书面异议。</strong>对不合理的增项（尤其签约时完全未提及的项目），通过微信或书面形式提出异议，明确表示"该费用签约时未告知，要求提供合同依据或协商解决"。不要仅口头沟通，保留文字痕迹。</p>
+  <p><strong>第三步：区分处理。</strong></p>
+  <ul>
+    <li>有合同依据的（石材主材、碗篮五金未列明）：可以接受，但要求出具材料品牌型号，确保质量对价；</li>
+    <li>合同未列明但属行业惯例的（背胶、美缝）：可以协商，要求解释为何签约时未提示，争取部分减免或赠品补偿；</li>
+    <li>明显重复收费或模糊收费的：明确拒绝，引用上述法律依据要求对方说明。</li>
+  </ul>
+  <p><strong>第四步：投诉渠道。</strong>协商无果可向当地市场监督管理局（<strong>12315</strong>）投诉侵犯知情权、涉嫌恶意增项；也可向住建部门反映装修合同履行中的违规行为。金额较大且证据充分的，可诉讼主张违约责任。</p>
+
+  <div class="concl-box"><b>提示：</b>以上分析基于你描述的情况，最终判断需以合同文本和实际证据为准。采取行动前，先完成合同附件核查与证据固定。</div>
+  <div class="disclaimer">本文档仅供参考，不构成正式法律意见；具体争议处理以合同约定与司法认定为准。</div>`
+},
+{
+  id:'case-corp',
+  title:'多地开办公司、经营贷融资，如何隔离个人与家庭资产？',
+  cat:'公司法 · 债务风险',
+  tag:'真实咨询案例 · 股权架构与责任隔离',
+  real:true,
+  source:'企业主咨询 · 2026年11月整理',
+  views:'1,388',
+  summary:'计划在多地开设二十余家公司并申请经营贷。法人连带责任能否避开？一人公司该不该设？注册资本写多少？本文从贷款端、股权端、责任隔离三层给出务实架构与关键红线。',
+  key:['法人连带保证避不开','不建议全设一人公司','认缴加速到期风险','注册资本务实且实缴到位'],
+  html:`
+  <p class="info-line">咨询背景：多地开办公司、经营贷融资、个人与家庭资产隔离　｜　整理日期：2026年11月</p>
+
+  <h2>一、贷款端：法人连带责任避不开</h2>
+  <p>以公司名义贷经营贷，银行几乎都要求<strong>法定代表人签个人连带保证</strong>。公司还不上，银行可直接追你个人资产，包括其他城市房产。负债无全国统一上限，但多头授信、征信查询密集会触发风控，后续直接被拒。</p>
+  <p>不需要注册集团公司。银行按监管规则，会把实际控制的所有公司认定为"<strong>集团客户</strong>"统一授信。要做的是：选定一家主力银行，集中代发工资、收款、纳税，主动申报关联关系，让银行做集团总授信和额度切分。别撒网式多头申贷，否则征信查花、整体额度做没。</p>
+
+  <h2>二、股权端：不建议全设一人公司</h2>
+  <p>当法定代表人不等于一人公司。一人公司指只有一个股东，2005 年就有；2024 年 7 月新《公司法》只是取消了"一个自然人只能设一家一人公司"的限制，现在可设多家。</p>
+  <p>但不建议二十几家全设一人公司，原因在<strong>举证责任</strong>：</p>
+  <ul>
+    <li><strong>一人公司：</strong>法律推定财产混同，公司欠债时股东必须自证清白（审计报告、独立账册、清晰流水），证明不了就承担连带责任；</li>
+    <li><strong>普通有限责任公司（两个以上股东，哪怕 1%）：</strong>不适用举证责任倒置，外部债权人想让股东个人担责，须自行举证证明滥用公司独立地位、财产混同，门槛高得多。</li>
+  </ul>
+  <p><strong>务实架构：</strong>每家你持股 99%，找一位成年且信得过的亲属持股 1%，做成普通有限责任公司。未成年子女不建议当股东（监护风险、登记摩擦、隔离效果打折扣）；父母或成年亲属可以。</p>
+  <p>这里的"债权人"指公司之外的债权人（银行、供应商、员工等），不是另一位股东。</p>
+
+  <h2>三、责任隔离：普通公司挡得住什么、挡不住什么</h2>
+  <p>普通有限责任公司下，公司经营亏损通常不会直接动到你或孩子的个人财产——<strong>前提是</strong>：不签个人担保、不抽逃出资、不公私账户混用、每个公司独立记账。否则防火墙照样被突破。</p>
+  <p>公司财产抵完债务仍有缺口，在普通公司且无个人担保前提下，债权人通常不能再追个人；公司走破产清算后注销，债务依法免除。</p>
+  <p><strong>但挡不住两件事：</strong></p>
+  <div class="risk-box">
+    <ol style="margin-top:4px">
+      <li><strong>认缴未实缴的出资：</strong>新《公司法》第五十四条，公司不能清偿到期债务时，债权人有权要求股东提前缴纳认缴出资（加速到期），在未出资范围内承担补充赔偿责任，上限即认缴数额。没钱缴义务也不消失——法院可终结本次执行，但将来有财产可恢复执行；可能被限高、纳入失信名单，子女就读高收费私立学校受限。小孩财产原则上不被直接执行，除非证明你转移财产逃债。</li>
+      <li><strong>亲笔签下的个人担保：</strong>与股权结构无关，银行拿着担保合同就能追你。</li>
+    </ol>
+  </div>
+
+  <h2>四、注册资本：写得务实、实缴到位</h2>
+  <p>法律无最低限额，10 万—20 万实缴对起步科技公司通常够用，属"够用但偏紧"。写低对银行贷款和商业信任有一定影响，但银行更看重真实流水、纳税和抵押物；科技类政策资质看重"含科量"而非注册资本。</p>
+  <p><strong>关键：</strong>注册资本写得务实并实缴到位，个人资产隔离才真正生效。写 20 万实缴 20 万，比写 100 万实缴 0 元安全得多。需要时再单独对某家公司增资，而不是一开始把二十几家全部写高。</p>
+
+  <h2>五、一句话总纲</h2>
+  <div class="concl-box">二十几家公司可以陆续开、当法定代表人没问题；不需要注册集团公司，但要向主力银行主动申报关联做统一授信；不建议全设一人公司，找成年亲属持 1% 做成普通有限责任公司更稳；隔离个人资产的关键不是股权结构本身，而是——<strong>注册资本务实且实缴到位、不签不必要的个人担保、严格公私账户分离</strong>。</div>
+  <div class="disclaimer">本文档为一般性法律与商业架构分析，不构成正式法律意见或税务筹划建议；具体设立与融资方案请结合当地政策并由执业律师、会计师复核。</div>`
+}
+];
+/* ============================================================
+   应用框架 & 路由
+   ============================================================ */
+const app = document.getElementById('app');
+const state = { page:'home', msgs:[], caseId:null, lawCat:'全部', lawKw:'', chatCat:'全部' };
+
+const FIELDS = [
+  {cat:'劳动用工', icon:'👷'}, {cat:'婚姻家事', icon:'💍'},
+  {cat:'房产纠纷', icon:'🏠'}, {cat:'交通事故', icon:'🚗'},
+  {cat:'借贷债权', icon:'💰'}, {cat:'消费维权', icon:'🛒'},
+  {cat:'合同纠纷', icon:'📄'}, {cat:'遗产继承', icon:'📜'}
+];
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.style.display='block';
+  clearTimeout(el._t); el._t = setTimeout(()=>el.style.display='none', 1800);
+}
+function matchQA(text){
+  const t = String(text||'');
+  let best=null, bestScore=0;
+  QA.forEach(item=>{
+    let score=0;
+    item.keys.forEach(k=>{ if(t.indexOf(k)>=0) score += (k.length>=3?2:1); });
+    if(item.cat && t.indexOf(item.cat)>=0) score += 1;
+    if(score>bestScore){ bestScore=score; best=item; }
+  });
+  return bestScore>0 ? best : null;
+}
+
+/* ---------- 底部导航 ---------- */
+const TABS = [
+  {k:'home', t:'首页', i:'🏛️'},
+  {k:'chat', t:'问答', i:'💬'},
+  {k:'cases', t:'案例', i:'📚'},
+  {k:'tools', t:'工具', i:'🧮'},
+  {k:'law', t:'法规', i:'📖'}
+];
+function tabbar(){
+  return `<div class="tabbar">${TABS.map(x=>`<div class="tab ${state.page===x.k?'on':''}" onclick="go('${x.k}')"><span class="tic">${x.i}</span>${x.t}</div>`).join('')}</div>`;
+}
+function go(page, opt){
+  state.page = page;
+  if(opt && opt.cat) state.chatCat = opt.cat;
+  if(opt && opt.caseId) state.caseId = opt.caseId;
+  if(page==='chat') state.chatCat = (opt&&opt.cat) ? opt.cat : '全部';
+  render();
+  window.scrollTo(0,0);
+}
+
+/* ---------- 首页 ---------- */
+function renderHome(){
+  const cases = CASES.slice(0,4).map(c=>`
+    <div class="card case-card press ${c.real?'real':''}" onclick="openCase('${c.id}')">
+      <span class="case-tag">${c.real?'📌 真实咨询案例':'专题案例'} · ${esc(c.cat)}</span>
+      <h4>${esc(c.title)}</h4>
+      <p>${esc(c.summary)}</p>
+      <div class="case-meta"><span>${esc(c.source)}</span><span class="dot"></span><span>${c.views} 阅读</span></div>
+      <span class="open">查看意见书 ›</span>
+    </div>`).join('');
+
+  const hot = QA.slice(0,5).map(q=>`
+    <div class="tool-item press" onclick="askQA('${esc(q.q)}')">
+      <div class="ticon t1">${q.icon}</div>
+      <div><b>${esc(q.q)}</b><span>${esc(q.cat)} · 附法条依据与行动建议</span></div>
+      <span class="arr">›</span>
+    </div>`).join('');
+
+  return `
+  <div class="hero">
+    <div class="hero-top">
+      <div class="logo-ic">⚖️</div>
+      <div><b>智法通</b><small>AI 法律咨询助手</small></div>
+      <span class="hero-badge">7×24 在线</span>
+    </div>
+    <h2>法律问题，随时问清楚</h2>
+    <p>小问题秒级问答并附法条依据，复杂案情生成完整专题意见书</p>
+    <div class="stats">
+      <div class="stat"><b>${QA.length}</b><span>常见问题库</span></div>
+      <div class="stat"><b>${CASES.length}</b><span>专题案例</span></div>
+      <div class="stat"><b>${LAWS.length}</b><span>法规条文</span></div>
+    </div>
+    <div class="hero-search press" onclick="go('chat')">
+      <span>🔍</span><span class="ph">描述你的法律问题，如"公司不给加班费"</span><span class="go">提问</span>
+    </div>
+  </div>
+
+  <div class="modes">
+    <div class="mode m1 press" onclick="go('chat')">
+      <span class="mic">💬</span>
+      <b>快速问答</b>
+      <span>日常小问题，秒级给出答案、法条依据和行动建议</span>
+      <div class="mbtn">立即提问</div>
+    </div>
+    <div class="mode m2 press" onclick="go('cases')">
+      <span class="mic">📑</span>
+      <b>专题分析</b>
+      <span>复杂纠纷，生成含事实梳理、法律依据、行动方案的意见书</span>
+      <div class="mbtn">浏览专题</div>
+    </div>
+  </div>
+
+  <div class="sect">
+    <div class="sect-head"><span class="bar"></span><b>法律领域</b><span class="more">按领域咨询 ›</span></div>
+    <div class="field-grid">
+      ${FIELDS.map(f=>`<div class="field press" onclick="go('chat',{cat:'${f.cat}'})"><div class="fic">${f.icon}</div><span>${f.cat}</span></div>`).join('')}
+    </div>
+  </div>
+
+  <div class="sect">
+    <div class="sect-head"><span class="bar"></span><b>专题案例库</b><span class="more" onclick="go('cases')">全部 ›</span></div>
+    ${cases}
+  </div>
+
+  <div class="sect" style="margin-bottom:24px">
+    <div class="sect-head"><span class="bar"></span><b>热门问答</b><span class="more" onclick="go('chat')">去提问 ›</span></div>
+    ${hot}
+  </div>
+  ${tabbar()}`;
+}
+
+/* ---------- 快速问答（小问题） ---------- */
+function renderChat(){
+  const catQA = state.chatCat==='全部' ? QA : QA.filter(x=>x.cat===state.chatCat);
+  const chips = catQA.slice(0,6).map(x=>`<span class="press" onclick="askQA('${esc(x.q)}')">${esc(x.q)}</span>`).join('');
+  const cats = ['全部',...new Set(QA.map(x=>x.cat))];
+  const msgs = state.msgs.map(m=>{
+    if(m.role==='me') return `<div class="msg me">${esc(m.text)}</div>`;
+    if(m.typing) return `<div class="msg ai"><span class="typing"><i></i><i></i><i></i> 正在检索法条与类案</span></div>`;
+    return `<div class="msg ai">${esc(m.text)}
+      ${m.law?`<div class="law"><b>📖 法律依据</b><br>${esc(m.law)}</div>`:''}
+      ${m.acts?`<div class="acts"><b>✅ 行动建议</b><br>${esc(m.acts)}</div>`:''}
+      ${m.related?`<div style="margin-top:9px;display:flex;gap:6px;flex-wrap:wrap">${m.related.map(r=>`<span style="font-size:11.5px;color:var(--blue);background:#eef4ff;padding:4px 10px;border-radius:999px" onclick="askQA('${esc(r)}')">追问：${esc(r)}</span>`).join('')}</div>`:''}
+    </div>`;
+  }).join('');
+
+  setTimeout(bindChatInput, 0);
+  return `
+  <div class="sub-head">
+    <div class="back" onclick="go('home')">‹</div>
+    <div><h3>快速问答</h3><small>小问题 · 秒级解答 · 附法条依据</small></div>
+  </div>
+  <div class="chat-body">
+    <div class="chat-box" id="chatBox">
+      ${state.msgs.length===0?`<div class="msg ai">你好，我是智法通 AI 法律助手 👋<br>请直接描述你的问题（如"公司拖欠工资怎么办""离婚房子怎么分"），我会给出<strong>结论、法律依据和可执行的行动建议</strong>。<br><br>问题较复杂、涉及多方的，建议使用「专题分析」生成完整意见书。</div>`:''}
+      ${chips?`<div class="quick">${chips}</div>`:''}
+      ${msgs}
+    </div>
+  </div>
+  <div class="chat-input">
+    <input id="chatInput" placeholder="输入你的法律问题…" onkeydown="if(event.key==='Enter')sendChat()">
+    <button onclick="sendChat()">发送</button>
+  </div>
+  ${tabbar()}`;
+}
+
+function bindChatInput(){
+  const box = document.getElementById('chatBox');
+  if(box) box.scrollTop = box.scrollHeight;
+  const w = document.querySelector('.chat-body'); if(w) window.scrollTo(0, document.body.scrollHeight);
+}
+
+function askQA(text){
+  if(!text) return;
+  state.page='chat';
+  state.msgs.push({role:'me', text});
+  state.msgs.push({role:'ai', typing:true});
+  render(); scrollChatBottom();
+  setTimeout(()=>{
+    state.msgs.pop();
+    const hit = matchQA(text);
+    if(hit){
+      const related = QA.filter(x=>x!==hit && x.cat===hit.cat).slice(0,2).map(x=>x.q);
+      state.msgs.push({role:'ai', text:hit.a, law:hit.law, acts:hit.acts, related});
+    } else {
+      state.msgs.push({role:'ai',
+        text:'你的问题已收到。为给出更准确的结论，我需要明确三点：① 你与对方是什么法律关系（劳动关系 / 买卖 / 租赁 / 婚姻 / 借贷等）；② 争议金额或核心诉求；③ 目前是否已有书面证据（合同、转账、聊天记录等）。\n\n你可以补充上述信息继续追问；若案情涉及多方责任、金额较大或已进入诉讼，建议使用「专题分析」生成完整意见书，或转人工律师。',
+        law:'提示：法律咨询结论与具体事实、证据、当地裁判尺度密切相关，AI 意见仅供参考。',
+        acts:'① 补充事实与证据继续追问；② 打开「专题案例库」查找同类纠纷的处理思路；③ 通过「法律工具」估算赔偿或诉讼费；④ 重大事项建议咨询执业律师。',
+        related:['劳动纠纷怎么维权？','诉讼时效是多久？']
+      });
+    }
+    render(); scrollChatBottom();
+  }, 700);
+}
+
+function sendChat(){
+  const el = document.getElementById('chatInput');
+  const v = el ? el.value.trim() : '';
+  if(!v) return;
+  el.value='';
+  askQA(v);
+}
+function scrollChatBottom(){
+  setTimeout(()=>{ window.scrollTo(0, document.body.scrollHeight); }, 60);
+}
+
+/* ---------- 专题案例库（大问题） ---------- */
+function renderCases(){
+  const cats = ['全部',...new Set(CASES.map(c=>c.cat.split(' · ')[0]))];
+  const list = CASES.map(c=>`
+    <div class="card case-card press ${c.real?'real':''}" onclick="openCase('${c.id}')">
+      <span class="case-tag">${c.real?'📌 真实咨询案例':'专题案例'} · ${esc(c.cat)}</span>
+      <h4>${esc(c.title)}</h4>
+      <p>${esc(c.summary)}</p>
+      <div class="case-meta"><span>${esc(c.source)}</span><span class="dot"></span><span>${c.views} 阅读</span></div>
+      <span class="open">查看意见书 ›</span>
+    </div>`).join('');
+  return `
+  <div class="sub-head">
+    <div class="back" onclick="go('home')">‹</div>
+    <div><h3>专题案例库</h3><small>复杂纠纷 · 完整法律意见书</small></div>
+  </div>
+  <div style="padding:14px 14px 30px">
+    <div class="mode-tip">以下为基于真实咨询整理的法律意见书，涵盖事实梳理、法律依据、争议焦点、行动方案与风险提示。个案结论因事实与证据不同而异，复杂事项建议转人工律师复核。</div>
+    ${list}
+    <div class="card" style="padding:22px 18px;text-align:center;border:1px dashed #cfd9e8;background:#fafcff;box-shadow:none">
+      <div style="font-size:26px">📝</div>
+      <b style="font-size:14.5px;color:var(--navy);display:block;margin-top:8px">你的案情更复杂？</b>
+      <span style="font-size:12.5px;color:var(--ink2);display:block;margin-top:5px;line-height:1.7">提交案情要点，由 AI 生成专属意见书，必要时转人工律师复核</span>
+      <div class="go-btn" style="display:inline-block;margin-top:12px" onclick="toast('已进入专题申请通道（演示环境）')">提交专题咨询</div>
+    </div>
+  </div>
+  ${tabbar()}`;
+}
+
+function openCase(id){ state.caseId = id; go('case'); }
+
+function renderCaseDetail(){
+  const c = CASES.find(x=>x.id===state.caseId) || CASES[0];
+  return `
+  <div class="sub-head">
+    <div class="back" onclick="go('cases')">‹</div>
+    <div><h3>法律意见书</h3><small>${esc(c.cat)}</small></div>
+  </div>
+  <div class="detail">
+    <div class="detail-pad">
+      <span class="case-tag ${c.real?'':''}" style="margin-bottom:10px;display:inline-block">${c.real?'📌 真实咨询案例':'专题案例'}</span>
+      <h1>${esc(c.title)}</h1>
+      <div class="info-line">来源：${esc(c.source)}　｜　${c.views} 阅读</div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin:14px 0 4px">
+        ${c.key.map(k=>`<span style="font-size:11.5px;background:#fbf6ea;color:#8a6420;padding:4px 10px;border-radius:6px">${esc(k)}</span>`).join('')}
+      </div>
+      <hr>
+      ${c.html}
+      <div style="display:flex;gap:10px;margin-top:26px">
+        <div class="calc-btn" style="flex:1;background:linear-gradient(135deg,#0f2847,#1e5088)" onclick="go('chat')">咨询类似问题</div>
+        <div class="calc-btn" style="flex:1" onclick="toast('已提交律师复核申请（演示环境）')">申请律师复核</div>
+      </div>
+    </div>
+  </div>
+  ${tabbar()}`;
+}
+
+/* ---------- 法律工具 ---------- */
+const TOOLS = [
+  {id:'fee', icon:'🧾', cls:'t1', name:'诉讼费计算器', desc:'按《诉讼费用交纳办法》分段累计估算案件受理费'},
+  {id:'ot', icon:'⏰', cls:'t2', name:'加班费计算器', desc:'工作日 1.5 倍 / 休息日 2 倍 / 法定节假日 3 倍'},
+  {id:'loan', icon:'💰', cls:'t3', name:'借贷利息计算器', desc:'按年利率与天数计算，并提示 4 倍 LPR 上限'},
+  {id:'sev', icon:'📦', cls:'t4', name:'经济补偿金计算器', desc:'N / N+1 / 2N，按工作年限与月工资估算'}
+];
+function renderTools(){
+  return `
+  <div class="sub-head">
+    <div class="back" onclick="go('home')">‹</div>
+    <div><h3>法律工具</h3><small>常用计算 · 快速估算</small></div>
+  </div>
+  <div class="tool-list">
+    ${TOOLS.map(t=>`<div class="tool-item press" onclick="openTool('${t.id}')">
+      <div class="ticon ${t.cls}">${t.icon}</div>
+      <div><b>${t.name}</b><span>${t.desc}</span></div>
+      <span class="arr">›</span>
+    </div>`).join('')}
+    <div class="mode-tip" style="margin-top:14px">计算结果为估算参考，实际金额以法院核定、合同约定或社保经办机构认定为准。</div>
+  </div>
+  <div class="sheet-mask" id="sheetMask" onclick="if(event.target===this)closeTool()">
+    <div class="sheet" id="sheetBody"></div>
+  </div>
+  ${tabbar()}`;
+}
+
+function closeTool(){ document.getElementById('sheetMask').classList.remove('on'); }
+function openTool(id){
+  const mask = document.getElementById('sheetMask');
+  const body = document.getElementById('sheetBody');
+  if(id==='fee'){
+    body.innerHTML = `<h3>诉讼费计算器 <span class="x" onclick="closeTool()">×</span></h3>
+      <div class="field-row"><label>诉讼请求金额（元）</label><input id="feeAmt" type="number" placeholder="如 300000" inputmode="decimal"></div>
+      <button class="calc-btn" onclick="calcFee()">计算受理费</button>
+      <div class="calc-result" id="feeRes"></div>`;
+  } else if(id==='ot'){
+    body.innerHTML = `<h3>加班费计算器 <span class="x" onclick="closeTool()">×</span></h3>
+      <div class="field-row"><label>月工资（元，按劳动合同约定）</label><input id="otWage" type="number" placeholder="如 8000" inputmode="decimal"></div>
+      <div class="field-row"><label>工作日加班（小时）</label><input id="otA" type="number" placeholder="0" inputmode="decimal"></div>
+      <div class="field-row"><label>休息日加班（小时）</label><input id="otB" type="number" placeholder="0" inputmode="decimal"></div>
+      <div class="field-row"><label>法定节假日加班（小时）</label><input id="otC" type="number" placeholder="0" inputmode="decimal"></div>
+      <button class="calc-btn" onclick="calcOt()">计算加班费</button>
+      <div class="calc-result" id="otRes"></div>
+      <div class="mode-tip" style="margin-top:12px">小时工资 = 月工资 ÷ 21.75 ÷ 8。依据《劳动法》第四十四条。</div>`;
+  } else if(id==='loan'){
+    body.innerHTML = `<h3>借贷利息计算器 <span class="x" onclick="closeTool()">×</span></h3>
+      <div class="field-row"><label>本金（元）</label><input id="lnP" type="number" placeholder="如 100000" inputmode="decimal"></div>
+      <div class="field-row"><label>约定年利率（%）</label><input id="lnR" type="number" placeholder="如 12" inputmode="decimal"></div>
+      <div class="field-row"><label>借款天数</label><input id="lnD" type="number" placeholder="如 365" inputmode="decimal"></div>
+      <button class="calc-btn" onclick="calcLoan()">计算利息</button>
+      <div class="calc-result" id="lnRes"></div>
+      <div class="mode-tip" style="margin-top:12px">司法保护上限为合同成立时一年期 LPR 的 4 倍（按 LPR 3.0% 计约 12%/年）。超过上限部分，法院不予支持。</div>`;
+  } else if(id==='sev'){
+    body.innerHTML = `<h3>经济补偿金计算器 <span class="x" onclick="closeTool()">×</span></h3>
+      <div class="field-row"><label>月平均工资（元，解除前 12 个月）</label><input id="svWage" type="number" placeholder="如 10000" inputmode="decimal"></div>
+      <div class="field-row"><label>工作年限（年，可填小数如 3.5）</label><input id="svYear" type="number" placeholder="如 3.5" inputmode="decimal"></div>
+      <div class="field-row"><label>解除情形</label>
+        <select id="svType">
+          <option value="n">协商一致 / 经济性裁员（N）</option>
+          <option value="n1">无过失性辞退未提前 30 天通知（N+1）</option>
+          <option value="2n">违法解除（2N）</option>
+        </select>
+      </div>
+      <button class="calc-btn" onclick="calcSev()">计算补偿金</button>
+      <div class="calc-result" id="svRes"></div>
+      <div class="mode-tip" style="margin-top:12px">月工资高于当地上年度职工月平均工资 3 倍的，按 3 倍封顶且年限最高 12 年。</div>`;
+  }
+  mask.classList.add('on');
+}
+
+function fmtMoney(n){ return '¥ ' + Math.round(n).toLocaleString('zh-CN'); }
+function num(id){ const v = parseFloat((document.getElementById(id)||{}).value); return isNaN(v)?0:v; }
+
+function calcFee(){
+  const x = num('feeAmt');
+  if(x<=0){ toast('请输入诉讼请求金额'); return; }
+  let f = 0;
+  if(x<=10000) f = 50;
+  else {
+    f = 50;
+    const seg = [[10000,100000,.025],[100000,200000,.02],[200000,500000,.015],[500000,1000000,.01],[1000000,2000000,.009],[2000000,5000000,.008],[5000000,10000000,.007],[10000000,20000000,.006]];
+    seg.forEach(([a,b,r])=>{ if(x>a) f += (Math.min(x,b)-a)*r; });
+    if(x>20000000) f += (x-20000000)*.005;
+  }
+  const r = document.getElementById('feeRes');
+  r.className='calc-result on';
+  r.innerHTML = `<span style="font-size:13px;color:rgba(255,255,255,.75)">案件受理费（一审，估算）</span>
+    <div class="big">${fmtMoney(f)}</div>
+    <div class="det">适用简易程序减半交纳：约 ${fmtMoney(f/2)}<br>调解结案或撤诉的减半交纳<br>不含保全费、公告费、鉴定费等</div>
+    <small>依据《诉讼费用交纳办法》第十三条，分段累计计算。</small>`;
+}
+
+function calcOt(){
+  const w = num('otWage');
+  if(w<=0){ toast('请输入月工资'); return; }
+  const h = w/21.75/8;
+  const a = num('otA'), b = num('otB'), c = num('otC');
+  const ta = h*1.5*a, tb = h*2*b, tc = h*3*c;
+  const total = ta+tb+tc;
+  const r = document.getElementById('otRes');
+  r.className='calc-result on';
+  r.innerHTML = `<span style="font-size:13px;color:rgba(255,255,255,.75)">应发加班费合计</span>
+    <div class="big">${fmtMoney(total)}</div>
+    <div class="det">小时工资：${fmtMoney(h)}<br>工作日 ${a} 小时 × 1.5 = ${fmtMoney(ta)}<br>休息日 ${b} 小时 × 2 = ${fmtMoney(tb)}<br>法定节假日 ${c} 小时 × 3 = ${fmtMoney(tc)}</div>
+    <small>依据《劳动法》第四十四条；月计薪天数按 21.75 天计算。</small>`;
+}
+
+function calcLoan(){
+  const p = num('lnP'), rate = num('lnR'), d = num('lnD');
+  if(p<=0||d<=0){ toast('请输入本金与借款天数'); return; }
+  const interest = p*rate/100*d/365;
+  const cap = p*12/100*d/365;
+  const over = rate>12;
+  const r = document.getElementById('lnRes');
+  r.className='calc-result on';
+  r.innerHTML = `<span style="font-size:13px;color:rgba(255,255,255,.75)">按约定利率计算利息</span>
+    <div class="big">${fmtMoney(interest)}</div>
+    <div class="det">本息合计：${fmtMoney(p+interest)}<br>司法保护上限（按 12%/年）：${fmtMoney(cap)}<br>${over?'<span style="color:#ffb4b4">约定利率已超过 4 倍 LPR，超出部分可能不被支持</span>':'约定利率未超 4 倍 LPR 参考上限'}</div>
+    <small>实际以合同成立时一年期 LPR 的四倍为准，LPR 会随市场调整。</small>`;
+}
+
+function calcSev(){
+  const w = num('svWage'), y = num('svYear');
+  if(w<=0||y<=0){ toast('请输入月工资与工作年限'); return; }
+  const full = Math.floor(y), rem = y-full;
+  let n = full + (rem>=0.5?1:(rem>0?0.5:0));
+  if(n<=0) n = 0.5;
+  const type = document.getElementById('svType').value;
+  let months = n, label = 'N';
+  let base = n*w;
+  if(type==='n1'){ base = n*w + w; label='N+1'; }
+  if(type==='2n'){ base = 2*n*w; label='2N'; }
+  const r = document.getElementById('svRes');
+  r.className='calc-result on';
+  r.innerHTML = `<span style="font-size:13px;color:rgba(255,255,255,.75)">经济补偿 / 赔偿金（估算）</span>
+    <div class="big">${fmtMoney(base)}</div>
+    <div class="det">计算年限：${n} 个月工资（${label}）<br>月工资基数：${fmtMoney(w)}<br>${type==='n1'?'含代通知金 1 个月工资':''}${type==='2n'?'违法解除按经济补偿标准二倍':''}</div>
+    <small>依据《劳动合同法》第四十七条、第八十七条；高收入者适用 3 倍封顶与 12 年上限。</small>`;
+}
+
+/* ---------- 法规速查 ---------- */
+function setLawCat(c){ state.lawCat = c; render(); }
+function filterLaw(v){ state.lawKw = v; render(); }
+function renderLaws(){
+  const cats = ['全部',...new Set(LAWS.map(x=>x.cat))];
+  const kw = state.lawKw.trim();
+  const list = LAWS.filter(x=>(state.lawCat==='全部'||x.cat===state.lawCat) && (!kw || (x.name+x.txt).indexOf(kw)>=0));
+  return `
+  <div class="sub-head">
+    <div class="back" onclick="go('home')">‹</div>
+    <div><h3>法规速查</h3><small>常用法条 · 关键词检索</small></div>
+  </div>
+  <div class="law-search"><input placeholder="搜索法规或条文，如 定金 / 加班 / 彩礼" value="${esc(state.lawKw)}" oninput="filterLaw(this.value)"></div>
+  <div class="law-cat">${cats.map(c=>`<span class="${state.lawCat===c?'on':''}" onclick="setLawCat('${c}')">${c}</span>`).join('')}</div>
+  ${list.length?list.map(x=>`<div class="law-item">
+      <b>${esc(x.name)}</b><span class="law-no">${esc(x.no)}</span>
+      <p>${esc(x.txt)}</p>
+    </div>`).join(''):'<div class="law-empty">没有找到相关条文，换个关键词试试</div>'}
+  <div style="height:24px"></div>
+  ${tabbar()}`;
+}
+
+/* ---------- 渲染入口 ---------- */
+function render(){
+  let html = '';
+  if(state.page==='home') html = renderHome();
+  else if(state.page==='chat') html = renderChat();
+  else if(state.page==='cases') html = renderCases();
+  else if(state.page==='case') html = renderCaseDetail();
+  else if(state.page==='tools') html = renderTools();
+  else if(state.page==='law') html = renderLaws();
+  app.innerHTML = html;
+  if(state.page==='chat') bindChatInput();
+}
+
+/* 暴露到全局，供内联事件调用 */
+window.go = go; window.askQA = askQA; window.sendChat = sendChat;
+window.openCase = openCase; window.openTool = openTool; window.closeTool = closeTool;
+window.calcFee = calcFee; window.calcOt = calcOt; window.calcLoan = calcLoan; window.calcSev = calcSev;
+window.setLawCat = setLawCat; window.filterLaw = filterLaw; window.toast = toast;
+
+render();
+</script>
+</body>
+</html>
