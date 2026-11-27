@@ -182,6 +182,55 @@
   /* 双模式选择弹层（大问题） */
   .mode-tip{font-size:11.5px;color:var(--ink3);line-height:1.7;background:#f6f8fb;border-radius:8px;padding:9px 12px;margin-bottom:10px}
   .toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(15,30,55,.92);color:#fff;padding:12px 22px;border-radius:10px;font-size:13.5px;z-index:200;display:none;max-width:80%}
+
+  /* ===== 专题提交表单 ===== */
+  .topic-form{padding:14px 14px 30px}
+  .topic-form .card{padding:18px 16px;margin-bottom:14px}
+  .topic-form label{display:block;font-size:13px;color:var(--navy);font-weight:700;margin-bottom:8px}
+  .topic-form label em{color:var(--red);font-style:normal;margin-left:3px}
+  .topic-form input[type=text],.topic-form input[type=number],.topic-form select,.topic-form textarea{
+    width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:14px;outline:none;background:var(--bg);font-family:inherit;color:var(--ink)}
+  .topic-form textarea{min-height:96px;resize:vertical;line-height:1.7}
+  .topic-form input:focus,.topic-form select:focus,.topic-form textarea:focus{border-color:var(--blue2);background:#fff}
+  .topic-form .hint{font-size:11.5px;color:var(--ink3);margin-top:6px;line-height:1.6}
+  .ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .ev-grid label{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:400;color:var(--ink2);
+    border:1px solid var(--line);border-radius:10px;padding:10px 11px;margin:0;background:var(--bg)}
+  .ev-grid label:has(input:checked){background:#eef4ff;border-color:var(--blue2);color:var(--blue);font-weight:600}
+  .ev-grid input{accent-color:var(--blue)}
+  .agree-row{display:flex;gap:9px;align-items:flex-start;font-size:12px;color:var(--ink2);line-height:1.7;margin:6px 0 4px}
+  .agree-row input{margin-top:3px;accent-color:var(--blue)}
+  .my-topic{border-left-color:var(--cyan)!important}
+  .my-topic .case-tag{background:#e3f6f8!important;color:#0f7684!important}
+  .mine-actions{display:flex;gap:8px;margin-top:10px}
+  .mine-actions span{font-size:11.5px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);color:var(--ink2)}
+  .mine-actions span.del{color:var(--red);border-color:#f0caca}
+  .section-sub{font-size:12px;color:var(--ink3);margin:2px 0 10px}
+
+  /* ===== 专题访谈聊天 ===== */
+  .iv-progress{position:sticky;top:0;z-index:30;background:linear-gradient(140deg,#0f2847,#1e5088);padding:0 16px 12px}
+  .iv-bar{height:5px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden;margin-top:2px}
+  .iv-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .3s}
+  .iv-meta{font-size:11px;color:rgba(255,255,255,.75);margin-top:7px;display:flex;justify-content:space-between}
+  .msg.ai .chipset{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+  .msg.ai .cchip{font-size:12.5px;border:1px solid #cdddf2;background:#f4f8ff;color:var(--blue);padding:7px 13px;border-radius:999px;cursor:pointer}
+  .msg.ai .cchip.sel{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .msg.ai .cchip.go{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#2a1f08;border:none;font-weight:800}
+  .stmt-card{margin-top:10px;border:1px solid #e2d3a6;border-radius:12px;overflow:hidden}
+  .stmt-card .stmt-head{background:linear-gradient(135deg,#fbf7ee,#f5ecd4);padding:10px 13px;font-size:12.5px;font-weight:800;color:#7a5a18;display:flex;align-items:center;gap:6px}
+  .stmt-card .stmt-body{padding:12px 13px;font-size:12.5px;color:#4a5468;line-height:1.85;white-space:pre-wrap;max-height:340px;overflow-y:auto;background:#fffdf7}
+  .stmt-card .stmt-acts{display:flex;gap:8px;padding:10px 13px;background:#fff;border-top:1px solid #f0e8d2}
+  .stmt-card .stmt-acts span{flex:1;text-align:center;font-size:12.5px;font-weight:700;padding:9px 0;border-radius:8px;cursor:pointer}
+  .stmt-card .stmt-acts .ok{background:linear-gradient(135deg,#0f2847,#1e5088);color:#fff}
+  .stmt-card .stmt-acts .no{border:1px solid var(--line);color:var(--ink2)}
+  .stmt-title{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;margin:10px 13px 0;width:calc(100% - 26px)}
+  .pub-card{border-left-color:var(--green)!important}
+  .pub-card .case-tag{background:#e4f6ee!important;color:#0c7a52!important}
+  .publish-btn{flex:1;background:linear-gradient(135deg,#138a5f,#1ab37a);color:#fff;text-align:center;font-size:13.5px;font-weight:800;padding:11px 0;border-radius:10px;cursor:pointer}
+  .published-btn{flex:1;background:#eef7f2;color:#0c7a52;border:1px solid #bfe6d4;text-align:center;font-size:13.5px;font-weight:700;padding:11px 0;border-radius:10px}
+  .chat-input .iv-send{background:linear-gradient(135deg,#c8a45c,#e6c886);color:#2a1f08}
+  .iv-input-tip{position:fixed;bottom:64px;left:50%;transform:translateX(-50%);width:100%;max-width:460px;z-index:54;pointer-events:none}
+
 </style>
 </head>
 <body>
@@ -702,7 +751,27 @@ const CASES = [
    应用框架 & 路由
    ============================================================ */
 const app = document.getElementById('app');
-const state = { page:'home', msgs:[], caseId:null, lawCat:'全部', lawKw:'', chatCat:'全部' };
+const state = { page:'home', msgs:[], caseId:null, lawCat:'全部', lawKw:'', chatCat:'全部', draft:{}, iv:null };
+
+/* 用户生成的专题（本地持久化） */
+const STORE_KEY = 'zhifatong_my_topics_v1';
+const PUB_KEY = 'zhifatong_pub_topics_v1';
+let MY_CASES = [];
+let PUB_CASES = [];
+try { MY_CASES = JSON.parse(localStorage.getItem(STORE_KEY) || '[]') || []; } catch(e){ MY_CASES = []; }
+try { PUB_CASES = JSON.parse(localStorage.getItem(PUB_KEY) || '[]') || []; } catch(e){ PUB_CASES = []; }
+function saveMyCases(){
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(MY_CASES)); } catch(e){}
+}
+function savePubCases(){
+  try { localStorage.setItem(PUB_KEY, JSON.stringify(PUB_CASES)); } catch(e){}
+}
+function findCaseById(id){ return CASES.find(x=>x.id===id) || PUB_CASES.find(x=>x.id===id) || MY_CASES.find(x=>x.id===id); }
+function fmtDate(ts){
+  const d = new Date(ts);
+  const p = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
 
 const FIELDS = [
   {cat:'劳动用工', icon:'👷'}, {cat:'婚姻家事', icon:'💍'},
@@ -738,7 +807,8 @@ const TABS = [
   {k:'law', t:'法规', i:'📖'}
 ];
 function tabbar(){
-  return `<div class="tabbar">${TABS.map(x=>`<div class="tab ${state.page===x.k?'on':''}" onclick="go('${x.k}')"><span class="tic">${x.i}</span>${x.t}</div>`).join('')}</div>`;
+  const active = { cases:['cases','case','topic-form','interview'] };
+  return `<div class="tabbar">${TABS.map(x=>`<div class="tab ${(active[x.k]||[x.k]).includes(state.page)?'on':''}" onclick="go('${x.k}')"><span class="tic">${x.i}</span>${x.t}</div>`).join('')}</div>`;
 }
 function go(page, opt){
   state.page = page;
@@ -898,7 +968,31 @@ function scrollChatBottom(){
 
 /* ---------- 专题案例库（大问题） ---------- */
 function renderCases(){
-  const cats = ['全部',...new Set(CASES.map(c=>c.cat.split(' · ')[0]))];
+  const mine = MY_CASES.map(c=>{
+    const pub = c.published ? '<span style="color:#0c7a52;border-color:#bfe6d4">🌐 已发布</span>' : '';
+    return `
+    <div class="card case-card press my-topic" onclick="openCase('${c.id}')">
+      <span class="case-tag">📝 我的专题 · ${esc(c.cat)}</span>
+      <h4>${esc(c.title)}</h4>
+      <p>${esc(c.summary)}</p>
+      <div class="case-meta"><span>${esc(c.source)}</span><span class="dot"></span><span>${esc(fmtDate(c.createdAt))} 生成</span></div>
+      <div class="mine-actions">
+        <span onclick="event.stopPropagation();openCase('${c.id}')">查看意见书</span>
+        ${pub}
+        <span class="del" onclick="event.stopPropagation();delMyCase('${c.id}')">删除</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  const published = PUB_CASES.map(c=>`
+    <div class="card case-card press pub-card" onclick="openCase('${c.id}')">
+      <span class="case-tag">🌐 用户发布专题 · ${esc(c.cat)}</span>
+      <h4>${esc(c.title)}</h4>
+      <p>${esc(c.summary)}</p>
+      <div class="case-meta"><span>${esc(c.source)}</span><span class="dot"></span><span>匿名发布</span></div>
+      <span class="open">查看专题 ›</span>
+    </div>`).join('');
+
   const list = CASES.map(c=>`
     <div class="card case-card press ${c.real?'real':''}" onclick="openCase('${c.id}')">
       <span class="case-tag">${c.real?'📌 真实咨询案例':'专题案例'} · ${esc(c.cat)}</span>
@@ -910,44 +1004,592 @@ function renderCases(){
   return `
   <div class="sub-head">
     <div class="back" onclick="go('home')">‹</div>
-    <div><h3>专题案例库</h3><small>复杂纠纷 · 完整法律意见书</small></div>
+    <div><h3>专题案例库</h3><small>对话聊清案情 · 生成意见书 · 发布专题</small></div>
   </div>
   <div style="padding:14px 14px 30px">
+    <div class="card" style="padding:16px 16px;background:linear-gradient(135deg,#0f2847,#1e5088);color:#fff;box-shadow:0 6px 18px rgba(15,40,71,.22)">
+      <b style="font-size:15px;display:block">💬 和 AI 律师聊聊，把案情讲清楚</b>
+      <span style="font-size:12px;color:rgba(255,255,255,.82);display:block;margin-top:5px;line-height:1.6">对话式逐项追问：身份 → 经过 → 金额 → 证据 → 诉求，聊完先生成《详细情况说明》，确认后生成专题意见书，还可匿名发布为公开专题</span>
+      <div class="press" onclick="startInterview()" style="margin-top:11px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#2a1f08;text-align:center;font-weight:800;font-size:14px;padding:11px;border-radius:10px">💬 开始案情访谈（推荐）</div>
+      <div class="press" onclick="go('topic-form')" style="margin-top:8px;text-align:center;font-size:12px;color:rgba(255,255,255,.75)">也可直接填写表单 ›</div>
+    </div>
+    ${MY_CASES.length?`<div class="sect-head" style="margin:18px 0 11px"><span class="bar" style="background:linear-gradient(180deg,var(--cyan),#0f7684)"></span><b>我的专题（${MY_CASES.length}）</b></div>${mine}`:''}
+    ${PUB_CASES.length?`<div class="sect-head" style="margin:18px 0 11px"><span class="bar" style="background:linear-gradient(180deg,#138a5f,#1ab37a)"></span><b>用户发布专题（${PUB_CASES.length}）</b></div>
+      <div class="mode-tip" style="border-left-color:#1ab37a">以下为用户在案情访谈后匿名发布的专题，内容经本人确认并做脱敏处理，仅供参考、不构成法律意见。</div>${published}`:''}
+    <div class="sect-head" style="margin:18px 0 11px"><span class="bar"></span><b>真实案例库</b></div>
     <div class="mode-tip">以下为基于真实咨询整理的法律意见书，涵盖事实梳理、法律依据、争议焦点、行动方案与风险提示。个案结论因事实与证据不同而异，复杂事项建议转人工律师复核。</div>
     ${list}
-    <div class="card" style="padding:22px 18px;text-align:center;border:1px dashed #cfd9e8;background:#fafcff;box-shadow:none">
-      <div style="font-size:26px">📝</div>
-      <b style="font-size:14.5px;color:var(--navy);display:block;margin-top:8px">你的案情更复杂？</b>
-      <span style="font-size:12.5px;color:var(--ink2);display:block;margin-top:5px;line-height:1.7">提交案情要点，由 AI 生成专属意见书，必要时转人工律师复核</span>
-      <div class="go-btn" style="display:inline-block;margin-top:12px" onclick="toast('已进入专题申请通道（演示环境）')">提交专题咨询</div>
-    </div>
   </div>
   ${tabbar()}`;
 }
 
 function openCase(id){ state.caseId = id; go('case'); }
 
-function renderCaseDetail(){
-  const c = CASES.find(x=>x.id===state.caseId) || CASES[0];
+function delMyCase(id, back){
+  if(!confirm('确定删除这份专题意见书？删除后不可恢复（如已发布会一并撤回）。')) return;
+  MY_CASES = MY_CASES.filter(x=>x.id!==id);
+  saveMyCases();
+  if(PUB_CASES.some(x=>x.id===id)){ PUB_CASES = PUB_CASES.filter(x=>x.id!==id); savePubCases(); }
+  toast('已删除');
+  if(back){ state.page='cases'; }
+  render();
+}
+
+/* ---------- 专题提交表单（提问 + 录入） ---------- */
+const TOPIC_CATS = ['劳动用工','婚姻家事','房产纠纷','交通事故','借贷债权','消费维权','合同纠纷','公司经营','刑事举报','其他'];
+const EVIDENCE_OPTS = ['书面合同','转账/付款凭证','聊天记录/录音','书面承诺/欠条','第三方证人','暂无证据'];
+
+function renderTopicForm(){
+  const d = state.draft || {};
+  const ev = d.evidence || [];
+  const checked = name => ev.includes(name) ? 'checked' : '';
   return `
   <div class="sub-head">
     <div class="back" onclick="go('cases')">‹</div>
-    <div><h3>法律意见书</h3><small>${esc(c.cat)}</small></div>
+    <div><h3>发起专题咨询</h3><small>填写案情 · AI 生成意见书</small></div>
+  </div>
+  <div class="topic-form">
+    <div class="mode-tip">大问题（多方责任、金额较大、需要投诉或诉讼）建议使用专题分析。请尽量写清<strong>人物关系、时间、金额和证据</strong>，信息越完整，意见书越有针对性。内容仅保存在你的设备上。</div>
+
+    <div class="card">
+      <label>问题领域<em>*</em></label>
+      <select id="tfCat" onchange="state.draft.cat=this.value">
+        ${TOPIC_CATS.map(c=>`<option value="${c}" ${d.cat===c?'selected':''}>${c}</option>`).join('')}
+      </select>
+
+      <div style="height:14px"></div>
+      <label>一句话概括你的问题<em>*</em></label>
+      <input type="text" id="tfTitle" maxlength="50" placeholder="如：公司拖欠三个月工资并口头辞退我" value="${esc(d.title||'')}" oninput="state.draft.title=this.value">
+      <div class="hint">作为意见书标题，50 字以内</div>
+    </div>
+
+    <div class="card">
+      <label>我与对方的关系 / 身份<em>*</em></label>
+      <input type="text" id="tfRole" maxlength="60" placeholder="如：公司员工 / 买方 / 租客 / 业主 / 出借人" value="${esc(d.role||'')}" oninput="state.draft.role=this.value">
+      <div style="height:14px"></div>
+      <label>对方身份</label>
+      <input type="text" id="tfParty" maxlength="60" placeholder="如：用人单位（某公司）/ 卖家 / 房东 / 开发商" value="${esc(d.party||'')}" oninput="state.draft.party=this.value">
+    </div>
+
+    <div class="card">
+      <label>事实经过<em>*</em></label>
+      <textarea id="tfFacts" placeholder="按时间顺序描述：什么时候、发生了什么、对方做了什么、我做了什么……" oninput="state.draft.facts=this.value">${esc(d.facts||'')}</textarea>
+      <div class="hint">建议包含：起因、经过、目前进展、你的核心诉求</div>
+      <div style="height:14px"></div>
+      <label>争议金额（元，没有可不填）</label>
+      <input type="number" id="tfAmount" inputmode="decimal" placeholder="如 30000" value="${d.amount!=null&&d.amount!==''?esc(d.amount):''}" oninput="state.draft.amount=this.value">
+    </div>
+
+    <div class="card">
+      <label>目前已有的证据（可多选）</label>
+      <div class="ev-grid">
+        ${EVIDENCE_OPTS.map(name=>`<label><input type="checkbox" value="${name}" ${checked(name)} onchange="toggleEvidence(this)"> ${name}</label>`).join('')}
+      </div>
+      <div style="height:14px"></div>
+      <label>目前进展</label>
+      <select id="tfStage" onchange="state.draft.stage=this.value">
+        ${['刚发生，还没沟通','已自行协商，对方拖延或拒绝','已向平台/行政部门投诉','已发律师函或准备起诉','已进入仲裁/诉讼'].map((s,i)=>`<option value="${s}" ${d.stage===s?'selected':''}>${s}</option>`).join('')}
+      </select>
+    </div>
+
+    <div class="card">
+      <label class="agree-row"><input type="checkbox" id="tfAgree" ${d.agree?'checked':''} onchange="state.draft.agree=this.checked"> <span>我确认所填内容真实，仅用于生成咨询意见；知悉本意见由 AI 生成、仅供参考，不构成正式法律意见，重大事项将咨询执业律师。</span></label>
+    </div>
+
+    <button class="calc-btn" onclick="submitTopic()">生成专题意见书</button>
+    <button class="calc-btn" style="background:#fff;color:var(--ink2);border:1px solid var(--line);margin-top:10px" onclick="go('cases')">返回案例库</button>
+  </div>
+  ${tabbar()}`;
+}
+
+function toggleEvidence(cb){
+  if(!Array.isArray(state.draft.evidence)) state.draft.evidence = [];
+  const set = new Set(state.draft.evidence);
+  cb.checked ? set.add(cb.value) : set.delete(cb.value);
+  state.draft.evidence = [...set];
+}
+
+/* 根据录入内容，匹配相关法条/问答，拼装结构化意见书 */
+function buildTopicHtml(f){
+  const hits = [];
+  QA.forEach(q=>{ let s=0; q.keys.forEach(k=>{ if((f.title+' '+f.facts).indexOf(k)>=0) s+=(k.length>=3?2:1); }); if(s>0) hits.push({q,s}); });
+  hits.sort((a,b)=>b.s-a.s);
+  const top = hits.slice(0,2).map(x=>x.q);
+
+  const amount = parseFloat(f.amount);
+  const amtTxt = (!isNaN(amount)&&amount>0) ? `${amount.toLocaleString('zh-CN')} 元` : '未明确（请在后续补充）';
+  const evList = (f.evidence&&f.evidence.length) ? f.evidence : ['暂无（建议尽快收集，详见行动建议）'];
+  const lawBlocks = top.length ? top.map(q=>
+    `<h3>${esc(q.q)}</h3><p>${esc(q.a)}</p>
+     <div class="quote-box"><b>法律依据：</b>${esc(q.law)}</div>`).join('')
+    : `<p>暂未匹配到高度对应的内置法条。建议在「法规速查」中按"${esc(f.cat)}"领域检索，或转人工律师进一步定性。</p>`;
+
+  return `
+  <p class="info-line">咨询人身份：${esc(f.role||'未填写')}　｜　对方：${esc(f.party||'未填写')}　｜　领域：${esc(f.cat)}<br>争议金额：${esc(amtTxt)}　｜　当前进展：${esc(f.stage||'刚发生，还没沟通')}　｜　生成时间：${esc(fmtDate(f.createdAt))}</p>
+
+  <h2>一、事实梳理（根据你填写的内容）</h2>
+  <div class="quote-box">${esc(f.facts||'（未填写事实经过）')}</div>
+  <p>你的诉求概括为：<strong>${esc(f.title)}</strong>。以下分析以上述事实为基础，如事实有出入，结论需相应调整。</p>
+
+  <h2>二、法律关系与可能适用的规则</h2>
+  ${lawBlocks}
+  <p style="font-size:12.5px;color:var(--ink3)">系统根据你填写的关键词匹配了 ${top.length} 条高相关法律知识，仅供初步定性参考。</p>
+
+  <h2>三、争议焦点</h2>
+  <ol>
+    <li>双方之间成立何种法律关系（合同 / 侵权 / 劳动 / 婚姻家庭等），各自权利义务是什么；</li>
+    <li>对方行为是否构成违约或侵权，责任比例如何划分；</li>
+    <li>你主张的金额或诉求是否有合同、法律及证据支撑。</li>
+  </ol>
+
+  <h2>四、证据盘点</h2>
+  <p>你当前已掌握的证据：</p>
+  <ul>${evList.map(e=>`<li>${esc(e)}</li>`).join('')}</ul>
+  <p><strong>举证提示：</strong>证据应围绕"关系成立—对方违约/侵权事实—损失金额—因果关系"四条主线组织。聊天记录建议保留原始载体并做公证或可信存证；转账须有银行流水；书面文件保留原件。</p>
+
+  <h2>五、行动建议（按步骤）</h2>
+  <ol>
+    <li><strong>固定证据（立即）：</strong>整理合同、付款凭证、沟通记录并备份；对易灭失的网页/聊天进行截图录屏，必要时做证据保全。</li>
+    <li><strong>书面催告与协商：</strong>以微信、短信或书面函件向对方明确主张权利并给出答复期限，保留送达记录（同时可起到中断诉讼时效的作用）。</li>
+    <li><strong>行政或平台投诉：</strong>劳动争议向劳动监察大队投诉/申请劳动仲裁；消费争议拨打 12315；房产质量向质监站投诉；信息泄露向网信、市场监管部门投诉。</li>
+    <li><strong>仲裁或诉讼：</strong>协商不成的，依法律关系申请仲裁或向有管辖权的法院起诉；注意一般诉讼时效为 3 年，劳动仲裁时效为 1 年。可使用本软件「法律工具」估算诉讼费等成本。</li>
+    <li><strong>执行保障：</strong>起诉时可视情况申请财产保全，防止对方转移财产导致胜诉后无法执行。</li>
+  </ol>
+
+  <h2>六、风险提示</h2>
+  <div class="risk-box">
+    <ol style="margin-top:4px">
+      <li><strong>证据不足风险：</strong>${f.evidence&&f.evidence.length?'现有证据需核对能否形成完整证据链，孤证证明力有限。':'你目前未填写任何证据，建议在采取行动前优先收集，否则败诉风险较高。'}</li>
+      <li><strong>时效风险：</strong>拖延可能导致超过仲裁/诉讼时效，丧失胜诉权；每次书面催告注意保留证据以中断时效。</li>
+      <li><strong>金额与诉求风险：</strong>${(!isNaN(amount)&&amount>0)?'主张金额应有计算依据与凭证支撑，漫天要价可能承担超额部分的诉讼费。':'争议金额尚未明确，建议先核算损失明细（本金、利息、违约金、实际损失等）。'}</li>
+      <li><strong>程序选择风险：</strong>劳动争议须"先裁后审"，约定了有效仲裁条款的合同纠纷不能直接起诉，提交前核对争议解决条款。</li>
+    </ol>
+  </div>
+
+  <div class="concl-box"><b>下一步：</b>按第五部分顺序推进，并可携带本意见书与证据清单，前往属地公共法律服务中心或委托执业律师做个案复核。</div>
+  <div class="disclaimer">本意见书由智法通 AI 根据用户自行填写的信息自动生成，仅供参考，不构成正式法律意见或诉讼代理意见。AI 不能替代律师对证据原件的审查与出庭代理，重大、复杂或已进入诉讼的事项，请务必咨询执业律师。</div>`;
+}
+
+function submitTopic(){
+  const cat = document.getElementById('tfCat').value;
+  const title = document.getElementById('tfTitle').value.trim();
+  const role = document.getElementById('tfRole').value.trim();
+  const facts = document.getElementById('tfFacts').value.trim();
+  const amount = document.getElementById('tfAmount').value;
+  const party = document.getElementById('tfParty').value.trim();
+  const stage = document.getElementById('tfStage').value;
+  const agree = document.getElementById('tfAgree').checked;
+
+  if(!title){ toast('请填写"一句话概括你的问题"'); return; }
+  if(!role){ toast('请填写你与对方的关系/身份'); return; }
+  if(!facts || facts.length<15){ toast('事实经过请至少填写 15 个字'); return; }
+  if(!agree){ toast('请先勾选确认声明'); return; }
+
+  const f = { cat, title, role, party, facts, amount, stage, evidence:state.draft.evidence||[], agree, createdAt:Date.now() };
+  const rec = {
+    id:'my-'+f.createdAt,
+    title, cat, tag:'我的专题', real:false, mine:true,
+    source:'我提交的案情', views:'—',
+    summary: facts.length>80 ? facts.slice(0,80)+'…' : facts,
+    key:[cat, stage, ...((f.evidence||[]).slice(0,2))],
+    createdAt:f.createdAt,
+    html: buildTopicHtml(f)
+  };
+  MY_CASES.unshift(rec);
+  saveMyCases();
+  state.draft = {};
+  toast('专题意见书已生成');
+  state.caseId = rec.id;
+  state.page = 'case';
+  render();
+  window.scrollTo(0,0);
+}
+
+/* ============================================================
+   专题访谈：聊天把案情聊清楚 → 情况说明 → 专题意见书 → 发布
+   ============================================================ */
+const IV_STEPS = [
+  { key:'cat',    ask:'先确定一下问题领域，你的情况属于哪一类？（可点选，也可直接输入）',
+    chips:TOPIC_CATS,
+    hint:'领域有助于匹配对应的法律规则' },
+  { key:'role',   ask:'请先介绍一下：你在这件事里是什么身份？和对方是什么关系？',
+    placeholder:'如：我是公司员工 / 买方 / 租客 / 业主 / 出借人…',
+    hint:'例：我是某公司的员工，对方是我的用人单位' },
+  { key:'party',  ask:'对方是谁？（个人还是公司/机构？）',
+    placeholder:'如：某科技有限公司 / 房东张某 / 某开发商',
+    hint:'写清名称或称呼即可' },
+  { key:'facts',  ask:'请按时间顺序讲讲事情经过：什么时候发生的？起因是什么？对方做了什么？你做了什么？',
+    placeholder:'尽量写清时间、地点、人物、关键事件，可以分多条发送…',
+    multiline:true,
+    hint:'这是最重要的部分，可以连续发送多条，我会逐条记录' },
+  { key:'amount', ask:'这件事涉及多少钱？（欠款、货款、工资、损失等；没有明确金额可点"暂无明确金额"）',
+    chips:['暂无明确金额'],
+    placeholder:'如：30000 元',
+    isAmount:true },
+  { key:'evidence', ask:'你现在手里有哪些证据？（可点选多个，也可文字补充）',
+    chips:EVIDENCE_OPTS,
+    multi:true,
+    hint:'点选已有的证据，选完点"以上就是全部证据"' },
+  { key:'stage',  ask:'事情目前进展到哪一步了？',
+    chips:['刚发生，还没沟通','已自行协商，对方拖延或拒绝','已向平台/行政部门投诉','已发律师函或准备起诉','已进入仲裁/诉讼'] },
+  { key:'claim',  ask:'你希望达到什么结果？（你的核心诉求）',
+    placeholder:'如：要回工资和赔偿金 / 解除合同并退款 / 要求对方继续履行…',
+    hint:'明确诉求，意见书会围绕它给出路径' }
+];
+
+function startInterview(){
+  state.iv = { step:0, data:{evidence:[]}, logs:[], done:false };
+  ivPush('ai', IV_STEPS[0].ask, {chips:IV_STEPS[0].chips, hint:IV_STEPS[0].hint});
+  state.page = 'interview';
+  render();
+}
+
+function ivPush(role, text, opt){
+  state.iv.logs.push(Object.assign({role, text}, opt||{}));
+}
+
+/* 进度（0~100） */
+function ivProgress(){
+  if(!state.iv) return 0;
+  return Math.round(((state.iv.step) / IV_STEPS.length) * 100);
+}
+
+/* 点击快捷芯片 */
+function ivChip(val){
+  if(state.iv && state.iv.revising){ ivRevise(val); return; }
+  const st = IV_STEPS[state.iv.step];
+  if(!st) return;
+  if(st.multi){
+    const set = new Set(state.iv.data.evidence||[]);
+    if(val==='__done'){ ivNext(); return; }
+    set.has(val)?set.delete(val):set.add(val);
+    state.iv.data.evidence = [...set];
+    // 更新最后一条 AI 消息的芯片选中态：重渲染
+    ivPush('me', '（选择证据）'+val);
+    render(); ivScroll();
+    return;
+  }
+  ivAnswer(val);
+}
+
+/* 用户输入回答 */
+function ivSend(){
+  const el = document.getElementById('ivInput');
+  const v = el ? el.value.trim() : '';
+  if(!v) return;
+  el.value='';
+  ivAnswer(v);
+}
+
+function ivAnswer(raw){
+  const st = IV_STEPS[state.iv.step];
+  if(!st) return;
+  let val = String(raw).trim();
+  if(val==='__factsDone'){ ivNext(); return; }
+  ivPush('me', val);
+
+  if(st.key==='amount'){
+    if(val.indexOf('暂无')>=0 || val.indexOf('没有')>=0){ state.iv.data.amount=''; }
+    else {
+      const num = (val.match(/[\d.]+/)||[])[0];
+      state.iv.data.amount = num ? parseFloat(num) : '';
+      if(!num){
+        ivPush('ai','我没太识别出金额，可以直接输入数字，例如 30000；如果确实没有明确金额，请点「暂无明确金额」。',{chips:['暂无明确金额']});
+        render(); ivScroll(); return;
+      }
+    }
+  } else if(st.key==='evidence'){
+    // 文字补充证据
+    const set = new Set(state.iv.data.evidence||[]);
+    if(!EVIDENCE_OPTS.includes(val)){ set.add(val); }
+    state.iv.data.evidence = [...set];
+    ivPush('ai',`已记录。目前证据：${(state.iv.data.evidence.join('、')||'暂无')}。还可以继续点选或补充，完成后点下方按钮。`,
+      {chips:[...remainingEvChips(),'__done'], chipLabel:'__done|以上就是全部证据'});
+    render(); ivScroll(); return;
+  } else if(st.multiline){
+    // facts 支持多条：以句号/换行判断是否足够，这里让用户主动点"我说完了"
+    state.iv.data.facts = (state.iv.data.facts ? state.iv.data.facts+'\n' : '') + val;
+    if(!state.iv._askedMore){
+      state.iv._askedMore = true;
+      ivPush('ai','好的，已记录这一段。如果还有补充的时间、细节或对方的回应，可以继续发；如果事情经过已经讲清楚，请点「我讲完了，下一步」。',
+        {chips:['__factsDone'], chipLabel:'__factsDone|我讲完了，下一步'});
+    } else {
+      ivPush('ai','已补充记录。还可以继续，或点「我讲完了，下一步」。',
+        {chips:['__factsDone'], chipLabel:'__factsDone|我讲完了，下一步'});
+    }
+    render(); ivScroll(); return;
+  } else if(st.key==='cat'){
+    state.iv.data.cat = val;
+  } else {
+    state.iv.data[st.key] = val;
+  }
+  ivNext();
+}
+
+function remainingEvChips(){
+  const have = new Set(state.iv.data.evidence||[]);
+  return EVIDENCE_OPTS.filter(x=>!have.has(x));
+}
+
+function ivNext(){
+  state.iv.step += 1;
+  if(state.iv.step >= IV_STEPS.length){
+    finishInterview();
+    return;
+  }
+  const st = IV_STEPS[state.iv.step];
+  const opt = {};
+  if(st.chips) opt.chips = st.chips;
+  if(st.hint) opt.hint = st.hint;
+  if(st.key==='evidence'){
+    // 进入证据步：给出去重后的芯片 + 完成按钮
+    opt.chips = [...remainingEvChips(),'__done'];
+    opt.chipLabel = '__done|以上就是全部证据';
+  }
+  ivPush('ai', st.ask, opt);
+  render(); ivScroll();
+}
+
+function ivScroll(){
+  setTimeout(()=>{ const b=document.getElementById('ivBody'); if(b) b.scrollTop=b.scrollHeight; window.scrollTo(0,document.body.scrollHeight); },50);
+}
+
+/* 生成"详细情况说明"供用户确认 */
+function buildStatement(d){
+  const amt = (d.amount!==''&&d.amount!=null&&!isNaN(d.amount)) ? `${Number(d.amount).toLocaleString('zh-CN')} 元` : '暂无明确金额';
+  const ev = (d.evidence&&d.evidence.length) ? d.evidence.join('、') : '暂未提供';
+  return `【问题领域】${d.cat||'未选择'}
+【咨询人身份】${d.role||'未填写'}
+【对方当事人】${d.party||'未填写'}
+
+【事情经过】
+${d.facts||'（未填写）'}
+
+【争议金额】${amt}
+【现有证据】${ev}
+【目前进展】${d.stage||'未选择'}
+【核心诉求】${d.claim||'未填写'}`;
+}
+
+function finishInterview(){
+  state.iv.done = true;
+  const d = state.iv.data;
+  d.cat = d.cat || '其他';
+  const stmt = buildStatement(d);
+  ivPush('ai','我已经根据我们的对话，把案情整理成下面这份《详细情况说明》，请核对：\n如果信息有误，点「需要修改」我会继续追问；确认无误后点「确认无误，生成专题意见书」。',
+    {statement:stmt});
+  render(); ivScroll();
+}
+
+function reviseStatement(){
+  // 回到可补充状态：追加一轮自由修改
+  state.iv.step = IV_STEPS.length; // 保持结束态但允许补充
+  ivPush('ai','好的，请直接告诉我需要修改或补充的内容（例如"金额改成 5 万""再补充一条证据：对方的录音"），我会更新情况说明。',
+    {chips:['补充/修改事实经过','修改争议金额','补充证据','修改诉求']});
+  state.iv.revising = true;
+  render(); ivScroll();
+}
+
+/* 在确认后的修改：简单关键词路由更新 */
+function ivRevise(text){
+  ivPush('me', text);
+  const d = state.iv.data;
+  let changed = false;
+  const num = (text.match(/[\d.]+/)||[])[0];
+  if((text.indexOf('金额')>=0||text.indexOf('改成')>=0||text.indexOf('万')>=0) && num){
+    let v = parseFloat(num);
+    if(text.indexOf('万')>=0 && v<100000) v = v*10000;
+    d.amount = v; changed = true;
+  }
+  if(text.indexOf('证据')>=0){
+    const extra = text.replace(/.*证据[:：]?/,'').replace(/[，,。；;]/g,' ').trim();
+    if(extra){ const set=new Set(d.evidence||[]); extra.split(/\s+/).filter(Boolean).forEach(x=>set.add(x)); d.evidence=[...set]; changed=true; }
+  }
+  if(text.indexOf('诉求')>=0){
+    d.claim = text.replace(/.*诉求[:：]?/,'').replace(/^[，,\s]+/,'') || d.claim; changed=true;
+  }
+  if(text.indexOf('事实')>=0||text.indexOf('经过')>=0||text.indexOf('补充')>=0){
+    const add = text.replace(/^[，,\s]*(补充\/?修改?)?(事实经过)?[:：]?/,'');
+    if(add && add.length>4){ d.facts = (d.facts?d.facts+'\n补充：':'') + add; changed=true; }
+  }
+  if(!changed){ d.facts = (d.facts?d.facts+'\n补充：':'') + text; changed=true; }
+  ivPush('ai','已更新。最新的《详细情况说明》如下，请再次核对：',{statement:buildStatement(d)});
+  render(); ivScroll();
+}
+
+/* 确认情况说明 → 生成专题意见书 → 写入我的专题 */
+function confirmStatement(){
+  const d = state.iv.data;
+  const titleInput = (document.getElementById('ivTitle')||{}).value;
+  const title = (titleInput||'').trim() || autoTitle(d);
+  d.title = title;
+  const rec = makeTopicRecord(d, {fromChat:true});
+  MY_CASES.unshift(rec);
+  saveMyCases();
+  state.iv.recId = rec.id;
+  ivPush('ai',`专题意见书已生成：《${title}》。\n它已保存到「案例 → 我的专题」。你可以先打开查看，也可以直接发布到案例库，公开供其他用户参考（发布前可再次确认，且会做匿名提示）。`,
+    {openId:rec.id});
+  render(); ivScroll();
+}
+
+function autoTitle(d){
+  const base = (d.facts||'').replace(/\s+/g,'').slice(0,22);
+  return base ? base : `${d.cat||'法律'}咨询专题`;
+}
+
+/* 由访谈数据构造意见书记录（复用 buildTopicHtml） */
+function makeTopicRecord(d, opt){
+  const f = { cat:d.cat, title:d.title, role:d.role, party:d.party, facts:d.facts,
+              amount:d.amount, stage:d.stage, evidence:d.evidence||[], createdAt:Date.now() };
+  return {
+    id:'my-'+f.createdAt,
+    title:d.title, cat:d.cat||'其他', tag:'我的专题', real:false, mine:true, published:false,
+    source:'对话访谈生成', views:'0',
+    statement: buildStatement(d),
+    summary:(d.facts||'').length>80 ? d.facts.slice(0,80)+'…' : (d.facts||''),
+    key:[d.cat, d.stage, ...((d.evidence||[]).slice(0,2))].filter(Boolean),
+    createdAt:f.createdAt,
+    html: buildTopicHtml(f)
+  };
+}
+
+/* 发布到案例库（用户发布专题） */
+function publishTopic(id){
+  const rec = MY_CASES.find(x=>x.id===id);
+  if(!rec) return;
+  if(!confirm('发布后将作为「用户发布专题」在案例库公开展示。\n请确认：① 内容真实；② 已隐去真实姓名、电话、身份证号、详细住址、单位全称等个人信息。\n是否继续发布？')) return;
+  if(PUB_CASES.some(x=>x.id===id)){ toast('该专题已发布'); return; }
+  const pub = Object.assign({}, rec, {
+    published:true, pubAt:Date.now(),
+    tag:'用户发布专题', real:false, mine:true,
+    source:'用户匿名发布 · ' + fmtDate(Date.now()).slice(0,10),
+    views:'0'
+  });
+  PUB_CASES.unshift(pub);
+  savePubCases();
+  rec.published = true;
+  saveMyCases();
+  toast('已发布到案例库');
+  state.caseId = id;
+  state.page = 'case';
+  render(); window.scrollTo(0,0);
+}
+function unpublishTopic(id){
+  if(!confirm('确定撤回这条已发布的专题？撤回后案例库将不再公开展示。')) return;
+  PUB_CASES = PUB_CASES.filter(x=>x.id!==id);
+  savePubCases();
+  const rec = MY_CASES.find(x=>x.id===id);
+  if(rec){ rec.published=false; saveMyCases(); }
+  toast('已撤回发布');
+  render();
+}
+
+/* ---------- 专题访谈聊天窗口 ---------- */
+function renderInterview(){
+  const iv = state.iv;
+  const cur = IV_STEPS[iv.step];
+  const placeholder = cur ? (cur.placeholder || '输入你的回答…') : '输入补充内容…';
+  const logs = iv.logs.map(m=>{
+    if(m.role==='me') return `<div class="msg me">${esc(m.text)}</div>`;
+    let extra='';
+    if(m.hint) extra += `<div class="law" style="background:#f6f8fb;border-left-color:var(--ink3)"><b>💡 提示</b><br>${esc(m.hint)}</div>`;
+    if(m.chips){
+      let chips = m.chips.map(c=>{
+        let label=c, val=c;
+        if(m.chipLabel){
+          const mm = m.chipLabel.split('|');
+          if(mm[0]===c) label=mm[1];
+        }
+        if(c==='__done'||c==='__factsDone') return `<span class="cchip go" onclick="ivChip('${c}')">${esc(label)}</span>`;
+        const sel = (c!=='__done'&&(iv.data.evidence||[]).includes(c)) ? ' sel':'';
+        return `<span class="cchip${sel}" onclick="ivChip('${c}')">${esc(label)}</span>`;
+      }).join('');
+      extra += `<div class="chipset">${chips}</div>`;
+    }
+    if(m.statement){
+      extra += `<div class="stmt-card">
+        <div class="stmt-head">📋 详细情况说明（请核对）</div>
+        <div class="stmt-body">${esc(m.statement)}</div>
+        <input class="stmt-title" id="ivTitle" maxlength="50" placeholder="给专题起个标题（也可用默认标题）">
+        <div class="stmt-acts">
+          <span class="no" onclick="reviseStatement()">需要修改 / 补充</span>
+          <span class="ok" onclick="confirmStatement()">确认无误，生成专题意见书</span>
+        </div>
+      </div>`;
+    }
+    if(m.openId){
+      extra += `<div class="chipset">
+        <span class="cchip go" onclick="openCase('${m.openId}')">📄 打开专题意见书</span>
+        <span class="cchip" onclick="go('cases')">去「我的专题」查看</span>
+      </div>`;
+    }
+    return `<div class="msg ai">${esc(m.text).replace(/\n/g,'<br>')}${extra}</div>`;
+  }).join('');
+
+  return `
+  <div class="sub-head">
+    <div class="back" onclick="go('cases')">‹</div>
+    <div><h3>专题案情访谈</h3><small>对话式梳理 · AI 逐项追问</small></div>
+  </div>
+  <div class="iv-progress">
+    <div class="iv-bar"><i style="width:${ivProgress()}%"></i></div>
+    <div class="iv-meta"><span>${iv.done?'已完成访谈，待确认情况说明':'正在了解案情（'+(Math.min(iv.step+1,IV_STEPS.length))+'/'+IV_STEPS.length+'）'}</span><span>${ivProgress()}%</span></div>
+  </div>
+  <div class="chat-body">
+    <div class="chat-box" id="ivBody">
+      <div class="msg ai">你好，我是<strong>专题法律顾问</strong> 🤝<br>大问题需要把事实、证据和诉求聊透。接下来我会分 ${IV_STEPS.length} 步向你提问，你像和律师对话一样回答即可，中途也可以补充。聊完后我会先整理一份《详细情况说明》给你确认，再生成完整的专题意见书。</div>
+      ${logs}
+    </div>
+  </div>
+  <div class="chat-input">
+    <input id="ivInput" placeholder="${placeholder}" onkeydown="if(event.key==='Enter')ivInputGo()">
+    <button class="iv-send" onclick="ivInputGo()">发送</button>
+  </div>
+  ${tabbar()}`;
+}
+
+/* 输入框回车/按钮统一入口：区分访谈中与修改中 */
+function ivInputGo(){
+  if(state.iv && state.iv.revising){ ivRevise(document.getElementById('ivInput').value.trim()); document.getElementById('ivInput').value=''; return; }
+  ivSend();
+}
+
+
+function renderCaseDetail(){
+  const c = findCaseById(state.caseId) || CASES[0];
+  const isPub = PUB_CASES.some(x=>x.id===c.id);
+  return `
+  <div class="sub-head">
+    <div class="back" onclick="go('cases')">‹</div>
+    <div><h3>${c.mine?'我的专题意见书':'法律意见书'}</h3><small>${esc(c.cat)}</small></div>
   </div>
   <div class="detail">
     <div class="detail-pad">
-      <span class="case-tag ${c.real?'':''}" style="margin-bottom:10px;display:inline-block">${c.real?'📌 真实咨询案例':'专题案例'}</span>
+      <span class="case-tag" style="margin-bottom:10px;display:inline-block;${c.mine?'background:'+(isPub?'#e4f6ee':'#e3f6f8')+';color:'+(isPub?'#0c7a52':'#0f7684'):''}">${isPub?'🌐 用户发布专题':(c.mine?'📝 我的专题 · AI 生成':(c.real?'📌 真实咨询案例':'专题案例'))}</span>
       <h1>${esc(c.title)}</h1>
-      <div class="info-line">来源：${esc(c.source)}　｜　${c.views} 阅读</div>
+      <div class="info-line">来源：${esc(c.source)}${c.mine?'　｜　'+esc(fmtDate(c.createdAt))+' 生成':'　｜　'+c.views+' 阅读'}</div>
       <div style="display:flex;gap:7px;flex-wrap:wrap;margin:14px 0 4px">
-        ${c.key.map(k=>`<span style="font-size:11.5px;background:#fbf6ea;color:#8a6420;padding:4px 10px;border-radius:6px">${esc(k)}</span>`).join('')}
+        ${c.key.map(k=>`<span style="font-size:11.5px;background:${isPub?'#e4f6ee':(c.mine?'#e3f6f8':'#fbf6ea')};color:${isPub?'#0c7a52':(c.mine?'#0f7684':'#8a6420')};padding:4px 10px;border-radius:6px">${esc(k)}</span>`).join('')}
       </div>
+      ${c.statement?`<div class="stmt-card" style="margin:16px 0 4px">
+        <div class="stmt-head">📋 详细情况说明（访谈整理）</div>
+        <div class="stmt-body" style="max-height:240px">${esc(c.statement)}</div>
+      </div>`:''}
       <hr>
       ${c.html}
-      <div style="display:flex;gap:10px;margin-top:26px">
+      ${c.mine?`<div style="display:flex;gap:10px;margin-top:22px">
+        <div class="calc-btn" style="flex:1;background:linear-gradient(135deg,#0f2847,#1e5088)" onclick="go('chat')">继续追问</div>
+        ${isPub
+          ? `<div class="published-btn" onclick="unpublishTopic('${c.id}')">✓ 已发布 · 撤回</div>`
+          : `<div class="publish-btn" onclick="publishTopic('${c.id}')">发布为专题</div>`}
+      </div>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <div class="calc-btn" style="flex:1;background:#fff;color:var(--red);border:1px solid #f0caca" onclick="delMyCase('${c.id}', true)">删除该专题</div>
+      </div>`
+      :`<div style="display:flex;gap:10px;margin-top:26px">
         <div class="calc-btn" style="flex:1;background:linear-gradient(135deg,#0f2847,#1e5088)" onclick="go('chat')">咨询类似问题</div>
         <div class="calc-btn" style="flex:1" onclick="toast('已提交律师复核申请（演示环境）')">申请律师复核</div>
-      </div>
+      </div>`}
     </div>
   </div>
   ${tabbar()}`;
@@ -1122,18 +1764,25 @@ function render(){
   if(state.page==='home') html = renderHome();
   else if(state.page==='chat') html = renderChat();
   else if(state.page==='cases') html = renderCases();
+  else if(state.page==='topic-form') html = renderTopicForm();
+  else if(state.page==='interview') html = renderInterview();
   else if(state.page==='case') html = renderCaseDetail();
   else if(state.page==='tools') html = renderTools();
   else if(state.page==='law') html = renderLaws();
   app.innerHTML = html;
   if(state.page==='chat') bindChatInput();
+  if(state.page==='interview') ivScroll();
 }
 
 /* 暴露到全局，供内联事件调用 */
 window.go = go; window.askQA = askQA; window.sendChat = sendChat;
 window.openCase = openCase; window.openTool = openTool; window.closeTool = closeTool;
+window.delMyCase = delMyCase; window.toggleEvidence = toggleEvidence; window.submitTopic = submitTopic;
 window.calcFee = calcFee; window.calcOt = calcOt; window.calcLoan = calcLoan; window.calcSev = calcSev;
 window.setLawCat = setLawCat; window.filterLaw = filterLaw; window.toast = toast;
+window.startInterview = startInterview; window.ivChip = ivChip; window.ivInputGo = ivInputGo;
+window.ivSend = ivSend; window.reviseStatement = reviseStatement; window.confirmStatement = confirmStatement;
+window.publishTopic = publishTopic; window.unpublishTopic = unpublishTopic;
 
 render();
 </script>
