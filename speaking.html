@@ -3,371 +3,1377 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>英语口语练习 · 像素训练工具</title>
+<title>像素英语口语练习 v2 · 真正能练口语</title>
 <style>
-  /* ============ 全局：8-bit 像素风 ============ */
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  :root{
-    --px-line:#c9b9a8;          /* 像素描边 */
-    --px-shadow:0 3px 0 rgba(90,60,30,.18);   /* 像素投影：2-3px 下偏移，无模糊 */
-    --ink:#4a3728;              /* 深棕文字 */
-    --ink2:#8a7460;             /* 浅棕文字 */
-    --pink:#f4679d;             /* 主题粉红（选中态） */
-  }
-  html,body{ height:100%; }
-  body{
-    font-family:"PingFang SC","Microsoft YaHei",sans-serif;
-    background:#1c2733;                     /* 桌面查看时的深色衬底 */
-    display:flex; justify-content:center;
-    color:var(--ink);
-  }
-  /* 手机竖屏容器：375-430px 适配 */
-  .phone{
-    width:100%; max-width:430px; min-height:100vh; position:relative;
-    background:linear-gradient(180deg,#9fd9ff 0%,#c9edff 30%,#e8f9ff 55%,#fdf3e3 100%);
-    overflow-x:hidden;
-    padding-bottom:120px;                    /* 底部 Tab 悬浮安全区 */
-  }
-  /* 像素云朵（装饰） */
-  .cloud{ position:absolute; image-rendering:pixelated; opacity:.85; pointer-events:none; }
-  .cloud.c1{ top:96px; right:-14px; }
-  .cloud.c2{ top:230px; left:-20px; transform:scale(.7); }
-  /* 通用像素卡片 */
-  .px-card{
-    background:#fffdf6; border:2px solid var(--px-line);
-    border-radius:8px; box-shadow:var(--px-shadow);
-  }
-  /* 按压反馈：0.95 缩放 */
-  .press{ transition:transform .08s; cursor:pointer; }
-  .press:active{ transform:scale(.95); }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --px-line:#c9b9a8;
+  --ink:#4a3728;
+  --ink2:#8a7460;
+  --pink:#f4679d;
+  --green:#2ecc71;
+  --yellow:#f5c542;
+  --red:#e85d5d;
+}
+html,body{height:100%;}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#1c2733;color:var(--ink);display:flex;justify-content:center;}
+.phone{
+  width:100%;max-width:430px;min-height:100vh;position:relative;
+  background:linear-gradient(180deg,#9fd9ff 0%,#c9edff 30%,#e8f9ff 55%,#fdf3e3 100%);
+  overflow-x:hidden;padding-bottom:120px;
+}
+.cloud{position:absolute;opacity:.85;pointer-events:none;}
+.cloud.c1{top:96px;right:-14px;}
+.cloud.c2{top:230px;left:-20px;transform:scale(.7);}
+.px-card{background:#fffdf6;border:2px solid var(--px-line);border-radius:8px;box-shadow:0 3px 0 rgba(90,60,30,.18);}
+.press{transition:transform .08s;cursor:pointer;user-select:none;}
+.press:active{transform:scale(.95);}
 
-  /* ============ 模块1：系统状态栏 + 品牌头部 ============ */
-  .statusbar{
-    height:34px; display:flex; align-items:center; justify-content:space-between;
-    padding:0 16px; font-size:12px; font-weight:700; color:#33475b;
-    background:rgba(255,255,255,.55); backdrop-filter:blur(2px);
-  }
-  .statusbar .sicons{ letter-spacing:2px; font-size:11px; }
-  .capsule{
-    border:1.5px solid rgba(51,71,91,.4); border-radius:14px; padding:1px 10px;
-    font-size:11px; color:#33475b; background:rgba(255,255,255,.7);
-  }
-  .brand{ position:relative; padding:14px 16px 6px; }
-  .brand h1{
-    text-align:center; font-size:24px; letter-spacing:3px; color:#3d2b1f;
-    text-shadow:2px 2px 0 #ffe9c9, 4px 4px 0 rgba(90,60,30,.12);   /* 像素阶梯字 */
-    font-weight:900;
-  }
-  .brand-row{ display:flex; align-items:flex-end; gap:8px; margin-top:10px; }
-  /* CSS 像素画：Q版女孩（16x18 网格，box-shadow 画法） */
-  .pixel-girl{ width:96px; height:108px; flex:none; position:relative; image-rendering:pixelated; }
-  .pixel-girl i{ position:absolute; width:6px; height:6px; }
-  .bubble{
-    position:relative; background:#fff; border:2px solid var(--px-line);
-    border-radius:8px; padding:8px 12px; font-size:13px; font-weight:700; color:#6b4b2a;
-    box-shadow:var(--px-shadow); margin-bottom:10px;
-  }
-  .bubble::before{
-    content:""; position:absolute; left:-8px; bottom:12px;
-    border:6px solid transparent; border-right-color:#fff;
-  }
-  .deco{ margin-left:auto; display:flex; gap:6px; align-items:flex-end; font-size:20px; filter:saturate(1.1); }
+/* 通用头部（二级页） */
+.page-head{
+  display:flex;align-items:center;gap:10px;padding:12px 16px;
+  background:rgba(255,255,255,.55);backdrop-filter:blur(2px);
+  border-bottom:2px solid var(--px-line);position:sticky;top:0;z-index:20;
+}
+.page-head .back{
+  width:32px;height:32px;border:2px solid var(--px-line);border-radius:6px;
+  background:#fffdf6;display:grid;place-items:center;font-size:16px;cursor:pointer;
+}
+.page-head h2{flex:1;font-size:16px;color:#3d2b1f;letter-spacing:1px;}
+.page-head .right{font-size:12px;color:var(--ink2);cursor:pointer;}
 
-  /* ============ 模块2：数据看板（3 指标卡） ============ */
-  .board{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:16rpx; gap:8px;
-    margin:10px 16px 0;
-  }
-  .stat{ padding:10px 6px; text-align:center; }
-  .stat .ic{ font-size:18px; }
-  .stat b{ display:block; font-size:16px; margin-top:2px; color:#3d2b1f; }
-  .stat span{ font-size:10px; color:var(--ink2); }
+/* 模块1 状态/品牌 */
+.statusbar{
+  height:34px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;font-size:12px;font-weight:700;color:#33475b;
+  background:rgba(255,255,255,.55);backdrop-filter:blur(2px);
+}
+.statusbar .sicons{letter-spacing:2px;font-size:11px;}
+.brand{position:relative;padding:14px 16px 6px;}
+.brand h1{
+  text-align:center;font-size:24px;letter-spacing:3px;color:#3d2b1f;font-weight:900;
+  text-shadow:2px 2px 0 #ffe9c9,4px 4px 0 rgba(90,60,30,.12);
+}
+.brand-row{display:flex;align-items:flex-end;gap:8px;margin-top:10px;}
+.pixel-girl{width:96px;height:108px;flex:none;position:relative;}
+.pixel-girl i{position:absolute;width:6px;height:6px;}
+.bubble{
+  position:relative;background:#fff;border:2px solid var(--px-line);
+  border-radius:8px;padding:8px 12px;font-size:13px;font-weight:700;color:#6b4b2a;
+  box-shadow:0 3px 0 rgba(90,60,30,.18);margin-bottom:10px;
+}
+.bubble::before{content:"";position:absolute;left:-8px;bottom:12px;border:6px solid transparent;border-right-color:#fff;}
+.deco{margin-left:auto;display:flex;gap:6px;align-items:flex-end;font-size:20px;filter:saturate(1.1);}
 
-  /* ============ 模块3：核心功能入口（3 大功能卡） ============ */
-  .funcs{ margin:14px 16px 0; display:flex; flex-direction:column; gap:14px; }
-  .func{
-    height:120px; border-radius:8px; border:2px solid var(--px-line);
-    box-shadow:var(--px-shadow); display:flex; align-items:center; gap:12px; padding:0 16px;
-    position:relative; overflow:hidden;
-  }
-  .func .f-ic{ font-size:34px; filter:drop-shadow(2px 2px 0 rgba(90,60,30,.25)); }
-  .func .f-txt{ flex:1; }
-  .func .f-txt b{ font-size:19px; letter-spacing:1px; display:block; }
-  .func .f-txt span{ font-size:13px; opacity:.85; }
-  .func .arrow{ font-size:20px; }
-  .f1{ background:linear-gradient(135deg,#FFB6C1,#FF9AA2); } .f1 b{ color:#2b1a1a; } .f1 span{ color:#7c3a44; }
-  .f2{ background:linear-gradient(135deg,#FFE29A,#FFCC66); } .f2 b{ color:#4a3315; } .f2 span{ color:#8a6a2f; }
-  .f3{ background:linear-gradient(135deg,#B5EAD7,#8DD8B0); } .f3 b{ color:#1f4a33; } .f3 span{ color:#3e6e52; }
-  .go-btn{
-    background:#ff8a5c; color:#fff; font-size:13px; font-weight:900;
-    border:2px solid #d96a3f; border-radius:8px; padding:8px 14px; box-shadow:0 3px 0 #d96a3f;
-  }
-  .go-btn:active{ transform:scale(.95); filter:brightness(.9); }
+/* 看板 */
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 16px 0;}
+.stat{padding:10px 6px;text-align:center;}
+.stat .ic{font-size:18px;}
+.stat b{display:block;font-size:16px;margin-top:2px;color:#3d2b1f;}
+.stat span{font-size:10px;color:var(--ink2);}
+.stat .bar{margin-top:6px;height:4px;border:1px solid var(--px-line);border-radius:2px;background:#fff;overflow:hidden;}
+.stat .bar > div{height:100%;background:var(--pink);transition:width .4s;}
 
-  /* ============ 模块4：今日推荐主题 ============ */
-  .sect{ margin:20px 16px 0; }
-  .sect-head{ display:flex; align-items:center; gap:6px; margin-bottom:10px; }
-  .sect-head b{ font-size:17px; color:#3d2b1f; }
-  .sect-head small{ font-size:12px; color:var(--ink2); }
-  .sect-head .more{ margin-left:auto; font-size:12px; color:#8a7460; display:flex; align-items:center; gap:4px; }
-  .topics{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-  .topic{ padding:6px; position:relative; }
-  .topic .pic{
-    height:74px; border-radius:4px; border:2px solid var(--px-line);
-    display:grid; place-items:center; font-size:30px;
-  }
-  .topic .pic.p1{ background:linear-gradient(180deg,#ffe3c2,#ffd0a3); }
-  .topic .pic.p2{ background:linear-gradient(180deg,#d8e8ff,#b9d4ff); }
-  .topic .pic.p3{ background:linear-gradient(180deg,#d6f5d0,#b3e6ab); }
-  .topic .name{ text-align:center; font-size:13px; font-weight:700; margin-top:6px; }
-  .topic .stars{ text-align:center; font-size:11px; color:#f5a623; letter-spacing:1px; }
-  .heart{
-    position:absolute; top:10px; left:10px; font-size:15px; cursor:pointer;
-    filter:drop-shadow(1px 1px 0 rgba(255,255,255,.8)); user-select:none;
-  }
+/* 主功能 */
+.funcs{margin:14px 16px 0;display:flex;flex-direction:column;gap:14px;}
+.func{
+  min-height:92px;border-radius:8px;border:2px solid var(--px-line);
+  box-shadow:0 3px 0 rgba(90,60,30,.18);display:flex;align-items:center;gap:12px;padding:0 16px;
+  position:relative;overflow:hidden;cursor:pointer;
+}
+.func .f-ic{font-size:34px;filter:drop-shadow(2px 2px 0 rgba(90,60,30,.25));}
+.func .f-txt{flex:1;}
+.func .f-txt b{font-size:18px;letter-spacing:1px;display:block;}
+.func .f-txt span{font-size:12px;opacity:.85;}
+.func .arrow{font-size:20px;color:#fff;}
+.f1{background:linear-gradient(135deg,#FFB6C1,#FF9AA2);}.f1 b{color:#2b1a1a;}.f1 span{color:#7c3a44;}
+.f2{background:linear-gradient(135deg,#FFE29A,#FFCC66);}.f2 b{color:#4a3315;}.f2 span{color:#8a6a2f;}
+.f3{background:linear-gradient(135deg,#B5EAD7,#8DD8B0);}.f3 b{color:#1f4a33;}.f3 span{color:#3e6e52;}
+.go-btn{background:#ff8a5c;color:#fff;font-size:12px;font-weight:900;border:2px solid #d96a3f;border-radius:6px;padding:6px 10px;box-shadow:0 2px 0 #d96a3f;}
 
-  /* ============ 模块5：最近训练记录 ============ */
-  .rec{ display:flex; align-items:center; gap:10px; padding:12px; }
-  .rec + .rec{ margin-top:8px; }
-  .rec .r-ic{
-    width:38px; height:38px; flex:none; border-radius:6px; border:2px solid var(--px-line);
-    display:grid; place-items:center; font-size:18px; background:#fdeed7;
-  }
-  .rec .r-mid{ flex:1; }
-  .rec .r-mid b{ font-size:14px; color:#3d2b1f; display:block; }
-  .rec .r-mid span{ font-size:11px; color:var(--ink2); }
-  .rec .xp{
-    background:#f4679d; color:#fff; font-size:11px; font-weight:900;
-    border-radius:4px; padding:3px 8px; border:1.5px solid #d94f83;
-  }
+/* 分区 */
+.sect{margin:18px 16px 0;}
+.sect-head{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+.sect-head b{font-size:16px;color:#3d2b1f;}
+.sect-head .more{margin-left:auto;font-size:12px;color:#8a7460;display:flex;align-items:center;gap:4px;cursor:pointer;}
+.topics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.topic{padding:6px;position:relative;cursor:pointer;}
+.topic .pic{height:74px;border-radius:4px;border:2px solid var(--px-line);display:grid;place-items:center;font-size:30px;}
+.topic .pic.p1{background:linear-gradient(180deg,#ffe3c2,#ffd0a3);}
+.topic .pic.p2{background:linear-gradient(180deg,#d8e8ff,#b9d4ff);}
+.topic .pic.p3{background:linear-gradient(180deg,#d6f5d0,#b3e6ab);}
+.topic .pic.p4{background:linear-gradient(180deg,#f5d6ff,#e8b9ff);}
+.topic .pic.p5{background:linear-gradient(180deg,#ffd6d6,#ffb3b3);}
+.topic .pic.p6{background:linear-gradient(180deg,#d6fff5,#abffe0);}
+.topic .name{text-align:center;font-size:12px;font-weight:700;margin-top:6px;}
+.topic .stars{text-align:center;font-size:10px;color:#f5a623;letter-spacing:1px;}
+.heart{position:absolute;top:8px;left:8px;font-size:14px;cursor:pointer;user-select:none;}
 
-  /* ============ 模块6：底部 Tab 导航 ============ */
-  .tabbar{
-    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
-    width:100%; max-width:430px; height:100px; background:#fffdf6;
-    border-top:2px solid var(--px-line); display:flex; z-index:50;
-    padding-bottom:env(safe-area-inset-bottom);
-  }
-  .tab{
-    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:3px; font-size:11px; color:#7c6a55; cursor:pointer; transition:color .1s;
-  }
-  .tab .t-ic{ font-size:22px; }
-  .tab.on{ color:var(--pink); font-weight:900; }
-  .tab.on .t-ic{ filter:drop-shadow(1px 1px 0 rgba(244,103,157,.35)); }
+/* 历史记录 */
+.rec{display:flex;align-items:center;gap:10px;padding:12px;cursor:pointer;}
+.rec + .rec{margin-top:8px;}
+.rec .r-ic{width:38px;height:38px;flex:none;border-radius:6px;border:2px solid var(--px-line);display:grid;place-items:center;font-size:18px;background:#fdeed7;}
+.rec .r-mid{flex:1;}
+.rec .r-mid b{font-size:14px;color:#3d2b1f;display:block;}
+.rec .r-mid span{font-size:11px;color:var(--ink2);}
+.rec .xp{background:#f4679d;color:#fff;font-size:11px;font-weight:900;border-radius:4px;padding:3px 8px;border:1.5px solid #d94f83;}
 
-  /* ============ Toast ============ */
-  #toast{
-    position:fixed; left:50%; bottom:130px; transform:translateX(-50%) translateY(20px);
-    background:rgba(40,30,20,.92); color:#ffe9c9; font-size:13px; padding:10px 18px;
-    border-radius:6px; border:2px solid #6b533b; opacity:0; pointer-events:none;
-    transition:.25s; z-index:99; max-width:80vw; text-align:center;
-  }
-  #toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+/* Tab */
+.tabbar{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:430px;height:72px;background:#fffdf6;
+  border-top:2px solid var(--px-line);display:flex;z-index:50;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;color:#7c6a55;cursor:pointer;transition:color .1s;}
+.tab .t-ic{font-size:20px;}
+.tab.on{color:var(--pink);font-weight:900;}
+.tab.on .t-ic{filter:drop-shadow(1px 1px 0 rgba(244,103,157,.35));}
 
-  /* 竖屏窄屏适配：375px 以下微调 */
-  @media (max-width:375px){
-    .brand h1{ font-size:21px; }
-    .func{ height:108px; }
-  }
+/* Toast */
+#toast{
+  position:fixed;left:50%;bottom:130px;transform:translateX(-50%) translateY(20px);
+  background:rgba(40,30,20,.92);color:#ffe9c9;font-size:13px;padding:10px 18px;
+  border-radius:6px;border:2px solid #6b533b;opacity:0;pointer-events:none;
+  transition:.25s;z-index:99;max-width:80vw;text-align:center;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ============ 语音挑战 / 跟读打分 ============ */
+.stage{padding:12px 16px;}
+.card-en{
+  background:#fffdf6;border:2px solid var(--px-line);border-radius:10px;
+  padding:16px;box-shadow:0 3px 0 rgba(90,60,30,.18);margin-bottom:12px;
+}
+.card-en .zh{color:var(--ink2);font-size:12px;margin-bottom:6px;}
+.card-en .en{font-size:18px;font-weight:700;line-height:1.7;letter-spacing:.3px;}
+/* 逐词高亮 */
+.word{display:inline-block;min-width:.3em;padding:0 1px;margin:0 1px;border-radius:2px;}
+.word.hit{background:#bff7cf;color:#145a32;}
+.word.miss{background:#ffd4d4;color:#8b1a1a;text-decoration:line-through;}
+.word.partial{background:#fff0b3;color:#7a5c00;}
+.action-row{display:flex;gap:8px;margin-top:10px;}
+.btn{
+  flex:1;background:#fffdf6;border:2px solid var(--px-line);border-radius:8px;
+  padding:10px;font-size:13px;font-weight:700;color:#3d2b1f;cursor:pointer;
+  box-shadow:0 2px 0 rgba(90,60,30,.18);
+}
+.btn:active{transform:scale(.95);}
+.btn.primary{background:linear-gradient(135deg,#FFB6C1,#FF9AA2);border-color:#d94f83;color:#2b1a1a;}
+.btn.play{background:linear-gradient(135deg,#B5EAD7,#8DD8B0);border-color:#4f9a70;color:#1f4a33;}
+.btn:disabled{opacity:.55;cursor:not-allowed;}
+
+/* 实时识别条 */
+.transcript{
+  min-height:40px;border:2px dashed var(--px-line);border-radius:8px;
+  padding:10px;background:rgba(255,255,255,.6);margin:8px 0;font-size:14px;color:#3d2b1f;
+}
+.transcript.interim{color:#8a7460;font-style:italic;}
+
+/* 麦克风动效 */
+.mic-wrap{display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;}
+.mic-btn{
+  width:60px;height:60px;border-radius:50%;border:3px solid #fff;
+  background:linear-gradient(135deg,#f4679d,#d94f83);color:#fff;font-size:24px;font-weight:900;
+  cursor:pointer;box-shadow:0 4px 0 #a33463;position:relative;
+}
+.mic-btn.rec{animation:pulse .9s ease-in-out infinite;background:linear-gradient(135deg,#e85d5d,#b42020);box-shadow:0 4px 0 #6d1313;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+.mic-btn.off{background:#bbb;box-shadow:0 4px 0 #666;}
+
+.score-bar{
+  height:10px;border:1px solid var(--px-line);border-radius:5px;background:#fff;overflow:hidden;margin-top:6px;
+}
+.score-bar > div{height:100%;transition:width .4s ease-out;}
+.score-text{font-size:28px;font-weight:900;text-align:center;margin-top:4px;}
+.score-text.high{color:#2ecc71;}
+.score-text.mid{color:#f5c542;}
+.score-text.low{color:#e85d5d;}
+
+/* 对话消息 */
+.chat-scroll{height:calc(100vh - 260px);overflow-y:auto;padding:10px 14px 8px;}
+.chat-msg{margin-bottom:10px;display:flex;gap:8px;align-items:flex-start;}
+.chat-msg.me{flex-direction:row-reverse;}
+.chat-msg .av{width:32px;height:32px;border-radius:6px;flex:none;border:2px solid var(--px-line);display:grid;place-items:center;font-size:16px;}
+.chat-msg.you .av{background:#fdeed7;}
+.chat-msg.me .av{background:#d8e8ff;}
+.chat-msg .bubble{
+  max-width:75%;padding:8px 12px;font-size:14px;border:2px solid var(--px-line);border-radius:10px;
+  box-shadow:0 2px 0 rgba(90,60,30,.14);font-weight:500;margin:0;min-height:22px;
+}
+.chat-msg.you .bubble{background:#fffdf6;color:#3d2b1f;}
+.chat-msg.me .bubble{background:linear-gradient(135deg,#FFB6C1,#FF9AA2);color:#2b1a1a;}
+.chat-msg .zh-hint{font-size:11px;color:var(--ink2);margin-top:2px;}
+.chat-input-area{
+  position:sticky;bottom:0;background:rgba(255,255,255,.9);backdrop-filter:blur(4px);
+  border-top:2px solid var(--px-line);padding:10px 14px;display:flex;gap:8px;align-items:center;
+}
+.chat-input-area input{
+  flex:1;border:2px solid var(--px-line);border-radius:8px;padding:8px 10px;font-size:14px;background:#fff;outline:none;
+}
+.chat-input-area input:focus{border-color:var(--pink);}
+
+/* 复习卡片轮播 */
+.review-wrap{padding:16px;min-height:calc(100vh - 260px);display:flex;flex-direction:column;}
+.review-card{flex:1;}
+.review-card .zh{text-align:center;font-size:13px;color:var(--ink2);margin-top:6px;}
+.review-card .en{text-align:center;font-size:22px;font-weight:900;margin:14px 0;letter-spacing:.5px;}
+.review-progress{font-size:12px;color:var(--ink2);text-align:center;margin-bottom:10px;}
+
+/* 练习列表 */
+.prac-list{padding:10px 16px;display:flex;flex-direction:column;gap:10px;}
+.prac-item{background:#fffdf6;border:2px solid var(--px-line);border-radius:8px;padding:12px;box-shadow:0 2px 0 rgba(90,60,30,.18);}
+.prac-item .zh{color:var(--ink2);font-size:12px;margin-bottom:4px;}
+.prac-item .en{font-size:16px;font-weight:700;margin-bottom:6px;}
+.prac-item .act{display:flex;gap:6px;}
+.prac-item .act .btn{flex:none;padding:6px 10px;font-size:12px;}
+.prac-item .score-tag{font-size:11px;color:var(--ink2);}
+
+/* 收藏/历史空态 */
+.empty-center{padding:60px 20px;text-align:center;color:var(--ink2);font-size:13px;}
+
+/* 生成模板 */
+.gen-wrap{padding:16px;}
+.gen-tabs{display:flex;gap:6px;margin-bottom:10px;}
+.gen-tabs .btn{flex:none;padding:8px 12px;font-size:12px;}
+.gen-tabs .btn.on{background:linear-gradient(135deg,#FFE29A,#FFCC66);border-color:#b3862a;}
+
+/* 小屏适配 */
+@media (max-width:375px){
+  .brand h1{font-size:21px;}
+  .func{min-height:82px;}
+  .card-en .en{font-size:16px;}
+}
 </style>
 </head>
 <body>
-<div class="phone">
+<div class="phone" id="app">
 
-  <!-- 像素云朵装饰 -->
   <div class="cloud c1">☁️</div>
   <div class="cloud c2">☁️</div>
 
-  <!-- 模块1a：模拟系统状态栏 -->
-  <div class="statusbar">
-    <span>22:06</span>
-    <span class="sicons">📶 📡 🔋</span>
-    <span class="capsule">◉ &nbsp;|&nbsp; ◧</span>
+  <!-- 首页 -->
+  <div data-page="home">
+    <div class="statusbar">
+      <span id="clock">22:06</span>
+      <span class="sicons">📶 📡 🔋</span>
+      <span class="capsule" style="border:1.5px solid rgba(51,71,91,.4);border-radius:14px;padding:1px 10px;font-size:11px;background:rgba(255,255,255,.7);color:#33475b;">◉ &nbsp;|&nbsp; ◧</span>
+    </div>
+    <header class="brand">
+      <h1>英语口语练习</h1>
+      <div class="brand-row">
+        <div class="pixel-girl" id="pixelGirl"></div>
+        <div class="bubble">Hi，Vicky 喊你练口语啦！</div>
+        <div class="deco">🪟🌱📚</div>
+      </div>
+    </header>
+
+    <section class="board">
+      <div class="px-card stat press" data-toast="打卡日历"><div class="ic">🔥</div><b id="sStreak">12 天</b><span>连续打卡</span><div class="bar"><div style="width:100%"></div></div></div>
+      <div class="px-card stat press" data-toast="等级与 XP"><div class="ic">⭐</div><b id="sLevel">Lv.7</b><span id="sXpRemain">还差 240 XP</span><div class="bar"><div id="sXpBar" style="width:0%"></div></div></div>
+      <div class="px-card stat press" data-toast="今日训练时长"><div class="ic">🎯</div><b id="sGoal">0/15 分</b><span>今日目标</span><div class="bar"><div id="sGoalBar" style="width:0%"></div></div></div>
+    </section>
+
+    <section class="funcs">
+      <div class="func f1 press" data-hash="chat">
+        <span class="f-ic">🎤</span>
+        <div class="f-txt"><b>自由对话</b><span>像美国朋友一样自然聊天</span></div>
+        <span class="arrow">▸</span>
+      </div>
+      <div class="func f2 press" data-hash="practice">
+        <span class="f-ic">💻📚</span>
+        <div class="f-txt"><b>跟读练习</b><span>9 个主题 · 逐词打分</span></div>
+        <span class="arrow">▸</span>
+      </div>
+      <div class="func f3 press" data-hash="review">
+        <span class="f-ic">📖⏰</span>
+        <div class="f-txt"><b>今日复习</b><span id="reviewCount">加载中…</span></div>
+        <button class="go-btn press" data-hash="review">立即开始</button>
+      </div>
+    </section>
+
+    <section class="sect">
+      <div class="sect-head">
+        ⭐<b>今日推荐主题</b>
+        <span class="more press" id="shuffleBtn">换一换 🔄</span>
+      </div>
+      <div class="topics" id="topics"></div>
+    </section>
+
+    <section class="sect">
+      <div class="sect-head">
+        🏋️<b>最近训练记录</b>
+        <span class="more press" data-hash="hist">查看更多 ▸</span>
+      </div>
+      <div id="historyWrap"></div>
+    </section>
+
+    <div style="text-align:center;margin:20px 0 6px;font-size:11px;color:#8a7460;">
+      数据存于本机 · 清除浏览器数据会重置 ·
+      <a href="#reset" style="color:#e85d5d;text-decoration:none;">重置进度</a>
+    </div>
   </div>
 
-  <!-- 模块1b：品牌头部区 -->
-  <header class="brand">
-    <h1>英语口语练习</h1>
-    <div class="brand-row">
-      <div class="pixel-girl" id="pixelGirl"></div>
-      <div class="bubble">Hi，Vicky 喊你练口语啦！</div>
-      <div class="deco">🪟🌱📚</div>
+  <!-- 自由对话 -->
+  <div data-page="chat" style="display:none;">
+    <div class="page-head">
+      <div class="back press" data-hash="home">◀</div>
+      <h2 id="chatTitle">自由对话</h2>
+      <span class="right" id="chatTopicBtn" data-hash="practice">换主题 ▸</span>
     </div>
-  </header>
+    <div class="chat-scroll" id="chatScroll"></div>
+    <div class="chat-input-area">
+      <input id="chatInput" placeholder="输入你的回答…回车发送">
+      <button class="btn play press" id="chatMicBtn" style="flex:none;">🎤 语音</button>
+    </div>
+  </div>
 
-  <!-- 模块2：数据看板 -->
-  <section class="board">
-    <div class="px-card stat press" data-toast="打卡日历：本月已练 18 天！"><div class="ic">🔥</div><b>12 天</b><span>连续打卡</span></div>
-    <div class="px-card stat press" data-toast="当前等级 Lv.7 · 距 Lv.8 还差 240 XP"><div class="ic">⭐</div><b>Lv.7</b><span>当前等级</span></div>
-    <div class="px-card stat press" data-toast="今日已练 9 分钟，再练 6 分钟达标！"><div class="ic">🎯</div><b>15 分钟</b><span>今日目标</span></div>
-  </section>
+  <!-- 跟读练习 -->
+  <div data-page="practice" style="display:none;">
+    <div class="page-head">
+      <div class="back press" data-hash="home">◀</div>
+      <h2>跟读练习</h2>
+      <span class="right" id="pracTopicLabel"></span>
+    </div>
+    <div style="display:flex;gap:6px;padding:10px 16px 0;overflow-x:auto;">
+      <button class="btn press" id="pracTopicSelect">选择主题 ▾</button>
+      <button class="btn press" data-prac-mode="chain">连续挑战 🏆</button>
+    </div>
+    <div class="prac-list" id="pracList"></div>
+  </div>
 
-  <!-- 模块3：三大核心功能入口 -->
-  <section class="funcs">
-    <div class="func f1 press" data-toast="演示：跳转「AI 自由对话聊天页」">
-      <span class="f-ic">🎤</span>
-      <div class="f-txt"><b>自由对话</b><span>像美国朋友一样自然聊天</span></div>
-      <span class="arrow">▸</span>
+  <!-- 复习 -->
+  <div data-page="review" style="display:none;">
+    <div class="page-head">
+      <div class="back press" data-hash="home">◀</div>
+      <h2>今日复习</h2>
+      <span class="right" id="reviewRight"></span>
     </div>
-    <div class="func f2 press" data-toast="演示：跳转「训练材料生成页」">
-      <span class="f-ic">💻📚</span>
-      <div class="f-txt"><b>生成训练材料</b><span>对话 / 故事 / 演讲 / 场景练习</span></div>
-      <span class="arrow">▸</span>
-    </div>
-    <div class="func f3 press" data-toast="演示：跳转「今日复习训练页」">
-      <span class="f-ic">📖⏰</span>
-      <div class="f-txt"><b>今日复习</b><span>待复习：8 个单词 · 5 个句子</span></div>
-      <button class="go-btn">立即开始</button>
-    </div>
-  </section>
+    <div class="review-wrap" id="reviewWrap"></div>
+  </div>
 
-  <!-- 模块4：今日推荐主题 -->
-  <section class="sect">
-    <div class="sect-head">
-      ⭐<b>今日推荐主题</b>
-      <span class="more press" id="shuffleBtn">换一换 🔄</span>
+  <!-- 收藏 -->
+  <div data-page="fav" style="display:none;">
+    <div class="page-head">
+      <div class="back press" data-hash="home">◀</div>
+      <h2>收藏复习</h2>
     </div>
-    <div class="topics" id="topics"></div>
-  </section>
+    <div id="favWrap"></div>
+  </div>
 
-  <!-- 模块5：最近训练记录 -->
-  <section class="sect">
-    <div class="sect-head">
-      🏋️<b>最近训练记录</b>
-      <span class="more press" data-toast="演示：跳转完整历史记录页">查看更多 ▸</span>
+  <!-- 历史 -->
+  <div data-page="hist" style="display:none;">
+    <div class="page-head">
+      <div class="back press" data-hash="home">◀</div>
+      <h2>训练历史</h2>
+      <span class="right" id="histStats"></span>
     </div>
-    <div class="px-card rec press" data-toast="演示：跳转「7月25日 聊旅行」详情复盘页">
-      <span class="r-ic">🧳</span>
-      <div class="r-mid"><b>7 月 25 日 · 聊旅行</b><span>时长 18 分钟 ｜ 表现 ★★★★☆</span></div>
-      <span class="xp">92 XP</span>
-    </div>
-    <div class="px-card rec press" data-toast="演示：跳转「7月24日 餐厅点餐」详情复盘页">
-      <span class="r-ic">🍽️</span>
-      <div class="r-mid"><b>7 月 24 日 · 餐厅点餐</b><span>时长 15 分钟 ｜ 表现 ★★★★☆</span></div>
-      <span class="xp">86 XP</span>
-    </div>
-  </section>
+    <div id="histWrap"></div>
+  </div>
 
-  <!-- 模块6：底部 Tab 导航栏 -->
+  <!-- 生成模板（附：场景/故事/演讲/对话） -->
+  <div data-page="gen" style="display:none;">
+    <div class="page-head">
+      <div class="back press" data-hash="home">◀</div>
+      <h2>生成训练材料</h2>
+    </div>
+    <div class="gen-wrap" id="genWrap"></div>
+  </div>
+
+  <!-- 底部 Tab（所有页都固定） -->
   <nav class="tabbar" id="tabbar">
-    <div class="tab on" data-tab="首页"><span class="t-ic">🏠</span>首页</div>
-    <div class="tab" data-tab="练习"><span class="t-ic">⚔️</span>练习</div>
-    <div class="tab" data-tab="收藏复习"><span class="t-ic">📦</span>收藏复习</div>
-    <div class="tab" data-tab="历史"><span class="t-ic">📜</span>历史</div>
+    <div class="tab on" data-tab="home"><span class="t-ic">🏠</span>首页</div>
+    <div class="tab" data-tab="practice"><span class="t-ic">⚔️</span>练习</div>
+    <div class="tab" data-tab="fav"><span class="t-ic">📦</span>收藏复习</div>
+    <div class="tab" data-tab="hist"><span class="t-ic">📜</span>历史</div>
   </nav>
 
   <div id="toast"></div>
 </div>
 
 <script>
-/* ============ 像素女孩（box-shadow 像素画，16x18 网格） ============ */
-/* 色板：棕发#8a5a3b 深棕#6b4423 肤色#ffd9b8 腮红#ff9e9e 黄内搭#ffd23e 蓝背带#4a90d9 红蝴蝶结#e84d6b */
+/* ==========================================================
+ * speaking-pixel v2 · 单文件自包含
+ * A 真实语音练习（Web Speech API） + B 本地数据闭环（localStorage）
+ * ========================================================== */
+
+/* ---------- 0. 像素女孩 ---------- */
 (function(){
-  const P = {
-    '.':'', 'h':'#8a5a3b', 'H':'#6b4423', 'f':'#ffd9b8', 'r':'#ff9e9e',
-    'y':'#ffd23e', 'b':'#4a90d9', 'R':'#e84d6b', 'e':'#3d2b1f', 'w':'#fff'
-  };
+  const P = {'.':'','h':'#8a5a3b','H':'#6b4423','f':'#ffd9b8','r':'#ff9e9e',
+    'y':'#ffd23e','b':'#4a90d9','R':'#e84d6b','e':'#3d2b1f','w':'#fff'};
   const art = [
-    '....RR....RR.....',
-    '...RRR....RRR....',
-    '....hhhhhhhh.....',
-    '...hhhhhhhhhh....',
-    '..hhhhhhhhhhhh...',
-    '..hhHffffffHhh...',
-    '..hHffffffffHh...',
-    '....fefffef.f....',
-    '....fffffff.r....',
-    '....fRffffRf.....',
-    '.....ffffff......',
-    '....yyfffyy......',
-    '...bbbfffbbb.....',
-    '...bbbbbbbbbb....',
-    '...bybbbbbbby....',
-    '...bybbbbbbby....',
-    '...bbbb..bbbb....',
-    '...HHH....HHH....'
-  ];
-  const girl = document.getElementById('pixelGirl');
+    '....RR....RR.....','...RRR....RRR....','....hhhhhhhh.....','...hhhhhhhhhh....',
+    '..hhhhhhhhhhhh...','..hhHffffffHhh...','..hHffffffffHh...','....fefffef.f....',
+    '....fffffff.r....','....fRffffRf.....','.....ffffff......','....yyfffyy......',
+    '...bbbfffbbb.....','...bbbbbbbbbb....','...bybbbbbbby....','...bybbbbbbby....',
+    '...bbbb..bbbb....','...HHH....HHH....'];
+  const g = document.getElementById('pixelGirl');
+  if(!g) return;
   let shadow = [];
-  art.forEach((row,y)=>{
-    [...row].forEach((ch,x)=>{
-      const c = P[ch];
-      if (c) shadow.push(`${(x+1)*6}px ${(y+1)*6}px 0 0 ${c}`);
-    });
-  });
-  const dot = document.createElement('i');
-  dot.style.background = 'transparent';
-  dot.style.boxShadow = shadow.join(',');
-  dot.style.width = '6px'; dot.style.height = '6px';
-  dot.style.left = '0'; dot.style.top = '0';
-  girl.appendChild(dot);
+  art.forEach((row,y)=>{[...row].forEach((ch,x)=>{const c=P[ch];if(c)shadow.push(`${(x+1)*6}px ${(y+1)*6}px 0 0 ${c}`);});});
+  const d=document.createElement('i');d.style.boxShadow=shadow.join(',');d.style.width='6px';d.style.height='6px';
+  g.appendChild(d);
 })();
 
-/* ============ 模块4：推荐主题渲染（含 换一换 / 爱心收藏） ============ */
-const THEME_POOL = [
-  { name:'餐厅点餐', icon:'🍽️', cls:'p1', fav:true  },
-  { name:'聊工作',   icon:'💼', cls:'p2', fav:false },
-  { name:'旅行英语', icon:'🧳', cls:'p3', fav:false },
-  { name:'咖啡点单', icon:'☕', cls:'p1', fav:false },
-  { name:'面试准备', icon:'🤝', cls:'p2', fav:false },
-  { name:'机场值机', icon:'✈️', cls:'p3', fav:false },
-  { name:'酒店入住', icon:'🏨', cls:'p1', fav:false },
-  { name:'购物砍价', icon:'🛍️', cls:'p2', fav:false },
-  { name:'问路导航', icon:'🗺️', cls:'p3', fav:false }
-];
-let cur = THEME_POOL.slice(0,3);
+/* ---------- 1. 工具 ---------- */
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const today = () => { const d=new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; };
+const toast = (msg, ms=1800)=>{
+  const t=$('#toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('show'),ms);
+};
+const fmtDate = d => {
+  const dt=new Date(d); return `${dt.getMonth()+1}月${dt.getDate()}日`;
+};
+const fmtLen = sec => { sec=Math.max(0,sec|0); return `${(sec/60|0)} 分${sec%60>0?' '+sec%60+'秒':''}`; };
 
-function renderTopics(){
-  document.getElementById('topics').innerHTML = cur.map((t,i)=>`
-    <div class="px-card topic press" data-toast="演示：进入「${t.name}」专项训练页">
-      <span class="heart" data-heart="${i}">${t.fav ? '❤️' : '🤍'}</span>
+/* ---------- 2. 存储层 ---------- */
+const LS = {
+  PREFIX: 'speaking-pixel-v1:',
+  get(k, def){ try{ const v=localStorage.getItem(this.PREFIX+k); return v==null?def:JSON.parse(v); }catch{ return def; } },
+  set(k, v){ localStorage.setItem(this.PREFIX+k, JSON.stringify(v)); },
+  del(k){ localStorage.removeItem(this.PREFIX+k); }
+};
+
+/* ---------- 3. Profile（成长系统） ---------- */
+/* Level 公式: XP = level*200 + 240*(level-1)  即 Lv1 起步，Lv.N 需要 N*200+240*(N-1) = 440N - 240 */
+const Profile = {
+  DEFAULT(){ return {
+    xp: 10400,              /* 种子：Lv.7，距 Lv.8 还差 240 XP（7 级累计 7800 + 当前 2600 = 10400） */
+    streak: 12,
+    lastCheckIn: '',       /* yyyy-m-d 当天完成打卡的日期 */
+    goalMin: 15,
+    todaySec: 0,
+    todayDate: today()
+  }; },
+  data(){
+    // 版本 v2：若检测到老版本（旧 seed xp 太小或缺 v 字段），迁移到新 seed
+    const meta = LS.get('meta', null);
+    if(!meta || meta.v < 2){
+      LS.set('profile', this.DEFAULT());
+      LS.set('meta', { v:2 });
+    }
+    let d = LS.get('profile', null);
+    if(!d){ d = this.DEFAULT(); LS.set('profile', d); }
+    // 字段补齐
+    d.xp = d.xp ?? this.DEFAULT().xp; d.streak = d.streak ?? this.DEFAULT().streak;
+    d.lastCheckIn = d.lastCheckIn ?? ''; d.goalMin = d.goalMin ?? 15;
+    d.todaySec = d.todaySec ?? 0; d.todayDate = d.todayDate ?? today();
+    LS.set('profile', d);
+    // 日切换：清理 todaySec；若昨天未完成 goal，streak 不动
+    if(d.todayDate !== today()){
+      d.todayDate = today();
+      d.todaySec = 0;
+      LS.set('profile', d);
+    }
+    return d;
+  },
+  save(){ LS.set('profile', this.data()); },
+  // 当前等级 & 下一等级所需 XP
+  level(){
+    let d=this.data();
+    let lv=1; let xpAcc=0;
+    while(true){
+      const need = lv*200 + 240*(lv-1);  // 到下一等级需要的累计 XP
+      if(d.xp < xpAcc + need) break;
+      xpAcc += need; lv++;
+    }
+    return { lv, curInLv: d.xp - xpAcc, need: lv*200 + 240*(lv-1), xpTotal: d.xp };
+  },
+  addXP(n){
+    const d=this.data(); d.xp += n; LS.set('profile', d);
+    // 升级 toast
+    const lvInfo=this.level();
+    if(lvInfo.curInLv === 0){ toast(`🎉 升级到 Lv.${lvInfo.lv}！`); }
+    return lvInfo;
+  },
+  addSec(sec){
+    const d=this.data(); d.todaySec += sec; LS.set('profile', d);
+    // 达到目标时，若今日未打卡则连续打卡+1
+    if(d.todaySec >= d.goalMin*60 && d.lastCheckIn !== today()){
+      d.streak += 1; d.lastCheckIn = today(); LS.set('profile', d);
+      toast(`🔥 今日目标达成！连续打卡 ${d.streak} 天`);
+    }
+  },
+  // 手动打卡（对"没到时间但完整完成一轮复习/挑战"的补偿）
+  checkInOnce(){
+    const d=this.data();
+    if(d.lastCheckIn !== today()){ d.streak += 1; d.lastCheckIn = today(); LS.set('profile', d); toast(`🔥 打卡 +1，连续 ${d.streak} 天`); }
+  },
+  reset(){ LS.del('profile'); LS.del('words'); LS.del('sentences'); LS.del('fav'); LS.del('hist'); LS.del('topics'); LS.del('lastTopic'); toast('已重置所有进度'); location.hash='home'; }
+};
+
+/* ---------- 4. SRS 复习池 ---------- */
+function genId(){ return Math.random().toString(36).slice(2,9); }
+const SRS = {
+  // 到期策略：dueDate <= 今天
+  dueItems(limit=13){
+    const now = new Date(); now.setHours(0,0,0,0);
+    const wordList = LS.get('words', []);
+    const sentList = LS.get('sentences', []);
+    const words = wordList.filter(w=>new Date(w.dueDate)<=now).map(w=>({kind:'word', ...w}));
+    const sents = sentList.filter(s=>new Date(s.dueDate)<=now).map(s=>({kind:'sent', ...s}));
+    const items = [...words, ...sents];
+    return items.sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate)).slice(0,limit);
+  },
+  allDueCount(){ return this.dueItems(999).length; },
+  // 首次初始化：种子词 + 种子句
+  initIfEmpty(){
+    if(LS.get('words', null) && LS.get('sentences', null)) return;
+    const now = new Date(); now.setHours(0,0,0,0);
+    const words = [
+      {en:'restaurant', zh:'餐厅'}, {en:'menu', zh:'菜单'}, {en:'waiter', zh:'服务员'},
+      {en:'delicious', zh:'美味的'}, {en:'recommend', zh:'推荐'}, {en:'bill', zh:'账单'},
+      {en:'reservation', zh:'预约'}, {en:'appetizer', zh:'开胃菜'}, {en:'dessert', zh:'甜点'}
+    ].map(w=>({id:genId(), ...w, reps:0, ease:1, dueDate: now.toISOString().slice(0,10), lastSeen:''}));
+    const sentences = [
+      {en:'Good evening, do you have a reservation?', zh:'晚上好，请问有预约吗？'},
+      {en:'What would you recommend today?', zh:'今天您推荐什么？'},
+      {en:'The steak is delicious, thank you.', zh:'牛排非常美味，谢谢。'},
+      {en:'Could we have the bill, please?', zh:'请把账单给我们好吗？'},
+      {en:'I would like a cup of coffee after dinner.', zh:'晚餐后我想要一杯咖啡。'},
+      {en:'See you at the airport tomorrow.', zh:'明天机场见。'},
+      {en:'My flight is delayed by two hours.', zh:'我的航班延误了两小时。'}
+    ].map(s=>({id:genId(), ...s, reps:0, ease:1, dueDate: now.toISOString().slice(0,10), lastSeen:''}));
+    LS.set('words', words); LS.set('sentences', sentences);
+  },
+  grade(id, kind, correct){
+    const key = kind==='word'?'words':'sentences';
+    const arr = LS.get(key, []);
+    const idx = arr.findIndex(x=>x.id===id);
+    if(idx<0) return;
+    const it = arr[idx];
+    const now = new Date(); now.setHours(0,0,0,0);
+    if(correct){
+      it.reps = (it.reps||0) + 1;
+      // 简单间隔：1天 → 3 → 7 → 14 → 30 → 60
+      const spans = [1,3,7,14,30,60];
+      const days = spans[Math.min(it.reps-1, spans.length-1)];
+      const nd = new Date(now); nd.setDate(nd.getDate()+days);
+      it.dueDate = nd.toISOString().slice(0,10);
+    } else {
+      it.reps = 0;
+      it.dueDate = now.toISOString().slice(0,10); // 今天再来
+    }
+    it.lastSeen = now.toISOString().slice(0,10);
+    arr[idx] = it; LS.set(key, arr);
+  }
+};
+
+/* ---------- 5. 主题句库 ---------- */
+const TOPICS = [
+  { id:'restaurant', name:'餐厅点餐', icon:'🍽️', cls:'p1', stars:'★★★★☆',
+    intro:'学习餐厅用语：点单、推荐、结账、投诉。', sentences:[
+      'Good evening, do you have a reservation?',
+      'What would you recommend today?',
+      'The steak is delicious, thank you.',
+      'Could we have the bill, please?',
+      'I would like a cup of coffee after dinner.',
+      'This tastes a little salty, could you fix it?'
+    ] },
+  { id:'work', name:'聊工作', icon:'💼', cls:'p2', stars:'★★★★☆',
+    intro:'日常职场英语：介绍、会议、请假、晋升。', sentences:[
+      "I'm responsible for the marketing team.",
+      "Could we schedule a meeting this afternoon?",
+      'I need to take a day off tomorrow.',
+      "I've been working here for three years.",
+      "The project deadline is next Friday.",
+      'Would you like to join our team?'
+    ] },
+  { id:'travel', name:'旅行英语', icon:'🧳', cls:'p3', stars:'★★★★☆',
+    intro:'机场、酒店、问路、购物一条龙。', sentences:[
+      'See you at the airport tomorrow.',
+      'My flight is delayed by two hours.',
+      'I have a reservation under the name Lee.',
+      'How do I get to the nearest subway station?',
+      'Is this souvenir handmade?',
+      'Could you take a photo for us?'
+    ] },
+  { id:'cafe', name:'咖啡点单', icon:'☕', cls:'p4', stars:'★★★☆☆',
+    intro:'美式、拿铁、浓缩、外带。', sentences:[
+      "I'll have a medium iced latte, please.",
+      'For here or to go?',
+      'Could I get an extra shot of espresso?',
+      "What's your house special?",
+      'The coffee smells amazing.'
+    ] },
+  { id:'interview', name:'面试准备', icon:'🤝', cls:'p5', stars:'★★★★☆',
+    intro:'自我介绍、优缺点、为什么选择我们。', sentences:[
+      'Tell me a little about yourself.',
+      'What are your greatest strengths?',
+      'Why do you want to work here?',
+      'Where do you see yourself in five years?',
+      "I'm a fast learner and a team player."
+    ] },
+  { id:'airport', name:'机场值机', icon:'✈️', cls:'p2', stars:'★★★☆☆',
+    intro:'值机柜台、行李、登机口。', sentences:[
+      'May I see your passport and ticket?',
+      'Do you have any luggage to check?',
+      'Your gate is B12, boarding starts at 9:30.',
+      'I missed my connecting flight, what can I do?',
+      'Is there a bus to the city center?'
+    ] },
+  { id:'hotel', name:'酒店入住', icon:'🏨', cls:'p1', stars:'★★★☆☆',
+    intro:'前台、叫醒、打扫、退房。', sentences:[
+      'I have a reservation for two nights.',
+      'What time is checkout tomorrow?',
+      'Could you give me a wake-up call at 7?',
+      'The air conditioner does not work in my room.',
+      'Can I have a late check-out?'
+    ] },
+  { id:'shopping', name:'购物砍价', icon:'🛍️', cls:'p5', stars:'★★★☆☆',
+    intro:'试穿、打折、砍价、退换。', sentences:[
+      'Can I try this on?',
+      'Do you have this in a smaller size?',
+      "That's a little expensive, can you give me a discount?",
+      'It looks great, I will take it.',
+      'Can I return this if it does not fit?'
+    ] },
+  { id:'direction', name:'问路导航', icon:'🗺️', cls:'p6', stars:'★★★☆☆',
+    intro:'指路、方向、距离、交通方式。', sentences:[
+      'Excuse me, how do I get to the museum?',
+      'Go straight and turn left at the traffic lights.',
+      'It is about a ten-minute walk.',
+      'Is there a bus stop near here?',
+      'I think I am lost.'
+    ] }
+];
+
+/* 自由对话 · 主题脚本（场景对话机器人：它说一句，用户回答一句，给每个回答打分） */
+const CHAT_SCRIPTS = {
+  restaurant: {
+    intro:'You are now inside a cozy restaurant. The waiter greets you.',
+    lines:[
+      {you:'Good evening, do you have a reservation for two?', zh:'服务员：晚上好，请问有两位的预约吗？'},
+      {me:'Yes, under the name Wang. A table by the window, please.', zh:'我：有的，姓王。麻烦靠窗的位置。'},
+      {you:'Sure, follow me. Here is your menu. Would you like something to drink first?', zh:'服务员：好的，请跟我来。这是菜单，先来点饮品吗？'},
+      {me:"I'll have a glass of orange juice. What do you recommend for dinner?", zh:'我：来杯橙汁。主菜你推荐什么？'},
+      {you:'Our steak is the most popular. It comes with vegetables and rice.', zh:'服务员：我们的牛排最受欢迎，配蔬菜和米饭。'},
+      {me:"Great! I'll take the steak, medium rare.", zh:'我：好！那我要牛排，五分熟。'},
+      {you:'Excellent choice. Anything else?', zh:'服务员：好选择，还要别的吗？'},
+      {me:'No, that will be all for now. Thank you!', zh:'我：暂时不用，谢谢！'}
+    ]
+  },
+  travel: {
+    intro:'You are at the airport, getting ready for your flight.',
+    lines:[
+      {you:'Good morning, may I see your passport and boarding pass?', zh:'值机员：早上好，请出示护照和登机牌。'},
+      {me:"Here you are. I'd like an aisle seat, please.", zh:'我：给您。我想要靠窗…不对，过道座。'},
+      {you:"Sure. Do you have any luggage to check in?", zh:'值机员：好的。有行李要托运吗？'},
+      {me:'Yes, one suitcase. Please label it fragile.', zh:'我：有一个行李箱，请贴易碎标签。'},
+      {you:'Got it. Your gate is B15. Boarding starts at 10:30.', zh:'值机员：好的，登机口 B15，10:30 开始登机。'},
+      {me:'Thank you! Have a nice day.', zh:'我：谢谢！祝您愉快。'}
+    ]
+  },
+  cafe: {
+    intro:'You are at a downtown coffee shop, ordering your daily drink.',
+    lines:[
+      {you:"Hi there, for here or to go?", zh:'店员：你好，在这喝还是外带？'},
+      {me:'For here. I would like a medium iced latte, please.', zh:'我：在这喝。中杯冰拿铁。'},
+      {you:'Sure. Any extra syrup?', zh:'店员：好的。要加糖浆吗？'},
+      {me:'No thanks, but can I have an extra shot of espresso?', zh:'我：不用糖浆，但能多萃一份浓缩吗？'},
+      {you:"Absolutely. That'll be $4.75.", zh:'店员：当然可以。一共 4 块 75。'},
+      {me:'Here you go. Keep the change!', zh:'我：给您。零钱不用找了！'}
+    ]
+  }
+};
+
+/* ---------- 6. 语音引擎 ---------- */
+const Speech = {
+  avail: false,
+  recogAvail: false,
+  recog: null,
+  voiceEn: null,
+  _init(){
+    this.avail = !!window.speechSynthesis;
+    this.recogAvail = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+    if(this.avail){
+      const pick = ()=>{
+        const vs = speechSynthesis.getVoices();
+        this.voiceEn = vs.find(v=>/en-US|en-GB|Google US|Samantha|Karen/i.test(v.lang+v.name)) || vs.find(v=>v.lang.startsWith('en')) || vs[0];
+      };
+      pick(); if(speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = pick;
+    }
+    if(this.recogAvail){
+      const Ctor = window.SpeechRecognition || window.webkitSpeechRecognition;
+      this.recog = new Ctor();
+      this.recog.lang = 'en-US';
+      this.recog.interimResults = true;
+      this.recog.continuous = false;
+    }
+  },
+  speak(text, {rate=1.0, pitch=1.0}={}){
+    return new Promise((resolve)=>{
+      if(!this.avail){ resolve(); return; }
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      if(this.voiceEn) u.voice = this.voiceEn;
+      u.rate = rate; u.pitch = pitch; u.lang = 'en-US';
+      u.onend = u.onerror = ()=>resolve();
+      speechSynthesis.speak(u);
+    });
+  },
+  /* 开始听：实时 interim 回调 + final 回调 + onError + stop 函数返回 */
+  listen({onInterim=()=>{}, onFinal=()=>{}, onError=()=>{}, maxMs=15000}={}){
+    if(!this.recogAvail){ onError('no-api'); return ()=>{}; }
+    let stopped=false;
+    this.recog.onresult = (ev)=>{
+      let fin='', inter='';
+      for(let i=ev.resultIndex;i<ev.results.length;i++){
+        const t = ev.results[i][0].transcript;
+        if(ev.results[i].isFinal) fin += t; else inter += t;
+      }
+      if(fin) onFinal(fin.trim());
+      else if(inter) onInterim(inter.trim());
+    };
+    this.recog.onerror = (e)=>{ if(!stopped) onError(e.error||'unknown'); };
+    this.recog.onend = ()=>{ stopped=true; };
+    try { this.recog.start(); } catch(e){ onError('already-started?'); }
+    // 超时自动停
+    const timer = setTimeout(()=>{ try{ this.recog.stop(); }catch{} }, maxMs);
+    return ()=>{ clearTimeout(timer); try{ this.recog.stop(); }catch{} };
+  },
+  /* 文本相似度：词级匹配，返回 {score, details} */
+  similarity(target, heard){
+    const norm = s => String(s||'').toLowerCase().replace(/[^a-z0-9'\s]/g,'').replace(/\s+/g,' ').trim();
+    const t = norm(target).split(' ').filter(Boolean);
+    const h = norm(heard).split(' ').filter(Boolean);
+    // 按 LCS 对齐 target 中每个词
+    const dp = Array.from({length:t.length+1},()=>new Array(h.length+1).fill(0));
+    for(let i=1;i<=t.length;i++) for(let j=1;j<=h.length;j++){
+      const sim = (a,b)=>{ if(a===b)return 2; if(lev(a,b)<=1)return 1; return 0; };
+      dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]+sim(t[i-1],h[j-1]));
+    }
+    // 回溯：给每个 target 词分配 hit/miss/partial
+    const details = new Array(t.length).fill(0); // 2=hit,1=partial,0=miss
+    let i=t.length, j=h.length;
+    while(i>0 && j>0){
+      if(t[i-1]===h[j-1]){ details[i-1]=2; i--; j--; }
+      else if(lev(t[i-1],h[j-1])<=1){ details[i-1]=1; i--; j--; }
+      else if(dp[i-1][j]>=dp[i][j-1]) i--; else j--;
+    }
+    // 匹配得分 + 长度惩罚
+    const hitWords = details.filter(d=>d===2).length;
+    const partial = details.filter(d=>d===1).length;
+    const score = Math.round( (hitWords*2 + partial*1) / Math.max(1, t.length*2) * 100 );
+    const detailsArr = t.map((w,idx)=>({word:w, ok:details[idx]}));
+    return { score, details: detailsArr, heard: h.join(' '), target: t.join(' ') };
+  }
+};
+function lev(a,b){ if(a===b)return 0; if(!a)return b.length; if(!b)return a.length; const m=lev(a.slice(1),b); const n=lev(a,b.slice(1)); if(a[0]===b[0])return Math.min(m,n,lev(a.slice(1),b.slice(1))); return 1+Math.min(m,n,lev(a.slice(1),b.slice(1))); }
+Speech._init();
+
+/* ---------- 7. 历史 & 收藏 ---------- */
+const Hist = {
+  list(){ return LS.get('hist', []); },
+  add(entry){
+    const arr = this.list();
+    arr.unshift({ id: genId(), date: new Date().toISOString().slice(0,10), ...entry });
+    LS.set('hist', arr.slice(0,50));
+  }
+};
+const Fav = {
+  list(){ return LS.get('fav', []); },
+  toggle(id){
+    const arr = this.list();
+    const i = arr.indexOf(id);
+    if(i>=0){ arr.splice(i,1); } else { arr.push(id); }
+    LS.set('fav', arr);
+    return arr.includes(id);
+  },
+  has(id){ return this.list().includes(id); }
+};
+
+/* ---------- 8. 路由 ---------- */
+const Router = {
+  current: 'home',
+  init(){
+    window.addEventListener('hashchange', ()=>this.go(location.hash.slice(1)||'home'));
+    // 点击任何带 data-hash / data-tab 的元素
+    document.addEventListener('click', (e)=>{
+      const hashEl = e.target.closest('[data-hash]');
+      if(hashEl){ e.preventDefault(); const h=hashEl.dataset.hash; if(h==='reset'){ if(confirm('确定要重置所有进度吗？')) Profile.reset(); return; } location.hash = h; return; }
+      const tabEl = e.target.closest('.tab');
+      if(tabEl){ const t=tabEl.dataset.tab; $$('.tab').forEach(x=>x.classList.toggle('on', x.dataset.tab===t)); location.hash = t; return; }
+      const toastEl = e.target.closest('[data-toast]');
+      if(toastEl && toastEl.dataset.toast) toast(toastEl.dataset.toast);
+      // 通用 press
+      const press = e.target.closest('.press');
+      if(press && !hashEl && !tabEl && !toastEl && !e.target.closest('[data-heart]') && !e.target.closest('[data-heart-btn]')){
+        const d = press.dataset;
+        if(d.toast) toast(d.toast);
+      }
+      if(e.target.closest('[data-heart]')){
+        const id = e.target.closest('[data-heart]').dataset.heart;
+        Fav.toggle(id); renderAll();
+        toast(Fav.has(id) ? '❤️ 已收藏' : '已取消收藏');
+        return;
+      }
+    });
+    this.go(location.hash.slice(1)||'home');
+  },
+  go(hash){
+    if(!hash) hash='home';
+    if(Speech.avail) speechSynthesis.cancel();
+    $$('[data-page]').forEach(p=>{
+      p.style.display = (p.dataset.page===hash.split('?')[0]) ? '' : 'none';
+    });
+    const tabMap = { home:'home', practice:'practice', fav:'fav', hist:'hist' };
+    const tab = tabMap[hash.split('?')[0]];
+    if(tab){ $$('.tab').forEach(t=>t.classList.toggle('on', t.dataset.tab===tab)); }
+    this.current = hash.split('?')[0];
+    this.render(hash);
+  },
+  render(hash){
+    const page = hash.split('?')[0];
+    const qs = (hash.split('?')[1]||'').split('&').reduce((m,p)=>{const [k,v]=p.split('='); m[k]=decodeURIComponent(v||''); return m;},{});
+    if(page==='home') renderHome();
+    else if(page==='chat') renderChat(qs.topic || LS.get('lastTopic','restaurant'));
+    else if(page==='practice') renderPractice(qs.topic || LS.get('lastTopic','restaurant'));
+    else if(page==='review') renderReview();
+    else if(page==='fav') renderFav();
+    else if(page==='hist') renderHist();
+    else if(page==='gen') renderGen();
+  }
+};
+
+/* ---------- 9. 页面渲染 ---------- */
+
+// 首页
+function renderHome(){
+  const p = Profile.data();
+  const lv = Profile.level();
+  const streak = p.streak;
+  $('#sStreak').textContent = streak + ' 天';
+  $('#sLevel').textContent = `Lv.${lv.lv}`;
+  $('#sXpRemain').textContent = `距 Lv.${lv.lv+1} 还差 ${lv.need - lv.curInLv} XP`;
+  $('#sXpBar').style.width = Math.round(lv.curInLv/lv.need*100)+'%';
+  const minDone = (p.todaySec/60)|0;
+  $('#sGoal').textContent = `${minDone}/${p.goalMin} 分`;
+  $('#sGoalBar').style.width = Math.min(100, Math.round(p.todaySec/(p.goalMin*60)*100))+'%';
+  $('#clock').textContent = new Date().toTimeString().slice(0,5);
+
+  // 推荐主题（含收藏）
+  let pickPool = LS.get('topics', null) || TOPICS.slice();
+  if(!LS.get('topics', null)) LS.set('topics', pickPool); // 首次
+  let cur = pickPool.slice(0,3);
+  const html = cur.map(t=>`
+    <div class="px-card topic press" data-toast="进入「${t.name}」练习">
+      <span class="heart" data-heart="${t.id}">${Fav.has(t.id)?'❤️':'🤍'}</span>
       <div class="pic ${t.cls}">${t.icon}</div>
       <div class="name">${t.name}</div>
-      <div class="stars">★★★★☆</div>
+      <div class="stars">${t.stars}</div>
     </div>`).join('');
+  $('#topics').innerHTML = html;
+  $('#topics').onclick = (e)=>{
+    const t = e.target.closest('.topic');
+    if(!t || e.target.closest('[data-heart]')) return;
+    const idx = [...$('#topics').children].indexOf(t);
+    const topic = cur[idx];
+    location.hash = 'practice?topic=' + topic.id;
+  };
+
+  $('#shuffleBtn').onclick = ()=>{
+    const pool = [...TOPICS].sort(()=>Math.random()-.5);
+    LS.set('topics', pool);
+    toast('已换 3 个新主题');
+    renderHome();
+  };
+
+  // 复习队列长度
+  const due = SRS.allDueCount();
+  $('#reviewCount').textContent = due>0 ? `今日待复习：${due} 项` : '今日复习完成 ✅';
+
+  // 历史（最近 2 条）
+  const list = Hist.list().slice(0,2);
+  if(list.length===0){
+    $('#historyWrap').innerHTML = `<div class="empty-center">还没有训练记录，开始第一课吧！</div>`;
+  } else {
+    $('#historyWrap').innerHTML = list.map(r=>{
+      const topic = TOPICS.find(t=>t.id===r.topic) || {icon:'📖', name:'自由练习'};
+      return `<div class="px-card rec press" data-toast="训练详情">
+        <span class="r-ic">${topic.icon}</span>
+        <div class="r-mid"><b>${fmtDate(r.date)} · ${topic.name}</b><span>时长 ${r.minutes} 分 · ${'★'.repeat(Math.round(r.stars||4))}${'☆'.repeat(5-Math.round(r.stars||4))} · XP +${r.xp||0}</span></div>
+        <span class="xp">+${r.xp||0}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // 全局计时（当首页可见时累加今天秒数）
+  if(!renderHome._running){
+    renderHome._running = setInterval(()=>{
+      Profile.addSec(5);
+      // 只更新看板数字，不刷新整个首页避免闪烁
+      const pp = Profile.data();
+      $('#sGoal').textContent = `${(pp.todaySec/60)|0}/${pp.goalMin} 分`;
+      $('#sGoalBar').style.width = Math.min(100, Math.round(pp.todaySec/(pp.goalMin*60)*100))+'%';
+    }, 5000);
+  }
 }
-renderTopics();
 
-/* 换一换：随机刷新 3 个新主题 */
-document.getElementById('shuffleBtn').addEventListener('click', e=>{
-  e.stopPropagation();
-  const pool = [...THEME_POOL].sort(()=>Math.random()-.5);
-  cur = pool.slice(0,3);
-  renderTopics();
-  toast('已为你换 3 个新主题！');
-});
+// 自由对话：脚本驱动，目标句高亮，语音听辨挑战
+function renderChat(topicId){
+  LS.set('lastTopic', topicId);
+  const script = CHAT_SCRIPTS[topicId] || CHAT_SCRIPTS.restaurant;
+  $('#chatTitle').textContent = `自由对话 · ${TOPICS.find(t=>t.id===topicId)?.name||'餐厅'}`;
+  $('#chatTopicBtn').onclick = ()=> location.hash = 'practice?topic=' + topicId;
 
-/* ============ 事件委托：toast / 爱心 / Tab ============ */
-let toastTimer;
-function toast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.remove('show'), 1800);
+  // 读 idx 并做边界裁剪（防止历史残留值越界）
+  let idx = (LS.get(`chat:${topicId}`, { idx:0 }) || {}).idx || 0;
+  if(!script.lines || script.lines.length===0){ toast('该主题暂无对话脚本'); location.hash='home'; return; }
+  idx = Math.min(Math.max(idx, 0), script.lines.length - 1);
+  const scroll = $('#chatScroll');
+  const addMsg = (who, en, zh='', score=null, details=null)=>{
+    const bubble = `<div class="bubble">${en}</div>` + (zh?`<div class="zh-hint">${zh}</div>`:'') + (score!=null?`<div class="score-tag" style="margin-top:4px;font-weight:900;color:${score>=80?'#2ecc71':score>=60?'#f5c542':'#e85d5d'}">${score} 分</div>`:'');
+    const node = document.createElement('div');
+    node.className = 'chat-msg ' + (who==='me'?'me':'you');
+    node.innerHTML = `<span class="av">${who==='me'?'🧑':'👩‍🍳'}</span>${bubble}`;
+    scroll.appendChild(node);
+    scroll.scrollTop = scroll.scrollHeight;
+    // 逐词高亮
+    if(details && node){
+      const b = node.querySelector('.bubble');
+      if(b){
+        // 只对 "me" 消息的高分句做高亮标记（已渲染过就覆盖）
+        b.innerHTML = en.split(/\s+/).map((w,i)=>{
+          const hit = details[i];
+          if(!hit) return `<span>${w}</span>`;
+          if(hit.ok===2) return `<span class="word hit">${w}</span>`;
+          if(hit.ok===1) return `<span class="word partial">${w}</span>`;
+          return `<span class="word miss">${w}</span>`;
+        }).join(' ');
+      }
+    }
+  };
+
+  function flushProgress(){
+    LS.set(`chat:${topicId}`, { idx });
+  }
+  function advance(){
+    if(!script.lines[idx]){ idx = 0; flushProgress(); scroll.innerHTML=''; sayIntro(); return; }
+    if(idx >= script.lines.length){
+      // 一轮结束
+      const xp = 80;
+      const stars = 4.5;
+      Profile.addXP(xp);
+      Hist.add({ topic: topicId, minutes: 4, stars, xp });
+      toast(`🎉 完成一轮对话！+${xp} XP`);
+      idx = 0; flushProgress();
+      // 清空重新开始
+      scroll.innerHTML = `<div class="empty-center">🎊 对话结束！再来一轮吧</div>`;
+      setTimeout(()=>{ scroll.innerHTML=''; sayIntro(); }, 1500);
+      return;
+    }
+    const turn = script.lines[idx];
+    if(turn.you){
+      addMsg('you', turn.you, turn.zh);
+      Speech.speak(turn.you);
+      idx++; flushProgress();
+      // 等用户输入 / 语音
+    } else if(turn.me){
+      addMsg('me', '(请用语音或输入回答)', '你需要说：' + turn.me);
+      // 让用户挑战
+      const wait = ()=>{
+        // 等用户回答（点击语音或回车）
+      };
+    }
+  }
+
+  function sayIntro(){
+    scroll.innerHTML = `<div class="empty-center">${script.intro}</div>`;
+    setTimeout(()=>{ scroll.innerHTML=''; advance(); }, 1200);
+  }
+
+  sayIntro();
+
+  // 输入框回车发送 → 当作用户用文本回答
+  const input = $('#chatInput');
+  input.onkeydown = async (e)=>{
+    if(e.key !== 'Enter') return;
+    const val = input.value.trim(); if(!val) return;
+    input.value = '';
+    await handleUserUtterance(val);
+  };
+
+  // 语音按钮
+  const micBtn = $('#chatMicBtn');
+  let stopListen = null;
+  micBtn.onclick = ()=>{
+    if(stopListen){ stopListen(); stopListen=null; micBtn.textContent='🎤 语音'; micBtn.classList.remove('rec'); return; }
+    if(!Speech.recogAvail){ toast('此浏览器不支持语音识别，请用键盘输入'); return; }
+    micBtn.classList.add('rec'); micBtn.textContent='🔴 录音中…';
+    let heard = '';
+    stopListen = Speech.listen({
+      onInterim(t){ heard = t; input.value = t; },
+      onFinal: async (t)=>{ stopListen(); stopListen=null; micBtn.classList.remove('rec'); micBtn.textContent='🎤 语音'; await handleUserUtterance(t); },
+      onError: (e)=>{ stopListen(); stopListen=null; micBtn.classList.remove('rec'); micBtn.textContent='🎤 语音'; toast('识别出错：'+(e==='not-allowed'?'请允许麦克风权限':e)); }
+    });
+    // 自动在 8 秒后停
+    setTimeout(()=>{ if(stopListen){ stopListen(); stopListen=null; micBtn.classList.remove('rec'); micBtn.textContent='🎤 语音'; } }, 9000);
+  };
+
+  // 用户说完（文本 or 语音）→ 检查是否匹配当前 "me" 目标句
+  async function handleUserUtterance(text){
+    // 找到第一个待处理的 me
+    while(idx < script.lines.length && script.lines[idx] && !script.lines[idx].me) idx++;
+    if(idx >= script.lines.length || !script.lines[idx]){ idx=0; flushProgress(); scroll.innerHTML=''; sayIntro(); return; }
+    const turn = script.lines[idx];
+    addMsg('me', text, '🎯 目标：' + turn.me);
+    const res = Speech.similarity(turn.me, text);
+    // 覆盖刚加的 me 消息 → 高亮
+    const lastMe = [...scroll.querySelectorAll('.chat-msg.me')].slice(-1)[0];
+    if(lastMe){
+      const b = lastMe.querySelector('.bubble');
+      b.innerHTML = res.target.split(' ').map((w,i)=>{
+        const d = res.details.find(x=>x.word===w);
+        if(!d) return `<span>${w}</span>`;
+        if(d.ok===2) return `<span class="word hit">${w}</span>`;
+        if(d.ok===1) return `<span class="word partial">${w}</span>`;
+        return `<span class="word miss">${w}</span>`;
+      }).join(' ');
+      const zhEl = lastMe.querySelector('.zh-hint'); if(zhEl) zhEl.textContent = `🎯 原目标：${turn.me}`;
+      const scoreEl = lastMe.querySelector('.score-tag');
+      if(scoreEl) scoreEl.textContent = `⭐ 匹配分：${res.score}/100`;
+      else {
+        const node = document.createElement('div');
+        node.className='score-tag';
+        node.style.marginTop='4px';
+        node.style.fontWeight='900';
+        node.style.color = res.score>=80?'#2ecc71':res.score>=60?'#f5c542':'#e85d5d';
+        node.textContent = `⭐ 匹配分：${res.score}/100`;
+        lastMe.appendChild(node);
+      }
+    }
+    const xpAdd = Math.round(res.score/10);
+    Profile.addXP(xpAdd);
+    // AI 侧继续（不真 LLM，用"下一句 you"推进）
+    idx++; flushProgress();
+    await new Promise(r=>setTimeout(r, 700));
+    advance();
+  }
 }
 
-document.addEventListener('click', e=>{
-  /* 爱心收藏切换（阻止冒泡到卡片跳转） */
-  const h = e.target.closest('[data-heart]');
-  if (h){
-    e.stopPropagation();
-    const i = +h.dataset.heart;
-    cur[i].fav = !cur[i].fav;
-    h.textContent = cur[i].fav ? '❤️' : '🤍';
-    toast(cur[i].fav ? `已收藏「${cur[i].name}」` : `已取消收藏「${cur[i].name}」`);
+// 练习页：主题句列表，每条可 TTS + 听 + 打分
+function renderPractice(topicId){
+  LS.set('lastTopic', topicId);
+  const topic = TOPICS.find(t=>t.id===topicId) || TOPICS[0];
+  $('#pracTopicLabel').textContent = topic.name;
+  const list = $('#pracList');
+  // 用 LS 存每个句子上次最高分
+  const scores = LS.get('practiceScores', {});
+  list.innerHTML = topic.sentences.map((en,i)=>{
+    const key = topicId + ':' + i;
+    const last = scores[key];
+    return `<div class="prac-item px-card">
+      <div class="zh">${['餐厅','工作','旅行','咖啡','面试','机场','酒店','购物','问路'][TOPICS.findIndex(x=>x.id===topicId)]}主题 · 第${i+1}句</div>
+      <div class="en" id="en-${key}">${en}</div>
+      <div class="act">
+        <button class="btn play" data-play="${en}">▶ 听一遍</button>
+        <button class="btn primary" data-record="${key}">🎤 跟读打分</button>
+        <button class="btn" data-manual="${key}" style="background:#fff;">✍️ 手动输入</button>
+      </div>
+      <div class="score-tag">上次最高分：${last?last+'/100':'暂无'}</div>
+      <div id="res-${key}" style="margin-top:6px;"></div>
+    </div>`;
+  }).join('');
+
+  // 点击事件
+  list.onclick = (e)=>{
+    const p = e.target.closest('[data-play]');
+    if(p){ Speech.speak(p.dataset.play); return; }
+    const r = e.target.closest('[data-record]');
+    if(r){ doRecord(r.dataset.record); return; }
+    const m = e.target.closest('[data-manual]');
+    if(m){ doManual(m.dataset.record); return; }
+  };
+
+  function doRecord(key){
+    if(!Speech.recogAvail){ toast('浏览器不支持语音识别，可点「手动输入」或换 Chrome/Edge'); return; }
+    const en = $('#en-'+key).textContent;
+    const btn = list.querySelector(`[data-record="${key}"]`);
+    btn.textContent='🔴 录音中…'; btn.classList.add('rec');
+    let heard='';
+    const stop = Speech.listen({
+      onInterim(t){ heard=t; $('#res-'+key).innerHTML = `<div class="transcript interim">${t}</div>`; },
+      onFinal: (t)=>{
+        btn.textContent='🎤 跟读打分'; btn.classList.remove('rec');
+        heard = t; $('#res-'+key).innerHTML = `<div class="transcript">你说：${heard}</div>`;
+        applyScore(key, en, heard);
+      },
+      onError: (err)=>{
+        btn.textContent='🎤 跟读打分'; btn.classList.remove('rec');
+        toast('识别失败：'+(err==='not-allowed'?'请允许麦克风':err));
+      }
+    });
+    setTimeout(()=>{ if(stop){ stop(); btn.textContent='🎤 跟读打分'; btn.classList.remove('rec'); } }, 10000);
+  }
+  function doManual(key){
+    const en = $('#en-'+key).textContent;
+    const val = prompt('请输入你想说的（或粘贴你听到的内容）：', '');
+    if(val==null || !val.trim()) return;
+    applyScore(key, en, val.trim());
+  }
+  function applyScore(key, target, heard){
+    const res = Speech.similarity(target, heard);
+    // 渲染高亮
+    const b = $('#en-'+key);
+    b.innerHTML = target.split(' ').map((w,i)=>{
+      const d = res.details[i];
+      if(!d) return `<span>${w}</span>`;
+      if(d.ok===2) return `<span class="word hit">${w}</span>`;
+      if(d.ok===1) return `<span class="word partial">${w}</span>`;
+      return `<span class="word miss">${w}</span>`;
+    }).join(' ');
+    const color = res.score>=80?'#2ecc71':res.score>=60?'#f5c542':'#e85d5d';
+    const bar = res.score>=80?'#2ecc71':res.score>=60?'#f5c542':'#e85d5d';
+    $('#res-'+key).innerHTML = `
+      <div class="score-text" style="color:${color};">${res.score} 分</div>
+      <div class="score-bar"><div style="width:${res.score}%;background:${bar};"></div></div>
+      <div style="margin-top:4px;font-size:12px;color:var(--ink2);">你说：${res.heard||'(空)'}｜目标：${res.target}</div>`;
+    // 分数写入
+    const scores = LS.get('practiceScores', {});
+    if(!scores[key] || scores[key] < res.score) scores[key] = res.score;
+    LS.set('practiceScores', scores);
+    const xpAdd = Math.round(res.score/2);
+    Profile.addXP(xpAdd);
+    // 加入复习池（低分句进入 SRS）
+    if(res.score < 70){
+      const sentArr = LS.get('sentences', []);
+      const zh = topic.intro;
+      if(!sentArr.find(s=>s.en===target)){
+        sentArr.push({id:genId(), en:target, zh: topic.intro, reps:0, ease:1, dueDate: today(), lastSeen:''});
+        LS.set('sentences', sentArr);
+      }
+    }
+  }
+
+  // 主题选择
+  $('#pracTopicSelect').onclick = ()=>{
+    const name = prompt('输入主题编号（0 餐厅/1 工作/2 旅行/3 咖啡/4 面试/5 机场/6 酒店/7 购物/8 问路）：', TOPICS.findIndex(t=>t.id===topicId));
+    if(name==null) return;
+    const n = parseInt(name); if(isNaN(n)||n<0||n>=TOPICS.length) return toast('编号无效');
+    location.hash = 'practice?topic=' + TOPICS[n].id;
+  };
+}
+
+// 复习页
+let reviewState = null;
+function renderReview(){
+  SRS.initIfEmpty();
+  const items = SRS.dueItems(13);
+  $('#reviewRight').textContent = items.length ? `${items.length} 项待复习` : '全部完成';
+  if(items.length===0){
+    $('#reviewWrap').innerHTML = `<div class="empty-center" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+      🎉 今日所有复习已完成！<br><br>去「自由对话」或「练习」页继续吧～
+      <div style="margin-top:20px;"><button class="btn play press" data-hash="chat" style="display:inline-block;">🎤 开始对话</button></div>
+    </div>`;
     return;
   }
-  /* Tab 切换 */
-  const tab = e.target.closest('.tab');
-  if (tab){
-    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t===tab));
-    toast(tab.dataset.tab === '首页' ? '已在首页' : `演示：切换到「${tab.dataset.tab}」页`);
-    return;
+  if(!reviewState || reviewState.items !== items.length){ reviewState = { idx:0, items, scoreTotal:0, xpGained:0 }; }
+  showItem();
+
+  function showItem(){
+    const rw = $('#reviewWrap');
+    const it = items[reviewState.idx];
+    const pct = Math.round((reviewState.idx)/items.length*100);
+    rw.innerHTML = `<div class="review-progress">复习 ${reviewState.idx+1} / ${items.length}  &nbsp;·&nbsp;  ${pct}%</div>
+      <div class="score-bar" style="margin-bottom:10px;"><div style="width:${pct}%;background:#f4679d;"></div></div>
+      <div class="px-card card-en review-card">
+        <div class="zh">${it.zh} · ${it.kind==='word'?'单词':'句子'}</div>
+        <div class="en" id="revEn">${it.en}</div>
+        <div class="action-row">
+          <button class="btn play" id="revPlay">▶ 听</button>
+          <button class="btn primary" id="revRec">🎤 回忆</button>
+          <button class="btn" id="revSkip">🙈 跳过</button>
+        </div>
+        <div id="revRes" style="margin-top:10px;"></div>
+      </div>
+      <div class="action-row" style="margin-top:10px;">
+        <button class="btn" id="revShow">👀 看原文重读</button>
+      </div>`;
+    $('#revPlay').onclick = ()=> Speech.speak(it.en);
+    $('#revShow').onclick = ()=> $('#revEn').textContent = it.en;
+    $('#revSkip').onclick = ()=>{ SRS.grade(it.id, it.kind, false); next(); };
+    $('#revRec').onclick = ()=>{
+      if(!Speech.recogAvail){ toast('浏览器不支持识别，点击「跳过」继续'); return; }
+      const btn = $('#revRec'); btn.textContent='🔴'; btn.classList.add('rec');
+      let heard='';
+      const stop = Speech.listen({
+        onInterim(t){ heard=t; $('#revRes').innerHTML = `<div class="transcript interim">${t}</div>`; },
+        onFinal: (t)=>{
+          btn.textContent='🎤 回忆'; btn.classList.remove('rec');
+          applyRecall(t);
+        },
+        onError: (e)=>{ btn.textContent='🎤 回忆'; btn.classList.remove('rec'); toast('识别失败'); }
+      });
+      setTimeout(()=>{ if(stop){ stop(); btn.textContent='🎤 回忆'; btn.classList.remove('rec'); applyRecall(heard); } }, 8000);
+    };
+
+    function applyRecall(text){
+      const res = Speech.similarity(it.en, text);
+      const ok = res.score >= 70;
+      SRS.grade(it.id, it.kind, ok);
+      const xpAdd = Math.round(res.score/3);
+      Profile.addXP(xpAdd); reviewState.xpGained += xpAdd; reviewState.scoreTotal += res.score;
+      $('#revEn').innerHTML = it.en.split(' ').map((w,i)=>{
+        const d = res.details[i];
+        if(!d) return `<span>${w}</span>`;
+        if(d.ok===2) return `<span class="word hit">${w}</span>`;
+        if(d.ok===1) return `<span class="word partial">${w}</span>`;
+        return `<span class="word miss">${w}</span>`;
+      }).join(' ');
+      $('#revRes').innerHTML = `
+        <div class="score-text ${res.score>=80?'high':res.score>=60?'mid':'low'}">${res.score}/100</div>
+        <div style="text-align:center;font-size:12px;color:var(--ink2);">${ok?'✅ 已记住，间隔拉长':'❌ 还要再记一次，明天再来'} · XP +${xpAdd}</div>
+        <div class="action-row" style="margin-top:10px;">
+          <button class="btn" id="revNext">${reviewState.idx<items.length-1?'下一个 ▸':'完成复习 🎉'}</button>
+        </div>`;
+      $('#revNext').onclick = ()=>next();
+      // 听一遍正确发音
+      Speech.speak(it.en);
+    }
+
+    function next(){
+      reviewState.idx++;
+      if(reviewState.idx >= items.length){ finish(); return; }
+      showItem();
+    }
+    function finish(){
+      const avg = Math.round(reviewState.scoreTotal / items.length);
+      Profile.checkInOnce();
+      const mins = Math.max(3, Math.round(items.length * 0.25));
+      Profile.addSec(mins*60);
+      Hist.add({ topic: 'review', minutes: mins, stars: avg>=80?4.5:avg>=60?3.5:2.5, xp: reviewState.xpGained, note: `${items.length} 项 SRS 复习，平均 ${avg} 分` });
+      toast(`🎊 复习完成！+${reviewState.xpGained} XP · 平均 ${avg} 分`);
+      reviewState = null;
+      renderReview();
+    }
   }
-  /* 通用 toast 卡片 */
-  const card = e.target.closest('[data-toast]');
-  if (card) toast(card.dataset.toast);
+}
+
+// 收藏
+function renderFav(){
+  const favIds = Fav.list();
+  const list = TOPICS.filter(t=>favIds.includes(t.id));
+  $('#favWrap').innerHTML = list.length===0
+    ? `<div class="empty-center">还没收藏任何主题，去首页点小爱心吧 ❤️</div>`
+    : `<div class="prac-list">${list.map(t=>`<div class="px-card rec press" data-toast="进入收藏主题练习">
+      <span class="r-ic">${t.icon}</span>
+      <div class="r-mid"><b>${t.name}</b><span>${t.intro}</span></div>
+      <span class="heart" data-heart="${t.id}" style="font-size:18px;">❤️</span>
+    </div>`).join('')}</div>`;
+  // 点卡片进入练习
+  $('#favWrap').onclick = (e)=>{
+    const rec = e.target.closest('.rec'); if(!rec || e.target.closest('[data-heart]')) return;
+    const idx = [...$('#favWrap .rec')].indexOf(rec);
+    location.hash = 'practice?topic=' + list[idx].id;
+  };
+}
+
+// 历史
+function renderHist(){
+  const list = Hist.list();
+  const totalMin = list.reduce((a,b)=>a + (b.minutes||0),0);
+  const totalXp = list.reduce((a,b)=>a + (b.xp||0),0);
+  $('#histStats').textContent = `累计 ${totalMin} 分 · +${totalXp} XP`;
+  if(list.length===0){
+    $('#histWrap').innerHTML = `<div class="empty-center">开始第一次训练后这里会出现记录 📊</div>`; return;
+  }
+  $('#histWrap').innerHTML = `<div class="prac-list">${list.map(r=>{
+    const topic = TOPICS.find(t=>t.id===r.topic) || {icon:'📖', name:'自由练习'};
+    return `<div class="px-card rec press">
+      <span class="r-ic">${topic.icon}</span>
+      <div class="r-mid"><b>${fmtDate(r.date)} · ${topic.name}</b><span>时长 ${r.minutes} 分 · ${'★'.repeat(Math.round(r.stars||4))}${'☆'.repeat(5-Math.round(r.stars||4))}${r.note?' · '+r.note:''}</span></div>
+      <span class="xp">+${r.xp||0}</span>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+// 生成训练材料（模板化 — 因为没有真实 LLM）
+function renderGen(){
+  const wrap = $('#genWrap');
+  const tabs = ['dialogue','story','speech','scene'];
+  const tabNames = {dialogue:'双人对话',story:'短故事',speech:'一分钟演讲',scene:'场景练习'};
+  const data = {
+    dialogue: [
+      {title:'机场相遇', a:"Hey, long time no see! Where have you been?", b:"Traveling for work mostly. How about you?"},
+      {title:'咖啡店讨论项目', a:"Did you see the latest report?", b:"Yes. I think we should schedule a meeting."}
+    ],
+    story: [
+      {title:'A Sunny Morning', text:'One Saturday morning, Tom woke up early. He looked out the window and saw blue sky. He decided to go to the park with his dog. They ran together for an hour.'},
+      {title:'Lost in Tokyo', text:'I got off at the wrong subway station. Luckily, a kind student showed me the way with her phone. We became friends that day.'}
+    ],
+    speech: [
+      {title:'One Minute About My Hometown', text:'My hometown is a small town near the mountains. Air is fresh, people are friendly. I grew up there, and every summer I go back to visit my grandparents.'},
+      {title:'Why Learn English', text:'English opens doors. You can travel alone, read original books, and talk to people from all over the world. It is not easy, but every minute pays off.'}
+    ],
+    scene: [
+      {title:'在诊所预约', text:"Hello, I'd like to make an appointment with Dr. Li. Is she free this afternoon?"},
+      {title:'和房东沟通', text:'The heater does not work in my room. Could you send someone to fix it tomorrow?'}
+    ]
+  };
+  wrap.innerHTML = `
+    <div class="gen-tabs">${tabs.map(t=>`<button class="btn ${t==='dialogue'?'on':''} press" data-gen="${t}">${tabNames[t]}</button>`).join('')}</div>
+    <div id="genList"></div>
+    <div style="margin-top:20px;font-size:11px;color:#8a7460;text-align:center;">注：接入 AI 大模型后可一键生成无限量材料（D 升级阶段）</div>
+  `;
+  function renderList(tab){
+    const items = data[tab];
+    $('#genList').innerHTML = items.map((o,i)=>{
+      let body='';
+      if(tab==='dialogue') body = `<b>${o.title}</b><br>A: ${o.a}<br>B: ${o.b}`;
+      else body = `<b>${o.title}</b><br>${o.text}`;
+      return `<div class="px-card" style="padding:14px;margin-bottom:10px;font-size:13px;line-height:1.7;">
+        <div>${body}</div>
+        <div class="action-row" style="margin-top:10px;">
+          <button class="btn play press" id="gp${tab}${i}">▶ 听</button>
+          <button class="btn primary press" id="gr${tab}${i}">🎤 挑战跟读</button>
+          <button class="btn press" data-copy="${(tab==='dialogue'?o.a+'\n'+o.b:o.text)}">📋 复制</button>
+        </div>
+      </div>`;
+    }).join('');
+    // 绑定播放 & 挑战
+    items.forEach((o,i)=>{
+      const txt = tab==='dialogue'? (o.a+' '+o.b) : o.text;
+      const playBtn = $(`#gp${tab}${i}`); if(playBtn) playBtn.onclick = ()=> Speech.speak(txt);
+      const chalBtn = $(`#gr${tab}${i}`); if(chalBtn) chalBtn.onclick = ()=>{
+        const key = `gen-${tab}-${i}`;
+        const val = prompt('请跟读上面那段内容，然后粘贴/直接输入：', '');
+        if(!val) return;
+        const res = Speech.similarity(txt, val);
+        toast(`⭐ 匹配分：${res.score}/100`);
+        Profile.addXP(Math.round(res.score/2));
+      };
+    });
+  }
+  renderList('dialogue');
+  wrap.onclick = (e)=>{
+    const t = e.target.closest('[data-gen]');
+    if(t){ wrap.querySelectorAll('.btn').forEach(b=>b.classList.toggle('on', b.dataset.gen===t.dataset.gen)); renderList(t.dataset.gen); return; }
+    const c = e.target.closest('[data-copy]');
+    if(c){ navigator.clipboard?.writeText(c.dataset.copy).then(()=>toast('已复制')); }
+  };
+}
+
+// 导出给 Router 用
+const renderAll = ()=>{ location.hash = Router.current; };
+
+/* ---------- 启动 ---------- */
+SRS.initIfEmpty();
+Router.init();
+
+/* 时钟每秒刷新 */
+setInterval(()=>{
+  if(Router.current==='home') $('#clock') && ($('#clock').textContent = new Date().toTimeString().slice(0,5));
+}, 1000);
+
+/* 离开页时停止计时（只在首页时计时） */
+document.addEventListener('visibilitychange', ()=>{
+  if(!document.hidden){
+    // 回前台，补一次打卡检测（如果今日还没记 lastCheckIn 但秒数够了）
+    Profile.addSec(0);
+  }
 });
 </script>
 </body>
