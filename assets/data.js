@@ -13,7 +13,7 @@ window.CATEGORIES = [
 ];
 
 window.APPS = [
-  {
+{
     id: 'legal-ai', name: '智法通AI法律咨询', cat: 'legal', catLabel: '法律合规', mark: 'LF',
     desc: '面向个人与中小企业的 AI 法律咨询助手：小问题秒级问答并附法条依据与行动建议，复杂纠纷一键生成含事实梳理、法律依据、争议焦点、行动方案与文书模板的专题意见书；内置专题案例库、诉讼费等四类计算器与法规速查，全端适配移动设备。',
     features: ['快速问答：秒级解答 + 法条依据 + 可执行行动建议', '专题案情访谈：8步对话式追问，把案情聊清楚', '可编辑的详细情况说明：访谈整理生成，支持修改补充后再确认', '专题意见书：事实梳理 / 法律依据 / 争议焦点 / 行动方案 / 风险提示', '专题发布：用户可匿名发布专题，形成案例库公开内容', '专题案例库：用户发布 + 真实咨询案例双轨展示', '法律工具：诉讼费 / 加班费 / 借贷利息 / 经济补偿金计算器', '法规速查：高频法条按领域检索，答案可溯源'],
@@ -23,7 +23,7 @@ window.APPS = [
     img: 'assets/img/products/legal-ai.jpg',
     demo: 'legal.html'
   },
-  {
+{
     id: 'ai-music', name: 'AI 音乐音效创作平台', cat: 'multimodal', catLabel: '多模态', mark: 'MU',
     desc: '面向音乐人、UP 主与影视团队的 AI 音乐创作工作台：文字成曲、片段续写、风格迁移、音效生成与分轨导出，支持商业授权与版权登记。',
     features: ['文字成曲：10 秒生成完整编曲', '风格迁移：流行 / 古风 / 电子 / 电影配乐一键切换', '音效生成：环境音、转场音、乐器采样按描述生成', '分轨导出 + 商业授权 + 版权登记一站式'],
@@ -32,7 +32,7 @@ window.APPS = [
     sales: 0, rating: 0, badge: '开发中', colors: ['#10b981', '#34d399'],
     comingSoon: true
   },
-  {
+{
     id: 'ai-vchar', name: 'AI 虚拟角色对话', cat: 'multimodal', catLabel: '多模态', mark: 'VC',
     desc: '与你喜爱的虚拟角色进行多轮对话：支持上传人设卡、捏脸换装、语音克隆与表情动画，打造专属陪伴 / 教育 / 偶像角色。',
     features: ['人设卡驱动：上传角色卡即开聊', '语音克隆：10 秒样本克隆角色声音', '表情动画：对话实时驱动面部微表情', '多端同步：小程序 + H5 + 智能音箱'],
@@ -41,7 +41,7 @@ window.APPS = [
     sales: 0, rating: 0, badge: '开发中', colors: ['#f472b6', '#a78bfa'],
     comingSoon: true
   },
-  {
+{
     id: 'speaking-pixel', name: '像素英语口语练习', cat: 'education', catLabel: '教育培训', mark: 'SP',
     desc: '像素风英语口语 A1 训练工具：AI 自由对话、训练材料生成与每日复习，打卡 · 等级 · XP 游戏化成长体系，把练口语变成每天的小游戏。支持移动端 H5 与小程序部署。',
     features: ['AI 自由对话：像美国朋友一样自然聊天', '训练材料生成：对话 / 故事 / 演讲 / 场景练习', '今日复习：单词与句子间隔复习', '8-bit 像素风 · 打卡等级 XP 成长体系'],
@@ -50,7 +50,7 @@ window.APPS = [
     sales: 96, rating: 4.9, badge: '新上', colors: ['#e8608a', '#f59e0b'],
     demo: 'speaking.html'
   },
-  {
+{
     id: 'qike-studio', name: '启课智能教学台', cat: 'education', catLabel: '教育培训', mark: 'QK',
     desc: '面向小学、初中、高中教师的 AI 教学生成软件：按课标与教材版本一键生成课件、互动课堂、作业评测、几何图形与模拟实验，九大模块一体化工作台，内容对齐国家课程标准。',
     features: ['题目讲课：文字/语音提问，像搜索一样自动生成讲解 PPT', '课件生成：五环节完整课件，可编辑、可导出', '互动课堂：提问、抢答、随堂测一键生成', '九大模块：几何引擎 / AI 课堂 / 模拟实验 / 项目学习 / 联网搜索', '本地引擎可离线生成，配置大模型 API 升级深度生成'],
@@ -60,103 +60,43 @@ window.APPS = [
     img: 'assets/img/products/qike-studio.jpg',
     demo: 'qike-studio.html'
   },
-  {
-    id: 'cs-agent', name: '智能客服 Agent', cat: 'efficiency', catLabel: '企业效率', mark: 'CS',
-    desc: '覆盖售前咨询、售后工单与私域运营的多轮对话智能体，可调用订单、物流与CRM工具。',
-    features: ['多渠道接入：网页、企微、公众号、App', '工单自动流转与人工无缝接管', '知识库实时更新，答案可溯源', '对话质检与满意度分析'],
-    tags: ['多轮对话', '工单流转', '工具调用'],
-    price: 19800, unit: '/年', priceNote: '含 5 个坐席与首年运维',
-    sales: 1260, rating: 4.9, badge: '官方自营', colors: ['#2f5cff', '#7c3aed']
+{
+    id: 'voice-volcano', name: '火山语音交互助手', cat: 'multimodal', catLabel: '多模态', mark: 'VV',
+    desc: '基于火山引擎语音合成与识别 API 打造的实时语音交互组件：支持流式对话、情感化配音与多语种识别，可快速嵌入 App、网页与智能硬件。',
+    features: ['流式语音合成：低延迟实时播报', '情感化音色：支持多风格语气切换', '多语种识别：中英日韩等主流语种', '可嵌入 SDK：一键集成到 Web / App / 硬件'],
+    tags: ['语音合成', '语音识别', '火山引擎', '多语种'],
+    price: null, unit: '', priceNote: '🚧 开发中 · 来自《AI编程职业实战班》第 3 章案例',
+    sales: 0, rating: 0, badge: '开发中', colors: ['#0ea5e9', '#7c3aed'],
+    comingSoon: true, chapterRef: 3, course: 'AI编程职业实战班-模块一'
   },
-  {
-    id: 'kb-qa', name: '企业知识库问答', cat: 'efficiency', catLabel: '企业效率', mark: 'KB',
-    desc: '把制度、文档、产品资料变成可问答的企业大脑，支持权限隔离与原文引用。',
-    features: ['结构化与非结构化文档统一入库', '部门/角色级权限隔离', '答案附原文出处与置信度', '评测集驱动的效果持续优化'],
-    tags: ['RAG', '权限隔离', '私有化'],
-    price: 29800, unit: '/年', priceNote: '含 50 万页文档额度',
-    sales: 860, rating: 4.8, badge: '热销', colors: ['#0ea5e9', '#2f5cff']
+{
+    id: 'douyin-live-analytics', name: '抖音直播数据看板', cat: 'retail', catLabel: '零售电商', mark: 'DA',
+    desc: '抖音直播间数据全链路采集与可视化：实时在线人数、互动率、GMV 趋势与商品转化漏斗，支持多直播间对比与达人效果评估。',
+    features: ['实时数据采集：在线人数 / 互动 / 礼物 / GMV', '商品转化漏斗：点击 → 加购 → 下单', '多直播间对比：矩阵号效果一目了然', '达人评估：历史直播综合评分'],
+    tags: ['抖音直播', '数据采集', '可视化', '转化漏斗'],
+    price: null, unit: '', priceNote: '🚧 开发中 · 来自《AI编程职业实战班》第 5 章案例',
+    sales: 0, rating: 0, badge: '开发中', colors: ['#f59e0b', '#ec4899'],
+    comingSoon: true, chapterRef: 5, course: 'AI编程职业实战班-模块一'
   },
-  {
-    id: 'vision-qc', name: '视觉质检平台', cat: 'manufacturing', catLabel: '智能制造', mark: 'VQ',
-    desc: '面向产线的小样本缺陷检测与在线复判，支持新缺陷快速标注上线并联动产线拦截。',
-    features: ['小样本训练，新缺陷 1–2 天上线', '边缘部署，单工位低时延推理', '缺陷分类、定位与统计看板', '与 MES / PLC 联动拦截'],
-    tags: ['缺陷检测', '边缘部署', 'MES 集成'],
-    price: 88000, unit: '起', priceNote: '按工位与产线数量报价',
-    sales: 180, rating: 4.9, badge: '行业标杆', colors: ['#b45309', '#f59e0b']
+{
+    id: 'writing-copilot', name: 'AI 写作副驾驶', cat: 'efficiency', catLabel: '企业效率', mark: 'WP',
+    desc: '私人写作助手：上传素材或一句话需求，自动生成标题、大纲、正文、润色和多版改写，内置小红书、公众号、职场汇报等 12+ 场景模板。',
+    features: ['一句话生成：标题 / 大纲 / 正文 / 结尾', '多版改写：正式版 / 口语版 / 小红书风', '润色优化：病句修正、逻辑重构、金句增强', '场景模板：12+ 常见写作场景一键套用'],
+    tags: ['文案生成', '润色改写', '多场景模板', '写作'],
+    price: null, unit: '', priceNote: '🚧 开发中 · 来自《AI编程职业实战班》第 7 章案例',
+    sales: 0, rating: 0, badge: '开发中', colors: ['#7c3aed', '#2f5cff'],
+    comingSoon: true, chapterRef: 7, course: 'AI编程职业实战班-模块一'
   },
-  {
-    id: 'pdm', name: '设备预测性维护', cat: 'manufacturing', catLabel: '智能制造', mark: 'PM',
-    desc: '融合振动、温度、电流等时序数据，输出设备健康度与剩余寿命预警，自动生成检修工单。',
-    features: ['多源传感器数据接入与特征工程', '健康度评分与故障早期预警', '检修工单自动派发与闭环', '设备知识库与故障复盘'],
-    tags: ['时序预测', '健康度', '工单联动'],
-    price: 128000, unit: '起', priceNote: '含 20 台关键设备授权',
-    sales: 96, rating: 4.7, badge: '官方自营', colors: ['#92400e', '#ea580c']
-  },
-  {
-    id: 'content-factory', name: '电商内容工厂', cat: 'retail', catLabel: '零售电商', mark: 'CF',
-    desc: '批量生成商品主图、场景图、短视频脚本与多语言文案，保持品牌风格统一。',
-    features: ['多平台规格一键适配', '品牌风格模板与审核规则', '多语言文案与本地化表达', '生成内容自动标识与留痕'],
-    tags: ['多模态生成', '商品内容', '多语言'],
-    price: 16800, unit: '/年', priceNote: '含 5,000 张/条内容额度',
-    sales: 730, rating: 4.8, badge: '热销', colors: ['#0891b2', '#22d3ee']
-  },
-  {
-    id: 'ops-copilot', name: '经营分析 Copilot', cat: 'retail', catLabel: '零售电商', mark: 'OC',
-    desc: '用自然语言查数、做异常归因与活动复盘，统一指标口径，答案附带计算过程。',
-    features: ['自然语言转 SQL / 指标查询', '异常波动自动归因', '活动复盘模板与图表生成', '语义层统一指标口径'],
-    tags: ['数据分析', '归因', '语义层'],
-    price: 24800, unit: '/年', priceNote: '含 3 个数据源接入',
-    sales: 410, rating: 4.7, badge: '新上', colors: ['#0d9488', '#22d3ee']
-  },
-  {
-    id: 'emr', name: '病历质控助手', cat: 'medical', catLabel: '医疗健康', mark: 'EM',
-    desc: '诊间语音转写并生成病历草稿，按书写规范做内涵质控，医生确认后归档。',
-    features: ['诊间语音实时转写与结构化', '病历完整性、时效性、内涵质控', '私有化部署，数据不出院', '质控规则可配置与统计'],
-    tags: ['语音转写', '病历质控', '私有化'],
-    price: null, unit: '面议', priceNote: '按院区与科室规模报价',
-    sales: 64, rating: 4.8, badge: '合规版', colors: ['#047857', '#34d399']
-  },
-  {
-    id: 'medkb', name: '医学知识助手', cat: 'medical', catLabel: '医疗健康', mark: 'MK',
-    desc: '面向医生、药师与医药代表的合规知识问答，覆盖指南、文献与院内制度。',
-    features: ['指南 / 文献 / 说明书统一检索', '答案逐条引用原文出处', '角色分权与问答审计', '培训题库与学习记录'],
-    tags: ['医学知识', '可溯源', '角色分权'],
-    price: 36000, unit: '/年', priceNote: '含 200 个账号',
-    sales: 210, rating: 4.7, badge: '官方自营', colors: ['#059669', '#22d3ee']
-  },
-  {
-    id: 'school-kb', name: '校本知识库', cat: 'education', catLabel: '教育培训', mark: 'SK',
-    desc: '把教材、讲义、校规与实训手册变成可溯源的问答助手，教师与学生分权使用。',
-    features: ['教材章节级溯源', '教师端 / 学生端分权', '答疑记录与高频问题分析', '支持校内私有化部署'],
-    tags: ['校本知识', '溯源', '分权'],
-    price: 12800, unit: '/年', priceNote: '含 1 个校区授权',
-    sales: 520, rating: 4.8, badge: '官方自营', colors: ['#7c3aed', '#a855f7']
-  },
-  {
-    id: 'course-gen', name: '课件生成工作台', cat: 'education', catLabel: '教育培训', mark: 'CG',
-    desc: '从大纲一键生成课件、图解、微课脚本与分层题库，教师二次编辑后发布。',
-    features: ['大纲到 PPT / 图解 / 脚本', '分层题库与答案解析', '校本模板与品牌规范', '生成内容人工校验流程'],
-    tags: ['课件生成', '题库', '多模态'],
-    price: 9800, unit: '/年', priceNote: '含 10 个教师账号',
-    sales: 680, rating: 4.6, badge: '新上', colors: ['#9333ea', '#ec4899']
-  },
-  {
-    id: 'scheduling', name: '智能排程调度', cat: 'manufacturing', catLabel: '智能制造', mark: 'SC',
-    desc: '在订单、物料、设备、人员多约束下生成可执行排程，插单影响分钟级评估。',
-    features: ['多约束求解与可执行排程', '插单影响模拟与建议', '与 ERP / MES 数据同步', '自然语言查询生产计划'],
-    tags: ['约束求解', '排产', 'ERP 集成'],
-    price: 158000, unit: '起', priceNote: '按产线与订单规模报价',
-    sales: 72, rating: 4.7, badge: '官方自营', colors: ['#c2410c', '#f59e0b']
-  },
-  {
-    id: 'digital-human', name: '数字人内容生产', cat: 'multimodal', catLabel: '多模态', mark: 'DH',
-    desc: '企业数字人形象与音色定制，批量生产口播视频、培训课程与直播素材。',
-    features: ['形象与音色定制', '脚本到成片批量生产', '多语言配音与字幕', '内容合规审核与标识'],
-    tags: ['数字人', '视频生成', '多语言'],
-    price: 39800, unit: '/年', priceNote: '含 120 分钟成片额度',
-    sales: 240, rating: 4.6, badge: '官方自营', colors: ['#be185d', '#f472b6']
+{
+    id: 'kids-english-story', name: '儿童英语故事学单词', cat: 'education', catLabel: '教育培训', mark: 'KE',
+    desc: '用 AI 给 3–8 岁孩子读英文故事、自动拆分高频单词、生成互动问答，可封装为 Skill 集成到 WorkBuddy 等平台对外服务。',
+    features: ['AI 读故事：英文绘本自动朗读 + 中文讲解', '单词拆解：高频词自动提取 + 例句 + 拼写', '互动问答：故事后生成理解题与词汇题', 'Skill 封装：可集成 WorkBuddy 等平台'],
+    tags: ['少儿英语', '故事朗读', 'Skill 封装', 'WorkBuddy'],
+    price: null, unit: '', priceNote: '🚧 开发中 · 来自《AI编程职业实战班》第 11 章案例',
+    sales: 0, rating: 0, badge: '开发中', colors: ['#22d3ee', '#a855f7'],
+    comingSoon: true, chapterRef: 11, course: 'AI编程职业实战班-模块一'
   }
-];
+  ];
 
 window.DEMANDS = [
   // ============ 官方发布需求（需求组评估立项、开发组拆解、营销组对接） ============
